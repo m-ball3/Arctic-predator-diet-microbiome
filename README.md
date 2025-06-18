@@ -1,2 +1,1 @@
-# Arctic-predator-diet-microbiome
-Genetic metabarcoding of fecal and stomach samples collected by the Alaskan Department of Fish and Game. This repository compares diet composition to microbial communities in Arctic marine top predators.
+This repo contains code used to generate manuscript on diet and microbiome interactions/comparisons in Arctic marine mammals. A working draft of this manuscript can be found [here](https://github.com/UW-WADE-lab/Arctic-predator-diet-microbiome/blob/main/Arctic_predators_metabarcoding.Rmd).
