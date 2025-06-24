@@ -2,11 +2,10 @@
 # FROM DADA2 TO PHYLOSEQ
 # ------------------------------------------------------------------
 
-
 ## Sets Working Directory
 setwd("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic Predator/DADA2/DADA2 Outputs")
 
-## Libraries
+## Sets up the Environment and Libraries
 
 # if(!requireNamespace("BiocManager")){
 #   install.packages("BiocManager")
@@ -16,52 +15,72 @@ setwd("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic Predator/DADA2/
 library(phyloseq); packageVersion("phyloseq")
 library(Biostrings); packageVersion("Biostrings")
 library(ggplot2); packageVersion("ggplot2")
-
-## Constructs a dataframe
-
-# creates a character vector of sample IDs
-samples.out <- rownames(seqtab.nochim)
-
-# extracts the specific sample ID
-# (splits the character at specified ""; extracts the first part)
-ID <- sapply(strsplit(samples.out, "003-"), `[`, 2)
-
-# Other options, specific to tutorial
-Predator <- substr(ADFG.metadata,1,1)
-ADFG.ID <- substr(ADFG.metadata,2,999)
-# day <- as.integer(sapply(strsplit(samples.out, "D"), `[`, 2))
-
-# Creates data frame
-## HOW IS IT GOING TO KNOW WHICH WADE ID = ADFG ID
-samdf <- data.frame(WADE.ID=ID, Predator=Predator, ADFG.ID=ADFG.ID, )
-
-# Get row names from source object
-source_rownames <- rownames(seqtab.nochim)
-maybe <- data.frame(row.names = source_rownames, taxa=)
+library(tidyverse)
+library(dplyr)
 
 
+# Loads dada2 output
+load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
 
-# Classifies samples as early or late - probably won't use
-# samdf$When <- "Early"
-# samdf$When[samdf$Day>100] <- "Late"
+# Removes file extensions from OTU table names
+rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
 
-# Assigns rownamesaccording to samples.out
-rownames(samdf) <- samples.out
+# Gets sample metadata
+labdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_labwork_metadata.csv")%>%
+  filter(!is.na(LabID))
 
-# Creates phyloseq object from DADA2 outputs
-ps <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE),
-               sample_data(samdf),
-               tax_table(taxa))
-ps <- prune_samples(sample_names(ps) != "Mock", ps) # Remove mock sample
+samdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_sample_metadata.csv")
+
+# 1. Create mapping table with BOTH Specimen.ID AND Repeat.or.New.Specimen
+map_unique <- labdf %>%
+  filter(!is.na(LabID)) %>%
+  distinct(Specimen.ID, Repeat.or.New.Specimen., LabID)
+
+# 2. Join to samdf using BOTH columns
+samdf <- samdf %>%
+  left_join(map_unique, by = c("Specimen.ID", "Repeat.or.New.Specimen.")) %>%
+  filter(!is.na(LabID)) %>%
+  column_to_rownames("LabID")
+
+# Sanity check: row names are the same
+rownames(samdf)
+rownames(seqtab.nochim)
 
 
-# store the DNA sequences of our ASVs in the refseq slot of the phyloseq object,
-# and then rename our taxa to a short string
-dna <- Biostrings::DNAStringSet(taxa_names(ps))
-names(dna) <- taxa_names(ps)
-ps <- merge_phyloseq(ps, dna)
-taxa_names(ps) <- paste0("ASV", seq(ntaxa(ps)))
-ps
+# Creates master phyloseq object
+ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
+                   sample_data(samdf), 
+                   tax_table(taxa))
+
+### shorten ASV seq names, store sequences as reference
+dna <- Biostrings::DNAStringSet(taxa_names(ps.16s))
+names(dna) <- taxa_names(ps.16s)
+ps.raw <- merge_phyloseq(ps.16s, dna)
+taxa_names(ps.16s) <- paste0("ASV", seq(ntaxa(ps.16s)))
+
+nsamples(ps.16s)
+
+# Creates stacked bar plot 
+## proportion of each species 
+  ### samples on x
+ps16s.prop <- transform_sample_counts(ps.16s, function(otu) otu/sum(otu))
+ps16s.bar <- transform_sample_counts(ps.16s, function(OTU) OTU/sum(OTU))
+ps16s.bar <- prune_taxa(taxa_names(ps16s.prop), ps16s.bar)
+
+plot_bar(ps16s.bar, x="Specimen.ID", fill="Family") +
+  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
+
+plot_bar(ps16s.bar, x="Specimen.ID", fill="Family") +
+  facet_wrap("Specimen.ID") +
+  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
 
 
-plot_richness(ps, x="WADE_ID", measures=c("Shannon", "Simpson"), color="When")
+
+
+
+### export csv for ampbias correction
+readcount.table <- as.data.frame(otu_table(ps.raw))
+taxon.table <- as.data.frame(tax_table(ps.raw)) %>% rownames_to_column(var = "ASV")
+metadata.table <- samdf %>% rownames_to_column(var = "Sample")
+reference.table <- as.data.frame(refseq(ps.raw)) %>% 
+  rownames_to_column("ASVname")
