@@ -3,14 +3,15 @@
 # ------------------------------------------------------------------
 
 ## Sets Working Directory
-setwd("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic Predator/DADA2/DADA2 Outputs")
+# setwd("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic Predator/DADA2/DADA2 Outputs")
+setwd("C:/Users/Intern/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs")
 
 ## Sets up the Environment and Libraries
 
-# if(!requireNamespace("BiocManager")){
-#   install.packages("BiocManager")
-# }
-# BiocManager::install("phyloseq")
+if(!requireNamespace("BiocManager")){
+  install.packages("BiocManager")
+}
+BiocManager::install("phyloseq")
 
 library(phyloseq); packageVersion("phyloseq")
 library(Biostrings); packageVersion("Biostrings")
@@ -20,16 +21,24 @@ library(dplyr)
 
 
 # Loads dada2 output
-load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
+#load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
+load("C:/Users/Intern/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
 
-# Gets sample metadata
-labdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_labwork_metadata.csv")%>%
-  filter(!is.na(LabID))
+# # Gets sample metadata
+# labdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_labwork_metadata.csv")%>%
+#   filter(!is.na(LabID))
+# 
+# samdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_sample_metadata.csv")
 
-samdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_sample_metadata.csv")
+# Gets sample metadata
+labdf <- read.csv("C:/Users/Intern/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_labwork_metadata.csv") %>%
+   filter(!is.na(LabID))
+
+samdf <- read.csv("C:/Users/Intern/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_sample_metadata.csv")
+
 
 # 1. Create mapping table with BOTH Specimen.ID AND Repeat.or.New.Specimen
 map_unique <- labdf %>%
@@ -67,10 +76,10 @@ ps16s.prop <- transform_sample_counts(ps.16s, function(otu) otu/sum(otu))
 ps16s.bar <- transform_sample_counts(ps.16s, function(OTU) OTU/sum(OTU))
 ps16s.bar <- prune_taxa(taxa_names(ps16s.prop), ps16s.bar)
 
-plot_bar(ps16s.bar, x="Specimen.ID", fill="Family") +
+plot_bar(ps16s.bar, x="Specimen.ID", fill="Species") +
   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
 
-plot_bar(ps16s.bar, x="Specimen.ID", fill="Family") +
+plot_bar(ps16s.bar, x="Specimen.ID", fill="Species") +
   facet_wrap("Specimen.ID") +
   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
 
