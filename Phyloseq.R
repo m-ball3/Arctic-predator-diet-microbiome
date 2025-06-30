@@ -87,6 +87,9 @@ plot_bar(ps16s.bar, x="Specimen.ID", fill="Species") +
 
 
 
+
+
+
 ### export csv for ampbias correction
 readcount.table <- as.data.frame(otu_table(ps.raw))
 taxon.table <- as.data.frame(tax_table(ps.raw)) %>% rownames_to_column(var = "ASV")

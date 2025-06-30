@@ -68,6 +68,12 @@ We receieved (*xx*) stomach and fecal samples from ringed seals (*n=XX*), bearde
 - 
 - How much sample volume did we use?
 - QIAmp Mini Stool Kit <-- did we modify?
+"*Whole genomic DNA was extracted from swabbed, wet scooped, and lyophilized samples using the QIAmp Fast DNA Stool Mini Kit (Qiagen). . We quantified the amount of DNA extracted from each sample, then amplified the 16S mitochondrial region using published primers and protocols (Van Cise et al. 2024). We determined PCR success through visual examination using gel electrophoresis, and re-amplified unsuccessful samples under a variety of parameters to increase sample success rate. Those parameters included: 1:10 dilution, 1:2 dilution, DNA cleaned using a Zymo Clean and Concetrate kit, and 2x concetration of cleaned DNA. After all iterations of PCR1 were run, we collected those samples with successfully amplified product to continue through the library preparation protocol." *
+
+*Next we cleaned the amplified PCR product using the AMPure bead clean protocol and indexed each sample using Unique Dual Indexes (UDI, Illumina, Inc). ... We then performed a second AMPure bead clean to remove all unused reagents, and pooled all samples to contain an equimolar mix of prey DNA from each sample.*
+
+*Once the amplified product was pooled, we performed a final gel cleaning step using the MinElute PCR purificaton kit (Qiagen, Inc) to remove any non-target DNA fragments, then diluted and denatured the DNA according to the MiSeq sequencing protocol and loaded the pooled DNA and 20% PhiX control onto an in-house MiSeq sequencer.*"
+ - Sophie
 
 
 Following automated detection, we conducted a visual validation of the detection data in 1-minute bins to filter out false positive detections. We first removed 4-15 kHz detections and unclassified detections, which do not have the acoustic characteristics of delphinid echolocation clicks. Next, examining only detections in the 15-32 kHz range and 32-45 kHz range, we distinguished and annotated delphinid clicks from ambient noise by scanning detections to identify multiple signals in rapid succession with similar waveforms, spectra, and wigner plots, most often increasing and then decreasing in amplitude as individuals approached and then left the recorder (Supplemental Figure S2). All annotated clicks occurring within the same 1-minute recording were grouped together and given a click event ID.
