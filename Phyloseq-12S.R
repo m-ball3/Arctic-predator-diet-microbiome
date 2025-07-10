@@ -22,10 +22,10 @@ library(dplyr)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("C:/Users/Intern/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output2.Rdata")
+load("C:/Users/Intern/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP2_output2.Rdata")
 
 # Removes file extensions from OTU table names
-rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
+rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
 
 # Gets sample metadata
 labdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_labwork_metadata.csv")%>%
@@ -73,37 +73,47 @@ rownames(samdf)
 rownames(seqtab.nochim)
 
 # Creates master phyloseq object
-ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
-                   sample_data(samdf), 
-                   tax_table(taxa))
+ps.12s <- phyloseq(
+    otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
+    sample_data(samdf), 
+    tax_table(taxa)
+  )
 
 ### shorten ASV seq names, store sequences as reference
-dna <- Biostrings::DNAStringSet(taxa_names(ps.16s))
-names(dna) <- taxa_names(ps.16s)
-ps.raw <- merge_phyloseq(ps.16s, dna)
-taxa_names(ps.16s) <- paste0("ASV", seq(ntaxa(ps.16s)))
+dna <- Biostrings::DNAStringSet(taxa_names(ps.12s))
+names(dna) <- taxa_names(ps.12s)
+ps.raw <- merge_phyloseq(ps.12s, dna)
+taxa_names(ps.12s) <- paste0("ASV", seq(ntaxa(ps.12s)))
 
-nsamples(ps.16s)
+nsamples(ps.12s)
 
 # Creates stacked bar plot 
 ## proportion of each species 
-  ### samples on x
-ps16s.prop <- transform_sample_counts(ps.16s, function(otu) otu/sum(otu))
-ps16s.bar <- transform_sample_counts(ps.16s, function(OTU) OTU/sum(OTU))
-ps16s.bar <- prune_taxa(taxa_names(ps16s.prop), ps16s.bar)
+### samples on x
+ps12s.prop <- transform_sample_counts(ps.12s, function(otu) otu/sum(otu))
+ps12s.bar <- transform_sample_counts(ps.12s, function(OTU) OTU/sum(OTU))
+ps12s.bar <- prune_taxa(taxa_names(ps12s.prop), ps12s.bar)
 
-plot_bar(ps16s.bar, x="LabID", fill="Species") +
+plot_bar(ps12s.bar, x="LabID", fill="Species") +
   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
 
 # FIlters NAs
-ps16s.bar.filtered <- subset_taxa(ps16s.bar, !is.na(Species))
+ps12s.bar.filtered <- subset_taxa(ps12s.bar, !is.na(Species))
 
-plot_bar(ps16s.bar.filtered, x = "LabID", fill = "Species") +
+plot_bar(ps12s.bar.filtered, x = "LabID", fill = "Species") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+# FIlters beluga whale as prey species
+ps12s.bar.no.beluga <- subset_taxa(ps12s.bar.filtered, Species != "Delphinapterus leucas")
+
+plot_bar(ps12s.bar.no.beluga, x = "LabID", fill = "Species") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
 
-plot_bar(ps16s.bar.filtered, x = "LabID", fill = "Species") +
+# Facet wrapped by predator species
+plot_bar(ps12s.bar.no.beluga, x="LabID", fill="Species") +
   facet_wrap(~ Predator, ncol = 1, strip.position = "right") +
   theme_minimal() +
   theme(
@@ -118,9 +128,7 @@ plot_bar(ps16s.bar.filtered, x = "LabID", fill = "Species") +
 
 
 
-
-
-# ### export csv for ampbias correction
+### export csv for ampbias correction
 # readcount.table <- as.data.frame(otu_table(ps.raw))
 # taxon.table <- as.data.frame(tax_table(ps.raw)) %>% rownames_to_column(var = "ASV")
 # metadata.table <- samdf %>% rownames_to_column(var = "Sample")
