@@ -98,14 +98,14 @@ plot_bar(ps12s.bar, x="LabID", fill="Species") +
   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
 
 # FIlters NAs
-ps12s.bar.filtered <- subset_taxa(ps12s.bar, !is.na(Species))
+ps12s.bar.no.na <- subset_taxa(ps12s.bar, !is.na(Species))
 
-plot_bar(ps12s.bar.filtered, x = "LabID", fill = "Species") +
+plot_bar(ps12s.bar.no.na, x = "LabID", fill = "Species") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
 # FIlters beluga whale as prey species
-ps12s.bar.no.beluga <- subset_taxa(ps12s.bar.filtered, Species != "Delphinapterus leucas")
+ps12s.bar.no.beluga <- subset_taxa(ps12s.bar.no.na, Species != "Delphinapterus leucas")
 
 plot_bar(ps12s.bar.no.beluga, x = "LabID", fill = "Species") +
   theme_minimal() +
@@ -126,7 +126,25 @@ plot_bar(ps12s.bar.no.beluga, x="LabID", fill="Species") +
   guides(fill = guide_legend(title = "Species"))
 
 
+# Compares stomach to fecal
+sample_data(ps12s.bar.no.beluga)$Stomach.Goo <- factor(
+  sample_data(ps12s.bar.no.beluga)$Stomach.Goo,
+  levels = c("No", "Yes"),
+  labels = c("Fecal", "Stomach")
+)
 
+
+plot_bar(ps12s.bar.no.beluga, x = "LabID", fill = "Species") +
+  facet_wrap(~ Stomach.Goo, ncol = 1, strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) +
+  guides(fill = guide_legend(title = "Species"))
 
 ### export csv for ampbias correction
 # readcount.table <- as.data.frame(otu_table(ps.raw))

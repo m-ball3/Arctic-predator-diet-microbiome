@@ -96,14 +96,14 @@ plot_bar(ps16s.bar, x="LabID", fill="Species") +
   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
 
 # FIlters NAs
-ps16s.bar.filtered <- subset_taxa(ps16s.bar, !is.na(Species))
+ps16s.bar.no.na <- subset_taxa(ps16s.bar, !is.na(Species))
 
-plot_bar(ps16s.bar.filtered, x = "LabID", fill = "Species") +
+plot_bar(ps16s.bar.no.na, x = "LabID", fill = "Species") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
 
-plot_bar(ps16s.bar.filtered, x = "LabID", fill = "Species") +
+plot_bar(ps16s.bar.no.na, x = "LabID", fill = "Species") +
   facet_wrap(~ Predator, ncol = 1, strip.position = "right") +
   theme_minimal() +
   theme(
@@ -115,8 +115,25 @@ plot_bar(ps16s.bar.filtered, x = "LabID", fill = "Species") +
   ) +
   guides(fill = guide_legend(title = "Species"))
 
+# Compares stomach to fecal
+sample_data(ps16s.bar.no.na)$Stomach.Goo <- factor(
+  sample_data(ps16s.bar.no.na)$Stomach.Goo,
+  levels = c("No", "Yes"),
+  labels = c("Fecal", "Stomach")
+)
 
 
+plot_bar(ps16s.bar.no.na, x = "LabID", fill = "Species") +
+  facet_wrap(~ Stomach.Goo, ncol = 1, strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) +
+  guides(fill = guide_legend(title = "Species"))
 
 
 
