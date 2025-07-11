@@ -85,26 +85,35 @@ taxa_names(ps.16s) <- paste0("ASV", seq(ntaxa(ps.16s)))
 
 nsamples(ps.16s)
 
-# Creates stacked bar plot 
-## proportion of each species 
-  ### samples on x
-ps16s.prop <- transform_sample_counts(ps.16s, function(otu) otu/sum(otu))
-ps16s.bar <- transform_sample_counts(ps.16s, function(OTU) OTU/sum(OTU))
-ps16s.bar <- prune_taxa(taxa_names(ps16s.prop), ps16s.bar)
+# Filters out any Mammalia and NA
+ps.16s <- subset_taxa(ps.16s, Class!="Mammalia")
+ps.16s <- prune_samples(sample_sums(ps.16s) > 0, ps.16s)
+#ps.16s <- subset_taxa(ps.16s, !is.na(Species))
 
-plot_bar(ps16s.bar, x="LabID", fill="Species") +
-  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
+# Plots stacked bar plot of abundance
+plot_bar(ps.16s, fill="Species")
 
-# FIlters NAs
-ps16s.bar.no.na <- subset_taxa(ps16s.bar, !is.na(Species))
+# Calculates relative abundance of each species 
+ps16s.rel <- transform_sample_counts(ps.16s, function(otu) otu/sum(otu))
 
-plot_bar(ps16s.bar.no.na, x = "LabID", fill = "Species") +
+# Creates bar plot of relative abundance
+rel.plot <- plot_bar(ps16s.rel, fill="Species")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
+# Extracts the sample data as a data frame
+ADFG_sample_df <- as.data.frame(sample_data(ps.16s))
 
-plot_bar(ps16s.bar.no.na, x = "LabID", fill = "Species") +
-  facet_wrap(~ Predator, ncol = 1, strip.position = "right") +
+# Ensures the order of ADFG IDs matches the sample order in the plot
+adfg_ids <- ADFG_sample_df$Specimen.ID[match(rel.plot$data$Sample, rownames(sample_df))]
+
+# Overrides the x-axis labels with ADFG Sample IDs
+rel.plot + scale_x_discrete(labels = adfg_ids)
+
+# Facet wrapped by predator species
+### I WANT BOXES AROUND THE DIFFERENT FACETS
+faucet.plot <- plot_bar(ps16s.rel, fill = "Species") +
+  facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") + 
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
@@ -115,31 +124,51 @@ plot_bar(ps16s.bar.no.na, x = "LabID", fill = "Species") +
   ) +
   guides(fill = guide_legend(title = "Species"))
 
-# Compares stomach to fecal
-sample_data(ps16s.bar.no.na)$Stomach.Goo <- factor(
-  sample_data(ps16s.bar.no.na)$Stomach.Goo,
-  levels = c("No", "Yes"),
-  labels = c("Fecal", "Stomach")
-)
+faucet.plot
 
 
-plot_bar(ps16s.bar.no.na, x = "LabID", fill = "Species") +
-  facet_wrap(~ Stomach.Goo, ncol = 1, strip.position = "right") +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-    strip.background = element_blank(),
-    strip.placement = "outside",
-    panel.spacing = unit(0.5, "lines"),
-    axis.title.x = element_text(margin = margin(t = 10))
-  ) +
-  guides(fill = guide_legend(title = "Species"))
+# cREATES SAMPLES X SPECIES TABLE 
+
+## Extracts the raw OTU count matrix (samples x ASVs)
+otu_mat_raw <- as(otu_table(ps.16s), "matrix")
+
+## Extracts the taxonomy table (ASVs x taxonomy)
+tax_mat <- as(tax_table(ps.16s), "matrix")
+
+## Gets species names for each ASV
+species_names <- tax_mat[, "Species"]
+species_names[is.na(species_names)] <- "Unknown"  # Replace NA species with 'Unknown'
+
+## Transposes OTU matrix to ASVs x samples
+otu_mat_t <- t(otu_mat_raw)
+
+## Creates a data frame with species as a column
+otu_df_t <- as.data.frame(otu_mat_t)
+otu_df_t$Species <- species_names
+
+## Aggregates by species, summing across ASVs for each sample
+species_counts_t <- otu_df_t %>%
+  group_by(Species) %>%
+  summarise(across(everything(), sum))
+
+## Transposes back to samples x species
+species_counts <- as.data.frame(t(as.matrix(species_counts_t[,-1])))
+colnames(species_counts) <- species_counts_t$Species
+
+## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
+df_sample <- as.data.frame(sample_data(ps.16s))
+species_counts$ADFG_SampleID <- df_sample$Specimen.ID
+
+## Sanity check
+head(species_counts)
+
+### ADFG SAMPLE ID TO LEFT
+species_counts$ADFG_SampleID <- sample_df$Specimen.ID
+
+## Moves ADFG_SampleID to the first column
+species_counts <- species_counts[, c(ncol(species_counts), 1:(ncol(species_counts)-1))]
+
+# Writes to CSV
+write.csv(species_counts, "ADFG_16s_speciesxsamples.csv", row.names = FALSE)
 
 
-
-# ### export csv for ampbias correction
-# readcount.table <- as.data.frame(otu_table(ps.raw))
-# taxon.table <- as.data.frame(tax_table(ps.raw)) %>% rownames_to_column(var = "ASV")
-# metadata.table <- samdf %>% rownames_to_column(var = "Sample")
-# reference.table <- as.data.frame(refseq(ps.raw)) %>% 
-#   rownames_to_column("ASVname")
