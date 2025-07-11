@@ -93,14 +93,14 @@ nsamples(ps.12s)
 
 # Filters out any Mammalia and NA
 ps.12s <- subset_taxa(ps.12s, Class!="Mammalia")
-ps.12s <- prune_samples(sample_sums(ps.12s) > 0, ps.12s)
+#ps.12s <- prune_samples(sample_sums(ps.12s) > 0, ps.12s)
 #ps.12s <- subset_taxa(ps.12s, !is.na(Species))
 
 # Plots stacked bar plot of abundance
 plot_bar(ps.12s, fill="Species")
 
 # Calculates relative abundance of each species 
-ps12s.rel <- transform_sample_counts(ps.12s, function(otu) otu/sum(otu))
+ps12s.rel <- transform_sample_counts(ps.12s, function(x) x/sum(x))
 
 # Creates bar plot of relative abundance
 rel.plot <- plot_bar(ps12s.rel, fill="Species")
@@ -115,6 +115,23 @@ adfg_ids <- ADFG_sample_df$Specimen.ID[match(rel.plot$data$Sample, rownames(ADFG
 
 # Overrides the x-axis labels with ADFG Sample IDs
 rel.plot + scale_x_discrete(labels = adfg_ids)
+
+# Facet wrapped by predator species
+### I WANT BOXES AROUND THE DIFFERENT FACETS
+plot_bar(ps.12s, x="LabID", fill="Species") +
+  facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) +
+  guides(fill = guide_legend(title = "Species"))
+
+
+
 
 
 
@@ -201,20 +218,6 @@ rowSums(otu_mat)         # Should be >0 for ASVs with data
 plot_bar(ps12s.prop, x="LabID", fill="Species") +
   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
 
-
-# Facet wrapped by predator species
-### I WANT BOXES AROUND THE DIFFERENT FACETS
-plot_bar(ps12s.bar, x="LabID", fill="Species") +
-  facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-    strip.background = element_blank(),
-    strip.placement = "outside",
-    panel.spacing = unit(0.5, "lines"),
-    axis.title.x = element_text(margin = margin(t = 10))
-  ) +
-  guides(fill = guide_legend(title = "Species"))
 
 
 # Compares stomach to fecal

@@ -4,14 +4,14 @@
 
 ## Sets Working Directory
 # setwd("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic Predator/DADA2/DADA2 Outputs")
-setwd("C:/Users/Intern/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs")
+#setwd("DADA2/DADA2 Outputs")
 
 ## Sets up the Environment and Libraries
 
-if(!requireNamespace("BiocManager")){
-  install.packages("BiocManager")
-}
-BiocManager::install("phyloseq")
+# if(!requireNamespace("BiocManager")){
+#   install.packages("BiocManager")
+# }
+# BiocManager::install("phyloseq")
 
 library(phyloseq); packageVersion("phyloseq")
 library(Biostrings); packageVersion("Biostrings")
@@ -22,16 +22,16 @@ library(dplyr)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("C:/Users/Intern/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output2.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output2.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
 
 # Gets sample metadata
-labdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_labwork_metadata.csv")%>%
+labdf <- read.csv("metadata/ADFG_dDNA_labwork_metadata.csv")%>%
   filter(!is.na(LabID))
 
-samdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_sample_metadata.csv")
+samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
 
 # Renames "species" column to "Predator"
 samdf <- dplyr::rename(samdf, Predator = Species)
@@ -87,14 +87,19 @@ nsamples(ps.16s)
 
 # Filters out any Mammalia and NA
 ps.16s <- subset_taxa(ps.16s, Class!="Mammalia")
-ps.16s <- prune_samples(sample_sums(ps.16s) > 0, ps.16s)
+#ps.16s <- prune_samples(sample_sums(ps.16s) > 0, ps.16s)
 #ps.16s <- subset_taxa(ps.16s, !is.na(Species))
+
+
+## MERGE TO SPECIES HERE (TAX GLOM)
+ps.16s = tax_glom(ps.16s, "Species")
 
 # Plots stacked bar plot of abundance
 plot_bar(ps.16s, fill="Species")
 
+otu <- as.data.frame(otu_table(ps.16s))
 # Calculates relative abundance of each species 
-ps16s.rel <- transform_sample_counts(ps.16s, function(otu) otu/sum(otu))
+ps16s.rel <- transform_sample_counts(ps.16s, function(x) x/sum(x))
 
 # Creates bar plot of relative abundance
 rel.plot <- plot_bar(ps16s.rel, fill="Species")+
@@ -127,13 +132,22 @@ faucet.plot <- plot_bar(ps16s.rel, fill = "Species") +
 faucet.plot
 
 
-# cREATES SAMPLES X SPECIES TABLE 
+# CREATES SAMPLES X SPECIES TABLE 
 
 ## Extracts the raw OTU count matrix (samples x ASVs)
-otu_mat_raw <- as(otu_table(ps.16s), "matrix")
+otu_mat_raw <- as.data.frame(otu_table(ps.16s))
+colnames(otu_mat_raw) <- as.data.frame(tax_table(ps.16s))$Species
+
+##TRANSFORM FOR RELATIVE COUNTS
+
+
+# tells that the species names are what we want colnames in df
+#col.names(otu_mat_raw) <- tax_table(ps_object)$Species
+
+
 
 ## Extracts the taxonomy table (ASVs x taxonomy)
-tax_mat <- as(tax_table(ps.16s), "matrix")
+tax_mat <- as(tax_table(ps.16s), "matrix") ##LEAVE AS DF
 
 ## Gets species names for each ASV
 species_names <- tax_mat[, "Species"]
