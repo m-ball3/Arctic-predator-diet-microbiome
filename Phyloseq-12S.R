@@ -4,34 +4,35 @@
 
 ## Sets Working Directory
 # setwd("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic Predator/DADA2/DADA2 Outputs")
-setwd("C:/Users/Intern/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs")
+setwd("Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs")
 
 ## Sets up the Environment and Libraries
 
-if(!requireNamespace("BiocManager")){
-  install.packages("BiocManager")
-}
-BiocManager::install("phyloseq")
+# if(!requireNamespace("BiocManager")){
+#   install.packages("BiocManager")
+# }
+# BiocManager::install("phyloseq")
 
 library(phyloseq); packageVersion("phyloseq")
 library(Biostrings); packageVersion("Biostrings")
 library(ggplot2); packageVersion("ggplot2")
 library(tidyverse)
 library(dplyr)
+library(lapply)
 
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("C:/Users/Intern/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP2_output3.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output6.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
 
 # Gets sample metadata; filters out NA's (shipment 1)
-labdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_labwork_metadata.csv")%>%
+labdf <- read.csv("metadata/ADFG_dDNA_labwork_metadata.csv")%>%
   filter(!is.na(LabID))
 
-samdf <- read.csv("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/metadata/ADFG_dDNA_sample_metadata.csv")
+samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
 
 # Renames "species" column to "Predator"
 samdf <- dplyr::rename(samdf, Predator = Species)
@@ -96,6 +97,10 @@ ps.12s <- subset_taxa(ps.12s, Class!="Mammalia")
 #ps.12s <- prune_samples(sample_sums(ps.12s) > 0, ps.12s)
 #ps.12s <- subset_taxa(ps.12s, !is.na(Species))
 
+
+## MERGE TO SPECIES HERE (TAX GLOM)
+ps.12s = tax_glom(ps.12s, "Species", NArm = FALSE)
+
 # Plots stacked bar plot of abundance
 plot_bar(ps.12s, fill="Species")
 
@@ -103,7 +108,9 @@ plot_bar(ps.12s, fill="Species")
 ps12s.rel <- transform_sample_counts(ps.12s, function(x) x/sum(x))
 
 # Creates bar plot of relative abundance
-rel.plot <- plot_bar(ps12s.rel, fill="Species")
+rel.plot <- plot_bar(ps12s.rel, fill="Species")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
 rel.plot
 
@@ -118,8 +125,9 @@ rel.plot + scale_x_discrete(labels = adfg_ids)
 
 # Facet wrapped by predator species
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
-plot_bar(ps.12s, x="LabID", fill="Species") +
+faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species") +
   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
+  scale_x_discrete(labels = adfg_ids) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
@@ -131,55 +139,38 @@ plot_bar(ps.12s, x="LabID", fill="Species") +
   guides(fill = guide_legend(title = "Species"))
 
 
+faucet
 
-
-
-
-# cREATES SAMPLES X SPECIES TABLE 
-
-## Extracts the raw OTU count matrix (samples x ASVs)
-otu_mat_raw <- as(otu_table(ps.12s), "matrix")
-
-## Extracts the taxonomy table (ASVs x taxonomy)
-tax_mat <- as(tax_table(ps.12s), "matrix")
-
-## Gets species names for each ASV
-species_names <- tax_mat[, "Species"]
-species_names[is.na(species_names)] <- "Unknown"  # Replace NA species with 'Unknown'
-
-## Transposes OTU matrix to ASVs x samples
-otu_mat_t <- t(otu_mat_raw)
-
-## Creates a data frame with species as a column
-otu_df_t <- as.data.frame(otu_mat_t)
-otu_df_t$Species <- species_names
-
-## Aggregates by species, summing across ASVs for each sample
-species_counts_t <- otu_df_t %>%
-  group_by(Species) %>%
-  summarise(across(everything(), sum))
-
-## Transposes back to samples x species
-species_counts <- as.data.frame(t(as.matrix(species_counts_t[,-1])))
-colnames(species_counts) <- species_counts_t$Species
+# CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
+otu.abs <- as.data.frame(otu_table(ps.12s))
+colnames(otu.abs) <- as.data.frame(tax_table(ps.12s))$Species
 
 ## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
-df_sample <- as.data.frame(sample_data(ps.12s))
-species_counts$ADFG_SampleID <- df_sample$Specimen.ID
-
-## Sanity check
-head(species_counts)
-
-### ADFG SAMPLE ID TO LEFT
-species_counts$ADFG_SampleID <- sample_df$Specimen.ID
+otu.abs$Specimen.ID <- samdf$Specimen.ID
 
 ## Moves ADFG_SampleID to the first column
-species_counts <- species_counts[, c(ncol(species_counts), 1:(ncol(species_counts)-1))]
+otu.abs <- otu.abs[, c(ncol(otu.abs), 1:(ncol(otu.abs)-1))]
+
+# CREATES RELATIVE SAMPLES X SPECIES TABLE
+otu.prop <- as.data.frame(otu_table(ps12s.rel))
+colnames(otu.prop) <- as.data.frame(tax_table(ps12s.rel))$Species
+
+## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
+otu.prop$Specimen.ID <- samdf$Specimen.ID
+
+## Moves ADFG_SampleID to the first column
+otu.prop <- otu.prop[, c(ncol(otu.prop), 1:(ncol(otu.prop)-1))]
+
+# Changes NaN to 0
+otu.prop[is.na(otu.prop)] <- 0
+
+# Rounds to three decimal places
+is.num <- sapply(otu.prop, is.numeric)
+otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
 
 # Writes to CSV
-write.csv(species_counts, "ADFG_12s_speciesxsamples.csv", row.names = FALSE)
-
-
+write.csv(otu.abs, "ADFG_12s_absolute_speciesxsamples.csv", row.names = FALSE)
+write.csv(otu.prop, "ADFG_12s_relative_speciesxsamples.csv", row.names = FALSE)
 
 
 
