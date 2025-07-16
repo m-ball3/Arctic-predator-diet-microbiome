@@ -48,13 +48,13 @@ df_16s$Marker <- "16S"
 combined_df <- bind_rows(df_12s, df_16s)
 
 # Plots absolute comparison
-rel.plot <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species)) +
+rel.plot <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Genus)) +
   geom_col(position = "stack") +
   facet_wrap(. ~ Marker, ncol=1, strip.position = "right") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
-
+rel.plot
 # Extracts the sample data as a data frame
 ADFG_sample_df <- as.data.frame(sample_data(ps.12s))
 
