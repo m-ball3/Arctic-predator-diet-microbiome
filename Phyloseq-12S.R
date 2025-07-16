@@ -18,12 +18,10 @@ library(Biostrings); packageVersion("Biostrings")
 library(ggplot2); packageVersion("ggplot2")
 library(tidyverse)
 library(dplyr)
-library(lapply)
-
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output6.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output8.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
@@ -97,6 +95,11 @@ ps.12s <- subset_taxa(ps.12s, Class!="Mammalia")
 #ps.12s <- prune_samples(sample_sums(ps.12s) > 0, ps.12s)
 #ps.12s <- subset_taxa(ps.12s, !is.na(Species))
 
+# Saves phyloseq obj
+saveRDS(ps.12s, "ps.12s")
+
+# Plots stacked bar plot of abundance
+plot_bar(ps.12s, fill="Species")
 
 ## MERGE TO SPECIES HERE (TAX GLOM)
 ps.12s = tax_glom(ps.12s, "Species", NArm = FALSE)
@@ -126,7 +129,7 @@ rel.plot + scale_x_discrete(labels = adfg_ids)
 # Facet wrapped by predator species
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
 faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species") +
-  facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
+  facet_grid(~ Predator, scales = "free_x") +
   scale_x_discrete(labels = adfg_ids) +
   theme_minimal() +
   theme(
@@ -169,8 +172,8 @@ is.num <- sapply(otu.prop, is.numeric)
 otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
 
 # Writes to CSV
-write.csv(otu.abs, "ADFG_12s_absolute_speciesxsamples.csv", row.names = FALSE)
-write.csv(otu.prop, "ADFG_12s_relative_speciesxsamples.csv", row.names = FALSE)
+write.csv(otu.abs, "ADFG_12s_absolute_speciesxsamples-trunc110.csv", row.names = FALSE)
+write.csv(otu.prop, "ADFG_12s_relative_speciesxsamples-trunc110.csv", row.names = FALSE)
 
 
 

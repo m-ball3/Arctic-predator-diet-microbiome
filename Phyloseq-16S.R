@@ -89,11 +89,17 @@ ps.16s <- subset_taxa(ps.16s, Class!="Mammalia")
 #ps.16s <- prune_samples(sample_sums(ps.16s) > 0, ps.16s)
 #ps.16s <- subset_taxa(ps.16s, !is.na(Species))
 
+# Saves phyloseq obj
+saveRDS(ps.16s, "ps.16s")
+
+
+# Plots stacked bar plot of abundance - to confirm presence of NA's
+plot_bar(ps.16s, fill="Species")
 
 ## MERGE TO SPECIES HERE (TAX GLOM)
 ps.16s = tax_glom(ps.16s, "Species", NArm = FALSE)
 
-# Plots stacked bar plot of abundance
+# Plots stacked bar plot of abundance - to confirm presence of NA's
 plot_bar(ps.16s, fill="Species")
 
 # Calculates relative abundance of each species 
