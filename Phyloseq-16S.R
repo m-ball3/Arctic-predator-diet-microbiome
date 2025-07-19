@@ -21,7 +21,7 @@ library(dplyr)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output3.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output4.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
@@ -106,24 +106,40 @@ plot_bar(ps.16s, fill="Species")
 ps16s.rel <- transform_sample_counts(ps.16s, function(x) x/sum(x))
 
 # Creates bar plot of relative abundance
-rel.plot <- plot_bar(ps16s.rel, fill="Species")+
+sp.rel.plot <- plot_bar(ps16s.rel, fill="Species")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
-rel.plot
+sp.rel.plot
+
+gen.rel.plot <- plot_bar(ps16s.rel, fill="Genus")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+gen.rel.plot
+
+fam.rel.plot <- plot_bar(ps16s.rel, fill="Family")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+fam.rel.plot 
 
 # Extracts the sample data as a data frame
 ADFG_sample_df <- as.data.frame(sample_data(ps.16s))
 
 # Ensures the order of ADFG IDs matches the sample order in the plot
-adfg_ids <- ADFG_sample_df$Specimen.ID[match(rel.plot$data$Sample, rownames(ADFG_sample_df))]
+adfg_ids <- ADFG_sample_df$Specimen.ID[match(sp.rel.plot$data$Sample, rownames(ADFG_sample_df))]
+adfg_ids <- ADFG_sample_df$Specimen.ID[match(gen.rel.plot$data$Sample, rownames(ADFG_sample_df))]
+adfg_ids <- ADFG_sample_df$Specimen.ID[match(fam.rel.plot$data$Sample, rownames(ADFG_sample_df))]
 
 # Overrides the x-axis labels with ADFG Sample IDs
-rel.plot + scale_x_discrete(labels = adfg_ids)
+sp.rel.plot + scale_x_discrete(labels = adfg_ids)
+gen.rel.plot + scale_x_discrete(labels = adfg_ids)
+fam.rel.plot + scale_x_discrete(labels = adfg_ids)
 
 # Facet wrapped by predator species
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
-faucet.plot <- plot_bar(ps16s.rel, fill = "Species") +
+sp.faucet.plot <- plot_bar(ps16s.rel, fill = "Family") +
   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") + 
   scale_x_discrete(labels = adfg_ids) +
   theme_minimal() +
@@ -134,10 +150,9 @@ faucet.plot <- plot_bar(ps16s.rel, fill = "Species") +
     panel.spacing = unit(0.5, "lines"),
     axis.title.x = element_text(margin = margin(t = 10))
   ) +
-  guides(fill = guide_legend(title = "Species"))
+  guides(fill = guide_legend(title = "Family"))
 
-faucet.plot
-
+sp.faucet.plot
 
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
 otu.abs <- as.data.frame(otu_table(ps.16s))
