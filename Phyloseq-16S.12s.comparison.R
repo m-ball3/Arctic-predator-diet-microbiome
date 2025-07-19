@@ -48,7 +48,7 @@ df_16s$Marker <- "16S"
 combined_df <- bind_rows(df_12s, df_16s)
 
 # Plots absolute comparison
-rel.plot <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Genus)) +
+rel.plot <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Family)) +
   geom_col(position = "stack") +
   facet_wrap(. ~ Marker, ncol=1, strip.position = "right") +
   theme_minimal() +
