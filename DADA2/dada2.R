@@ -1,4 +1,4 @@
-## dada2 QAQC of Oorc fecal fastq sequences
+## dada2 QAQC of Arctic Predator fastq sequences
 ## 1/3/2022 - modified 5/27/25 by mball for WADE-003 Arctic Predator Diets
 ## Amy Van Cise
 
@@ -22,8 +22,8 @@ library(tidyverse)
 library(ggplot2)
 library(seqinr)
 
-diet.seqs.file <- "/gscratch/coenv/mball3/WADE003-arctic-pred/rawdata/16SP2/"
-taxref <- "/gscratch/coenv/mball3/WADE003-arctic-pred/16S_Arctic_predator_reference_database_05_2025.fasta"
+diet.seqs.file <- "/gscratch/coenv/mball3/WADE003-arctic-pred/rawdata/12SP1"
+taxref <- "/gscratch/coenv/mball3/WADE003-arctic-pred/MURI_MFU_07_2025.fasta"
 
 
 ### read fastq files in working directory
@@ -34,8 +34,8 @@ sample.names2 <- sapply(strsplit(basename(fnFs), "_"), `[`, 2)
 sample.names <- paste(sample.names1, sample.names2, sep = "_")
 
 ### vizualize read quality profiles
-#plotQualityProfile(fnFs[1:2])
-#plotQualityProfile(fnRs[1:2])
+plotQualityProfile(fnFs[1:2])
+plotQualityProfile(fnRs[1:2])
 
 ### Name filtered files in filtered/subdirectory
 filtFs <- file.path(diet.seqs.file, "filtered", paste0(sample.names, "_F_filt.fastq.gz"))
@@ -43,14 +43,15 @@ filtRs <- file.path(diet.seqs.file, "filtered", paste0(sample.names, "_R_filt.fa
 names(filtFs) <- sample.names
 names(filtRs) <- sample.names
 
-
 ### Filter and Trim
-out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, truncLen=c(280,180),
+out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, trimLeft = 30, truncLen=c(130, 130),
                      maxN=0, maxEE=c(2,2), truncQ=2, rm.phix=TRUE,
-                     compress=TRUE, multithread=TRUE)
+                     compress=TRUE, multithread=TRUE, verbose=TRUE)
+
 ### Dereplicate
 derepFs <- derepFastq(filtFs, verbose=TRUE)
 derepRs <- derepFastq(filtRs, verbose=TRUE)
+
 # Name the derep-class objects by the sample names
 names(derepFs) <- sample.names
 names(derepRs) <- sample.names
@@ -61,17 +62,24 @@ errF <- dadaFs.lrn[[1]]$err_out
 dadaRs.lrn <- dada(derepRs, err=NULL, selfConsist = TRUE, multithread=TRUE)
 errR <- dadaRs.lrn[[1]]$err_out
 
-#plotErrors(dadaFs.lrn[[1]], nominalQ=TRUE)
+plotErrors(dadaFs.lrn[[1]], nominalQ=TRUE)
 
 ### Sample Inference
 dadaFs <- dada(derepFs, err=errF, multithread=TRUE)
 dadaRs <- dada(derepRs, err=errR, multithread=TRUE)
 
 ### Merge Paired Reads
-mergers <- mergePairs(dadaFs, derepFs, dadaRs, derepRs, verbose=TRUE)
+mergers <- mergePairs(dadaFs, derepFs, dadaRs, derepRs, minOverlap = 20, verbose=TRUE)
 
 ### Construct sequence table
 seqtab <- makeSequenceTable(mergers)
+obect <- as.data.frame(colnames(seqtab)) %>% 
+  rename("sequence" = 1) %>% 
+  mutate(seq_length = nchar(sequence)) %>% 
+  mutate(new_sequence = substr(sequence, 1, 185)) %>% 
+  mutate(seq2_length = nchar(new_sequence))
+
+colnames(seqtab) <- obect$new_sequence
 
 ### Remove chimeras
 seqtab.nochim <- removeBimeraDenovo(seqtab, method="consensus", multithread=TRUE, verbose=TRUE)
@@ -89,4 +97,5 @@ rownames(track) <- sample.names
 taxa <- assignTaxonomy(seqtab.nochim, taxref, tryRC = TRUE, minBoot = 95, outputBootstraps = FALSE)
 
 ### Save data
-save(seqtab.nochim, freq.nochim, track, taxa, file = "WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
+save(seqtab.nochim, freq.nochim, track, taxa, file = "WADE003-arcticpred_dada2_QAQC_12SP1_output-130trunc2.Rdata")
+
