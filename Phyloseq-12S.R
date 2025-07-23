@@ -157,7 +157,6 @@ fam.rel.plot +
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
 faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species") +
   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
-  scale_x_discrete(labels = adfg_ids) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
@@ -166,6 +165,8 @@ faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species") +
     panel.spacing = unit(0.5, "lines"),
     axis.title.x = element_text(margin = margin(t = 10))
   ) +
+  scale_x_discrete(labels = label_map) +
+  labs(x = "ADFG ID")+
   guides(fill = guide_legend(title = "Species"))
 
 

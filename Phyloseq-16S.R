@@ -162,7 +162,10 @@ sp.faucet.plot <- plot_bar(ps16s.rel, fill = "Family") +
     panel.spacing = unit(0.5, "lines"),
     axis.title.x = element_text(margin = margin(t = 10))
   ) +
-  guides(fill = guide_legend(title = "Family"))
+    scale_x_discrete(labels = label_map) +
+  labs(x = "ADFG ID")+
+  guides(fill = guide_legend(title = "Species"))
+
 
 sp.faucet.plot
 
