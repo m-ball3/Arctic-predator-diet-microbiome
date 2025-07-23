@@ -152,7 +152,7 @@ fam.rel.plot +
 
 # Facet wrapped by predator species
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
-sp.faucet.plot <- plot_bar(ps16s.rel, fill = "Family") +
+faucet <- plot_bar(ps16s.rel, fill = "Species") +
   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
   theme_minimal() +
   theme(
@@ -167,7 +167,7 @@ sp.faucet.plot <- plot_bar(ps16s.rel, fill = "Family") +
   guides(fill = guide_legend(title = "Species"))
 
 
-sp.faucet.plot
+faucet
 
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
 otu.abs <- as.data.frame(otu_table(ps.16s))

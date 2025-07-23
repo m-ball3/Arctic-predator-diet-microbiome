@@ -155,7 +155,7 @@ fam.rel.plot +
 
 # Facet wrapped by predator species
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
-faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species") +
+faucet <- plot_bar(ps12s.rel, x="LabID", fill="Family") +
   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
   theme_minimal() +
   theme(
@@ -167,7 +167,7 @@ faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species") +
   ) +
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")+
-  guides(fill = guide_legend(title = "Species"))
+  guides(fill = guide_legend(title = "Family"))
 
 
 faucet
