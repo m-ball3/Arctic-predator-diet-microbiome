@@ -22,7 +22,7 @@ library(tibble)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output9.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output-fixes.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
@@ -87,9 +87,12 @@ nsamples(ps.16s)
 
 # Filters out any Mammalia and NA
 ps.16s <- subset_taxa(ps.16s, Class!="Mammalia")
-#ps.16s <- subset_taxa(ps.16s, Kingdom!="Bacteria")
+ps.16s <- subset_taxa(ps.16s, Kingdom!="Bacteria")
 #ps.16s <- prune_samples(sample_sums(ps.16s) > 0, ps.16s)
 #ps.16s <- subset_taxa(ps.16s, !is.na(Species))
+
+# Remove samples with total abundance == 0
+ps.16s <- prune_samples(sample_sums(ps.16s) > 0, ps.16s)
 
 # Saves phyloseq obj
 saveRDS(ps.16s, "ps.16s")
@@ -152,7 +155,7 @@ fam.rel.plot +
 
 # Facet wrapped by predator species
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
-faucet <- plot_bar(ps16s.rel, fill = "Species") +
+faucet <- plot_bar(ps16s.rel, fill = "Genus") +
   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
   theme_minimal() +
   theme(
@@ -164,7 +167,7 @@ faucet <- plot_bar(ps16s.rel, fill = "Species") +
   ) +
     scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")+
-  guides(fill = guide_legend(title = "Species"))
+  guides(fill = guide_legend(title = "Genus"))
 
 
 faucet
