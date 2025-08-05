@@ -77,6 +77,43 @@ ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE),
                    sample_data(samdf), 
                    tax_table(taxa))
 
+# Creates a dataframe that maps ADFG IDs to sequences in taxa
+
+## Converts seqtab.nochim to long format (SampleID = WADE sample ID, Sequence = sequence column names)
+seqtab_long <- as.data.frame(seqtab.nochim)
+seqtab_long$WADE_ID <- rownames(seqtab_long)
+
+seqtab_long <- seqtab_long %>%
+  pivot_longer(
+    cols = -WADE_ID,
+    names_to = "Sequence",
+    values_to = "Abundance"
+  ) %>%
+  filter(Abundance > 0)   # Keep only entries where the sequence is present in the sample
+
+## Keeps only the Sequence and WADE_ID columns
+mapped.sequences <- seqtab_long[, c("Sequence", "WADE_ID")]
+
+# Turns rownames into a column for joining to mapped.sequences
+mapped.sequences <- mapped.sequences %>%
+  left_join(
+    samdf %>% rownames_to_column("WADE_ID") %>% select(WADE_ID, Specimen.ID),
+    by = "WADE_ID"
+  )
+
+mapped.taxa <- as.data.frame(taxa)
+
+# Add Sequence as a column from the row names
+mapped.taxa$Sequence <- rownames(mapped.taxa)
+
+# Merge with mapped.taxa to add ADFG_ID for each Sequence
+mapped.taxa <- merge(mapped.taxa, mapped.sequences[, c("Sequence", "Specimen.ID")], by = "Sequence", all.x = TRUE)
+
+# Reorders columns to put Sequence and ADFG_ID first
+other_cols <- setdiff(names(mapped.taxa), c("Sequence", "Specimen.ID"))
+mapped.taxa <- mapped.taxa[, c("Sequence", "Specimen.ID", other_cols)]
+
+
 ### shorten ASV seq names, store sequences as reference
 dna <- Biostrings::DNAStringSet(taxa_names(ps.16s))
 names(dna) <- taxa_names(ps.16s)
