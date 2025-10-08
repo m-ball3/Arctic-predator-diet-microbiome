@@ -47,6 +47,22 @@ df_16s$Marker <- "16S"
 # Creates the combined df
 combined_df <- bind_rows(df_12s, df_16s)
 
+# Checks relativbe abundance is calculated correctly 
+combined_df %>%
+  group_by(Sample, Marker) %>%
+  summarise(total_abundance = sum(Abundance)) %>%
+  print(n = 22)
+
+# # Ensures normalization after combination
+# combined_df <- combined_df %>%
+#   group_by(Sample, Marker) %>%
+#   mutate(Abundance = Abundance / sum(Abundance)) %>%
+#   ungroup()
+
+# Extracts the sample data as a data frame
+ADFG_sample_df <- as.data.frame(sample_data(ps.12s))
+
+
 # Plots absolute comparison
 rel.plot <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species)) +
   geom_col(position = "stack") +
@@ -55,14 +71,37 @@ rel.plot <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species)) 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
 rel.plot
-# Extracts the sample data as a data frame
-ADFG_sample_df <- as.data.frame(sample_data(ps.12s))
 
 # Ensures the order of ADFG IDs matches the sample order in the plot
 adfg_ids <- ADFG_sample_df$Specimen.ID[match(rel.plot$data$Sample, rownames(ADFG_sample_df))]
 
 # Overrides the x-axis labels with ADFG Sample IDs
 rel.plot + scale_x_discrete(labels = adfg_ids)
+
+
+
+rel.plot.sidebyside <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species)) +
+  geom_col(aes(group = Marker), position = position_dodge(width = 1)) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
+  theme(legend.position = "bottom")
+
+combined_df$Sample_Marker <- interaction(combined_df$Sample, combined_df$Marker)
+
+
+rel.plot.sidebyside <-
+  ggplot(combined_df, aes(x = Sample_Marker, y = Abundance, fill = Species)) +
+  geom_col() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+  theme(legend.position = "bottom")
+
+
+rel.plot.sidebyside
+
+# Overrides the x-axis labels with ADFG Sample IDs
+rel.plot.sidebyside + scale_x_discrete(labels = adfg_ids)
+
 
 # ------------------------------------------------------------------
 # Creates .csv of absolute and proportional samplexspecies
