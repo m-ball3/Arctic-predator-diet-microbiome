@@ -62,4 +62,4 @@ apptainer run --bind /gscratch /gscratch/coenv/containerstidyverse_4.0.1.sif Rsc
 
 
 # COPY OUTPUT FILE TO MY LOCAL COMPUTER!!
-scp mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata "C:\Users\MBall\OneDrive\文档\WADE LAB\Arctic Predator Diets\DADA2"
+scp mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_12SP1_output-130trunc-ADFGnotes-50BOOTTRUE-leftrim20.Rdata "C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/boot-true"

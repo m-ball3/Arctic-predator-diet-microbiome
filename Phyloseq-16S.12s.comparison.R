@@ -28,12 +28,12 @@ ps.16s <- readRDS("ps.16s")
 sam.12s <- sample_names(ps.12s)
 sam.16s <- sample_names(ps.16s)
 
-# Selects only the samples that are present in both
-sam.both <- intersect(sam.16s, sam.12s)
-
-# Keeps only the samples that are in both
-ps.12s <- prune_samples(sam.both, ps.12s)
-ps.16s <- prune_samples(sam.both, ps.16s)
+# # Selects only the samples that are present in both
+# sam.both <- intersect(sam.16s, sam.12s)
+# 
+# # Keeps only the samples that are in both
+# ps.12s <- prune_samples(sam.both, ps.12s)
+# ps.16s <- prune_samples(sam.both, ps.16s)
 
 # Gets the relative abundance pf each species
 rel.12s <- transform_sample_counts(ps.12s, function(x) x / sum(x))
@@ -48,10 +48,13 @@ df_16s$Marker <- "16S"
 combined_df <- bind_rows(df_12s, df_16s)
 
 # Checks relativbe abundance is calculated correctly 
-combined_df %>%
+equal.one <- combined_df %>%
   group_by(Sample, Marker) %>%
   summarise(total_abundance = sum(Abundance)) %>%
   print(n = 22)
+
+# Saves combined_df as a .csv for Amy's abundance table
+write.csv(combined_df, "Deliverables/allrows-abundance.csv")
 
 # # Ensures normalization after combination
 # combined_df <- combined_df %>%
