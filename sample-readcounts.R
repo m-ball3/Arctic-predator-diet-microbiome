@@ -4,6 +4,54 @@ library(ggplot2)
 library(dplyr)
 library(patchwork)
 
+
+### something isn't quite right!!!!!: it looks like denoisedF has more reads that input, but that can't be right, because input is the first step and denoisedF is the count after a few filtering steps
+# ------------------------------------------------------------------
+# 16s
+# ------------------------------------------------------------------
+#load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output-ADFGnotes.Rdata")
+
+# Removes file extensions from OTU table names
+rownames(track) <- gsub("-16S_S\\d+", "", rownames(track))
+ls()
+
+# Transformes track to df
+track.df <- as.data.frame(track)
+
+# Move sample names from rownames to a column
+track.16s <- tibble::rownames_to_column(track.df, var = "Sample")
+
+# Pivot longer to get a tidy dataframe for ggplot2
+track_long <- pivot_longer(
+  track.16s,
+  cols = -Sample,
+  names_to = "Step",
+  values_to = "Reads"
+)
+
+# Plot for samples final reads
+p1 <- ggplot(track_long, aes(x = Sample, y = Reads, fill = Step)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x = "Sample", y = "Number of Reads", fill = "Step", title = "Number of Reads on Each Step")
+
+# Filter for nonchim only
+track_nonchim <- track_long[track_long$Step == "nonchim", ]
+
+# Plot nonchim reads
+p_high_nchim <- ggplot(track_nonchim, aes(x = Sample, y = Reads)) +
+  geom_bar(stat = "identity", fill = "hotpink") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x = "Sample", y = "Nonchim Reads", title = "Number of Reads at nochim Step")
+
+# Print your plots (using patchwork)
+p1/p_high_nchim
+
+# ------------------------------------------------------------------
+# 12S
+# ------------------------------------------------------------------
+
 # Load the object, don't assign
 load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-130trunc-ADFGnotes.Rdata")
 # Removes file extensions from OTU table names
