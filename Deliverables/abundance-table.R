@@ -41,21 +41,21 @@ ggplot(abundance_by_marker, aes(x = reorder(Species, prop_abundance), y = prop_a
 ### CREATE EXCEL
 # Filter and order data for each marker
 sheet_12s <- abundance_by_marker %>%
-  filter(Marker == "12s") %>%
+  filter(Marker == "12S") %>%
   arrange(desc(prop_abundance)) %>%
   select(Marker, Species, prop_abundance)
 
 sheet_16s <- abundance_by_marker %>%
-  filter(Marker == "16s") %>%
+  filter(Marker == "16S") %>%
   arrange(desc(prop_abundance)) %>%
   select(Marker, Species, prop_abundance)
 
 # Create workbook and add sheets
 wb <- createWorkbook()
-addWorksheet(wb, "12s")
-addWorksheet(wb, "16s")
-writeData(wb, "12s", sheet_12s)
-writeData(wb, "16s", sheet_16s)
+addWorksheet(wb, "12S")
+addWorksheet(wb, "16S")
+writeData(wb, "12S", sheet_12s)
+writeData(wb, "16S", sheet_16s)
 
 getwd()
 # Save the workbook as .xlsx (multi-sheet Excel file)

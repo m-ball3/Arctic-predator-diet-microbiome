@@ -13,15 +13,21 @@ setwd("Arctic-predator-diet-microbiome/")
 # }
 # BiocManager::install("phyloseq")
 
+devtools::install_github("benjjneb/dada2", ref="v1.16", lib = .libPaths()[1])
+BiocManager::install("dada2", lib = .libPaths()[1])
+BiocManager::install("S4Vectors")
+
 library(phyloseq); packageVersion("phyloseq")
 library(Biostrings); packageVersion("Biostrings")
 library(ggplot2); packageVersion("ggplot2")
 library(tidyverse)
 library(dplyr)
+library(dada2)
+library(patchwork)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-130trunc-ADFGnotes.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-addSpecies-130;30.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
@@ -79,7 +85,7 @@ rownames(seqtab.nochim)
 ps.12s <- phyloseq(
     otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
     sample_data(samdf), 
-    tax_table(taxa)
+    tax_table(species)
   )
 
 # Creates a dataframe that maps ADFG IDs to sequences in taxa
@@ -106,7 +112,7 @@ mapped.sequences <- mapped.sequences %>%
     by = "WADE_ID"
   )
 
-mapped.taxa <- as.data.frame(taxa)
+mapped.taxa <- as.data.frame(species)
 
 # Add Sequence as a column from the row names
 mapped.taxa$Sequence <- rownames(mapped.taxa)
@@ -117,7 +123,6 @@ mapped.taxa <- merge(mapped.taxa, mapped.sequences[, c("Sequence", "Specimen.ID"
 # Reorders columns to put Sequence and ADFG_ID first
 other_cols <- setdiff(names(mapped.taxa), c("Sequence", "Specimen.ID"))
 mapped.taxa <- mapped.taxa[, c("Sequence", "Specimen.ID", other_cols)]
-
 
 
 ### shorten ASV seq names, store sequences as reference
@@ -141,15 +146,15 @@ ps.12s <- prune_samples(sample_sums(ps.12s) > 0, ps.12s)
 saveRDS(ps.12s, "ps.12s")
 
 # Plots stacked bar plot of abundance
-plot_bar(ps.12s, fill="Species")
+plot_bar(ps.12s, fill="Species.1")
 
 ## MERGE TO SPECIES HERE (TAX GLOM)
-ps.12s = tax_glom(ps.12s, "Species", NArm = FALSE)
+ps.12s = tax_glom(ps.12s, "Species.1", NArm = FALSE)
 
 # Plots stacked bar plot of abundance - to confirm presence of NA's
-plot_bar(ps.12s, fill="Species")
+plot_bar(ps.12s, fill="Species.1")
 
-# Calculates relative abundance of each species 
+# Transforms read counts to relative abundance of each species 
 ## Transforms NaN (0/0) to 0
 ps12s.rel <- transform_sample_counts(ps.12s, function(x) {
   x_rel <- x / sum(x)
@@ -170,7 +175,11 @@ names(label_map) <- rownames(sample_data(ps12s.rel))
 sp.rel.plot <- plot_bar(ps12s.rel, fill="Species")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-sp.rel.plot
+
+sp1.rel.plot <- plot_bar(ps12s.rel, fill="Species.1")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+sp.rel.plot / sp1.rel.plot
 
 # Plots with ADFG IDs
 sp.rel.plot +
