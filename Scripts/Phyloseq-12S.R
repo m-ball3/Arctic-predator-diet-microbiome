@@ -188,6 +188,7 @@ sp.rel.plot +
 
 gen.rel.plot <- plot_bar(ps12s.rel, fill="Genus")+
   theme_minimal() +
+  
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 gen.rel.plot
 
@@ -197,6 +198,7 @@ gen.rel.plot +
 
 fam.rel.plot <- plot_bar(ps12s.rel, fill="Family")+
   theme_minimal() +
+  labs(y= "Proportion")
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 fam.rel.plot 
 
