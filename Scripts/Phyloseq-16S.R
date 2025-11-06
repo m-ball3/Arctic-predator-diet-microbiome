@@ -187,6 +187,10 @@ gen.rel.plot +
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")
 
+fam.rel.plot <- plot_bar(ps16s.rel, fill="Family")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+fam.rel.plot 
 
 fam.rel.plot + 
   scale_x_discrete(labels = label_map) +

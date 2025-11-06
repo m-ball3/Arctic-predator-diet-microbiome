@@ -4,24 +4,26 @@
 library(tidyverse)
 library(dplyr)
 library(openxlsx)
+library(gridExtra)
+library(RColorBrewer)
 
 # Loads in data
 combined_df <- read.csv("Deliverables/allrows-abundance.csv")
 
 # Checks relativbe abundance is calculated correctly 
 equal.one <- combined_df %>%
-  group_by(Sample, Marker) %>%
+  group_by(Sample, Marker, Predator) %>%
   summarise(total_abundance = sum(Abundance))
 
 # Creates a table with only desired columns
 abundance_df <- combined_df %>%
-  select(Abundance, Sample, Marker, Species)%>%
+  select(Abundance, Sample, Marker, Species, Predator)%>%
   drop_na()
 
 abundance_by_marker <- abundance_df %>%
-  group_by(Marker, Species) %>%
+  group_by(Marker, Species, Predator) %>%
   summarise(species_abundance = sum(Abundance, na.rm = TRUE), .groups = "drop") %>%
-  group_by(Marker) %>%
+  group_by(Marker, Predator) %>%
   mutate(total_abundance = sum(species_abundance),
          prop_abundance = species_abundance / total_abundance) %>%
   arrange(Marker, desc(prop_abundance))
@@ -36,34 +38,114 @@ ggplot(abundance_by_marker, aes(x = reorder(Species, prop_abundance), y = prop_a
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
 
-# Total across markers --> issue here is to not count same samples twice!
+# By marker and predator
+ggplot(abundance_by_marker, aes(x = reorder(Species, prop_abundance), y = prop_abundance, fill = Species)) +
+  geom_bar(stat = "identity") +
+  facet_grid(Predator ~ Marker, scales = "free_x") +
+  labs(title = "Proportional Abundance of Species by Marker and Predator",
+       x = "Species",
+       y = "Proportional Abundance") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
 
-### CREATE EXCEL
-# Filter and order data for each marker
-sheet_12s <- abundance_by_marker %>%
-  filter(Marker == "12S") %>%
-  arrange(desc(prop_abundance)) %>%
-  select(Marker, Species, prop_abundance)
+# Total across markers; predator
 
-sheet_16s <- abundance_by_marker %>%
-  filter(Marker == "16S") %>%
-  arrange(desc(prop_abundance)) %>%
-  select(Marker, Species, prop_abundance)
+# Split abundance_by_marker by Predator and Marker
+split_data <- split(abundance_by_marker, list(abundance_by_marker$Predator, abundance_by_marker$Marker), drop = TRUE)
 
-# Create workbook and add sheets
+# Create a new workbook
 wb <- createWorkbook()
-addWorksheet(wb, "12S")
-addWorksheet(wb, "16S")
-writeData(wb, "12S", sheet_12s)
-writeData(wb, "16S", sheet_16s)
 
-getwd()
-# Save the workbook as .xlsx (multi-sheet Excel file)
-saveWorkbook(wb, "Deliverables/marker_species_proportions.xlsx", overwrite = TRUE)
+# Add a sheet and write data for each Predator-Marker combination
+for(name in names(split_data)) {
+  # Clean sheet name by replacing "." with "_" or other characters to avoid Excel limitations
+  sheet_name <- gsub("\\.", "_", name)
+  
+  # Select columns you want to export
+  data_to_write <- split_data[[name]] %>%
+    select(Marker, Species, prop_abundance, Predator)
+  
+  # Add worksheet named by predator_marker, truncating if needed for Excel sheet name length limits (max 31 chars)
+  addWorksheet(wb, sheetName = substr(sheet_name, 1, 31))
+  
+  # Write data
+  writeData(wb, sheet = substr(sheet_name, 1, 31), x = data_to_write)
+}
+
+# Save workbook
+saveWorkbook(wb, "Deliverables/predator_marker_species_proportions.xlsx", overwrite = TRUE)
+
+# ------------------------------------------------------------------
+# SPECIES BY ABUNDANCE TABLE
+# ------------------------------------------------------------------
+# Reads in the sheets
+file <- "Deliverables/predator_marker_species_proportions.xlsx"
+wb_sheets <- getSheetNames(file)
+
+
+# Extracts all unique species present in all dfs
+all_species <- unique(unlist(lapply(list_of_dfs, function(df) df$Species)))
+
+# Generates distinct colors for all species
+palette_colors <- brewer.pal(min(length(all_species), 12), "Set3")  # use 12 max colors from Set3 palette as example
+if(length(all_species) > length(palette_colors)) {
+  # Expands colors if more species than palette colors
+  palette_colors <- colorRampPalette(palette_colors)(length(all_species))
+}
+species_colors <- setNames(palette_colors, all_species)
+
+# Applies manual color scale in plot loop
+plots <- list()
+for(sheet_name in names(list_of_dfs)) {
+  df <- list_of_dfs[[sheet_name]]
+  df_filtered <- df %>% filter(prop_abundance > 0)
+  
+  p <- ggplot(df_filtered, aes(x = reorder(Species, prop_abundance), y = prop_abundance, fill = Species)) +
+    geom_bar(stat = "identity") +
+    scale_fill_manual(values = species_colors) +  # consistent colors across all plots
+    labs(title = paste(sheet_name),
+         x = "",
+         y = "Proportional Abundance") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
+  
+  plots[[sheet_name]] <- p
+}
+
+grid.arrange(grobs = plots, ncol = 3)
 
 
 
+
+# ------------------------------------------------------------------
 # old code
+# ------------------------------------------------------------------
+# ### CREATE EXCEL
+# # Filter and order data for each marker
+# sheet_12s <- abundance_by_marker %>%
+#   filter(Marker == "12S", Predator) %>%
+#   arrange(desc(prop_abundance)) %>%
+#   select(Marker, Species, prop_abundance, Predator)
+# 
+# sheet_16s <- abundance_by_marker %>%
+#   filter(Marker == "16S") %>%
+#   arrange(desc(prop_abundance)) %>%
+#   select(Marker, Species, prop_abundance, Predator)
+# 
+# # Create workbook and add sheets
+# wb <- createWorkbook()
+# addWorksheet(wb, "12S")
+# addWorksheet(wb, "16S")
+# writeData(wb, "12S", sheet_12s)
+# writeData(wb, "16S", sheet_16s)
+# 
+# getwd()
+# # Save the workbook as .xlsx (multi-sheet Excel file)
+# saveWorkbook(wb, "Deliverables/marker_species_proportions.xlsx", overwrite = TRUE)
+
+
+
+
 # tries to deal with replicates 
 ## replicates are not a thing here --> need to address this
 

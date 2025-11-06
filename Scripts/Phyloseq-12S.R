@@ -27,7 +27,7 @@ library(patchwork)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-addSpecies-130;30-merged.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-addSpecies-130;30-2.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
@@ -85,7 +85,7 @@ rownames(seqtab.nochim)
 ps.12s <- phyloseq(
     otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
     sample_data(samdf), 
-    tax_table(genus.species)
+    tax_table(species)
   )
 
 # Creates a dataframe that maps ADFG IDs to sequences in taxa
@@ -112,7 +112,7 @@ mapped.sequences <- mapped.sequences %>%
     by = "WADE_ID"
   )
 
-mapped.taxa <- as.data.frame(genus.species)
+mapped.taxa <- as.data.frame(species)
 
 # Add Sequence as a column from the row names
 mapped.taxa$Sequence <- rownames(mapped.taxa)
@@ -142,23 +142,7 @@ ps.12s <- subset_taxa(ps.12s, Kingdom!="Bacteria")
 # Remove samples with total abundance == 0
 ps.12s <- prune_samples(sample_sums(ps.12s) > 0, ps.12s)
 
-# Converts genus.species matrix array to df
-genus_species_df <- as.data.frame(genus.species)
-
-# Creates new column with combined genus and species binomial (space-separated)
-genus_species_df$species_binomial <- ifelse(
-  is.na(genus_species_df$Genus) | is.na(genus_species_df$Species),
-  NA,
-  paste(genus_species_df$Genus, genus_species_df$Species, sep = " ")
-)
-
-#Renames
-genus_species_df$Genus <- NULL
-genus_species_df$Species <- NULL
-genus_species_df <- genus_species_df %>%
-  rename(Species = species_binomial)
-
-# Saves phyloseq obj# Saves phyloseq species_binomialobj
+# Saves phyloseq obj
 saveRDS(ps.12s, "ps.12s")
 
 # Plots stacked bar plot of abundance
@@ -224,7 +208,7 @@ fam.rel.plot +
 
 # Facet wrapped by predator species
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
-faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species.1") +
+faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species") +
   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
   theme_minimal() +
   theme(
@@ -236,7 +220,7 @@ faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species.1") +
   ) +
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")+
-  guides(fill = guide_legend(title = "Species.1"))
+  guides(fill = guide_legend(title = "Species"))
 
 
 faucet
@@ -288,80 +272,82 @@ write.csv(otu.prop, "ADFG_12s_relative_speciesxsamples-trunc130.csv", row.names 
 
 
 
+# ------------------------------------------------------------------
+# OLD CODE
+# ------------------------------------------------------------------
 
-
-
-
-# Creates stacked bar plot 
-## proportion of each species 
-### samples on x
-ps12s.prop <- transform_sample_counts(ps.12s, function(OTU) OTU/sum(OTU))
-ps12s.bar <- transform_sample_counts(ps.12s, function(OTU) OTU/sum(OTU))
-
-# Checks what taxa are present after transformation
-taxa_sums(ps12s.bar)
-
-otu_mat <- as(otu_table(ps12s.bar), "matrix")
-rowSums(is.na(otu_mat))  # Should be zero for all ASVs
-rowSums(otu_mat)         # Should be >0 for ASVs with data
-
-
-plot_bar(ps12s.prop, x="LabID", fill="Species") +
-  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
-
-
-
-# Compares stomach to fecal
-sample_data(ps12s.bar)$Stomach.Goo <- factor(
-  sample_data(ps12s.bar)$Stomach.Goo,
-  levels = c("No", "Yes"),
-  labels = c("Fecal", "Stomach")
-)
-
-
-plot_bar(ps12s.bar.no.beluga, x = "LabID", fill = "Species") +
-  facet_wrap(~ Stomach.Goo, ncol = 1, scales = "free_x", strip.position = "right") +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-    strip.background = element_blank(),
-    strip.placement = "outside",
-    panel.spacing = unit(0.5, "lines"),
-    axis.title.x = element_text(margin = margin(t = 10))
-  ) +
-  guides(fill = guide_legend(title = "Species"))
-
-
-
-# Converts to proportional abundance
-
-sample_variables(ps.12s)
-otu_mat <- as(otu_table(ps.12s), "matrix")
-sample_totals <- sample_sums(ps.12s)
-
-# Extract the species assignments for each ASV
-species_assignments <- tax_table(ps.12s)[, "Species"]
-
-# Convert to character vector for assignment
-species_names <- as.character(species_assignments[colnames(otu_mat)])
-
-# Replace column names in otu_mat
-colnames(otu_mat) <- species_names
-colnames(otu_mat) <- make.unique(species_names)
-
-first_asv <- colnames(otu_mat)[1]
-tax_table(ps.12s)[first_asv, "Species"]
-
-
-
-ps12s.propa <- transform_sample_counts(ps12s.prop, function(x) x / sum(x) )
-
-plot_bar(ps12s.propa, x="LabID", fill="Species") +
-  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
-
-### export csv for ampbias correction
-# readcount.table <- as.data.frame(otu_table(ps.raw))
-# taxon.table <- as.data.frame(tax_table(ps.raw)) %>% rownames_to_column(var = "ASV")
-# metadata.table <- samdf %>% rownames_to_column(var = "Sample")
-# reference.table <- as.data.frame(refseq(ps.raw)) %>% 
-#   rownames_to_column("ASVname")
+# 
+# 
+# # Creates stacked bar plot 
+# ## proportion of each species 
+# ### samples on x
+# ps12s.prop <- transform_sample_counts(ps.12s, function(OTU) OTU/sum(OTU))
+# ps12s.bar <- transform_sample_counts(ps.12s, function(OTU) OTU/sum(OTU))
+# 
+# # Checks what taxa are present after transformation
+# taxa_sums(ps12s.bar)
+# 
+# otu_mat <- as(otu_table(ps12s.bar), "matrix")
+# rowSums(is.na(otu_mat))  # Should be zero for all ASVs
+# rowSums(otu_mat)         # Should be >0 for ASVs with data
+# 
+# 
+# plot_bar(ps12s.prop, x="LabID", fill="Species") +
+#   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
+# 
+# 
+# 
+# # Compares stomach to fecal
+# sample_data(ps12s.bar)$Stomach.Goo <- factor(
+#   sample_data(ps12s.bar)$Stomach.Goo,
+#   levels = c("No", "Yes"),
+#   labels = c("Fecal", "Stomach")
+# )
+# 
+# 
+# plot_bar(ps12s.bar.no.beluga, x = "LabID", fill = "Species") +
+#   facet_wrap(~ Stomach.Goo, ncol = 1, scales = "free_x", strip.position = "right") +
+#   theme_minimal() +
+#   theme(
+#     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+#     strip.background = element_blank(),
+#     strip.placement = "outside",
+#     panel.spacing = unit(0.5, "lines"),
+#     axis.title.x = element_text(margin = margin(t = 10))
+#   ) +
+#   guides(fill = guide_legend(title = "Species"))
+# 
+# 
+# 
+# # Converts to proportional abundance
+# 
+# sample_variables(ps.12s)
+# otu_mat <- as(otu_table(ps.12s), "matrix")
+# sample_totals <- sample_sums(ps.12s)
+# 
+# # Extract the species assignments for each ASV
+# species_assignments <- tax_table(ps.12s)[, "Species"]
+# 
+# # Convert to character vector for assignment
+# species_names <- as.character(species_assignments[colnames(otu_mat)])
+# 
+# # Replace column names in otu_mat
+# colnames(otu_mat) <- species_names
+# colnames(otu_mat) <- make.unique(species_names)
+# 
+# first_asv <- colnames(otu_mat)[1]
+# tax_table(ps.12s)[first_asv, "Species"]
+# 
+# 
+# 
+# ps12s.propa <- transform_sample_counts(ps12s.prop, function(x) x / sum(x) )
+# 
+# plot_bar(ps12s.propa, x="LabID", fill="Species") +
+#   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
+# 
+# ### export csv for ampbias correction
+# # readcount.table <- as.data.frame(otu_table(ps.raw))
+# # taxon.table <- as.data.frame(tax_table(ps.raw)) %>% rownames_to_column(var = "ASV")
+# # metadata.table <- samdf %>% rownames_to_column(var = "Sample")
+# # reference.table <- as.data.frame(refseq(ps.raw)) %>% 
+# #   rownames_to_column("ASVname")
