@@ -2,10 +2,6 @@
 # FROM DADA2 TO PHYLOSEQ
 # ------------------------------------------------------------------
 
-## Sets Working Directory
-# setwd("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic Predator/DADA2/DADA2 Outputs")
-setwd("Arctic-predator-diet-microbiome/")
-
 ## Sets up the Environment and Libraries
 
 # if(!requireNamespace("BiocManager")){
