@@ -2,10 +2,6 @@
 # FROM DADA2 TO PHYLOSEQ
 # ------------------------------------------------------------------
 
-## Sets Working Directory
-# setwd("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic Predator/DADA2/DADA2 Outputs")
-setwd("Arctic-predator-diet-microbiome/")
-
 ## Sets up the Environment and Libraries
 
 # if(!requireNamespace("BiocManager")){
@@ -27,7 +23,7 @@ library(patchwork)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-addSpecies-130;30-merged.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-addSpecies-130;30-3.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
@@ -85,7 +81,7 @@ rownames(seqtab.nochim)
 ps.12s <- phyloseq(
     otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
     sample_data(samdf), 
-    tax_table(genus.species)
+    tax_table(merged.taxa)
   )
 
 # Creates a dataframe that maps ADFG IDs to sequences in taxa
@@ -112,7 +108,7 @@ mapped.sequences <- mapped.sequences %>%
     by = "WADE_ID"
   )
 
-mapped.taxa <- as.data.frame(genus.species)
+mapped.taxa <- as.data.frame(merged.taxa)
 
 # Add Sequence as a column from the row names
 mapped.taxa$Sequence <- rownames(mapped.taxa)
@@ -123,7 +119,6 @@ mapped.taxa <- merge(mapped.taxa, mapped.sequences[, c("Sequence", "Specimen.ID"
 # Reorders columns to put Sequence and ADFG_ID first
 other_cols <- setdiff(names(mapped.taxa), c("Sequence", "Specimen.ID"))
 mapped.taxa <- mapped.taxa[, c("Sequence", "Specimen.ID", other_cols)]
-
 
 ### shorten ASV seq names, store sequences as reference
 dna <- Biostrings::DNAStringSet(taxa_names(ps.12s))
@@ -139,36 +134,17 @@ ps.12s <- subset_taxa(ps.12s, Kingdom!="Bacteria")
 #ps.12s <- prune_samples(sample_sums(ps.12s) > 0, ps.12s)
 #ps.12s <- subset_taxa(ps.12s, !is.na(Species))
 
-# Remove samples with total abundance == 0
-ps.12s <- prune_samples(sample_sums(ps.12s) > 0, ps.12s)
-
-# Converts genus.species matrix array to df
-genus_species_df <- as.data.frame(genus.species)
-
-# Creates new column with combined genus and species binomial (space-separated)
-genus_species_df$species_binomial <- ifelse(
-  is.na(genus_species_df$Genus) | is.na(genus_species_df$Species),
-  NA,
-  paste(genus_species_df$Genus, genus_species_df$Species, sep = " ")
-)
-
-#Renames
-genus_species_df$Genus <- NULL
-genus_species_df$Species <- NULL
-genus_species_df <- genus_species_df %>%
-  rename(Species = species_binomial)
-
 # Saves phyloseq obj# Saves phyloseq species_binomialobj
 saveRDS(ps.12s, "ps.12s")
 
 # Plots stacked bar plot of abundance
-plot_bar(ps.12s, fill="Species.1")
+plot_bar(ps.12s, fill="Species.y")
 
 ## MERGE TO SPECIES HERE (TAX GLOM)
-ps.12s = tax_glom(ps.12s, "Species.1", NArm = FALSE)
+ps.12s = tax_glom(ps.12s, "Species.y", NArm = FALSE)
 
 # Plots stacked bar plot of abundance - to confirm presence of NA's
-plot_bar(ps.12s, fill="Species.1")
+plot_bar(ps.12s, fill="Species.y")
 
 # Transforms read counts to relative abundance of each species 
 ## Transforms NaN (0/0) to 0
@@ -188,19 +164,22 @@ names(label_map) <- rownames(sample_data(ps12s.rel))
 # Creates bar plot of relative abundance
 
 # Plots with WADE IDs
-sp.rel.plot <- plot_bar(ps12s.rel, fill="Species")+
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+# sp.rel.plot <- plot_bar(ps12s.rel, fill="Species.x")+
+#   theme_minimal() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))+
+#   theme(legend.position = "none")
 
-sp1.rel.plot <- plot_bar(ps12s.rel, fill="Species.1")+
+sp1.rel.plot <- plot_bar(ps12s.rel, fill="Species.y")+
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-sp.rel.plot / sp1.rel.plot
-
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))+
+  theme(legend.position = "none")
+# sp.rel.plot / sp1.rel.plot
+sp1.rel.plot
 # Plots with ADFG IDs
-sp.rel.plot +
+sp1.rel.plot +
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")
+
 
 gen.rel.plot <- plot_bar(ps12s.rel, fill="Genus")+
   theme_minimal() +
