@@ -28,12 +28,12 @@ ps.16s <- readRDS("ps.16s")
 sam.12s <- sample_names(ps.12s)
 sam.16s <- sample_names(ps.16s)
 
-# # Selects only the samples that are present in both
-# sam.both <- intersect(sam.16s, sam.12s)
-# 
-# # Keeps only the samples that are in both
-# ps.12s <- prune_samples(sam.both, ps.12s)
-# ps.16s <- prune_samples(sam.both, ps.16s)
+# Selects only the samples that are present in both
+sam.both <- intersect(sam.16s, sam.12s)
+
+# Keeps only the samples that are in both
+ps.12s <- prune_samples(sam.both, ps.12s)
+ps.16s <- prune_samples(sam.both, ps.16s)
 
 # Gets the relative abundance pf each species
 rel.12s <- transform_sample_counts(ps.12s, function(x) x / sum(x))
@@ -67,11 +67,12 @@ ADFG_sample_df <- as.data.frame(sample_data(ps.12s))
 
 
 # Plots absolute comparison
-rel.plot <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species)) +
+rel.plot <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species.y)) +
   geom_col(position = "stack") +
   facet_wrap(. ~ Marker, ncol=1, strip.position = "right") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))+
+  theme(legend.position= "bottom")
 
 rel.plot
 
@@ -83,7 +84,7 @@ rel.plot + scale_x_discrete(labels = adfg_ids)
 
 
 
-rel.plot.sidebyside <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species)) +
+rel.plot.sidebyside <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species.y)) +
   geom_col(aes(group = Marker), position = position_dodge(width = 1)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
@@ -91,9 +92,9 @@ rel.plot.sidebyside <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill =
 
 combined_df$Sample_Marker <- interaction(combined_df$Sample, combined_df$Marker)
 
-
+## NOT READY
 rel.plot.sidebyside <-
-  ggplot(combined_df, aes(x = Sample_Marker, y = Abundance, fill = Species)) +
+  ggplot(combined_df, aes(x = Sample_Marker, y = Abundance, fill = Species.y)) +
   geom_col() +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +

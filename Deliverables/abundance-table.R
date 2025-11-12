@@ -17,11 +17,11 @@ equal.one <- combined_df %>%
 
 # Creates a table with only desired columns
 abundance_df <- combined_df %>%
-  select(Abundance, Sample, Marker, Species, Predator)%>%
+  select(Abundance, Sample, Marker, Species.y, Predator)%>%
   drop_na()
 
 abundance_by_marker <- abundance_df %>%
-  group_by(Marker, Species, Predator) %>%
+  group_by(Marker, Species.y, Predator) %>%
   summarise(species_abundance = sum(Abundance, na.rm = TRUE), .groups = "drop") %>%
   group_by(Marker, Predator) %>%
   mutate(total_abundance = sum(species_abundance),
@@ -29,7 +29,7 @@ abundance_by_marker <- abundance_df %>%
   arrange(Marker, desc(prop_abundance))
 
 # By marker
-ggplot(abundance_by_marker, aes(x = reorder(Species, prop_abundance), y = prop_abundance, fill = Species)) +
+ggplot(abundance_by_marker, aes(x = reorder(Species.y, prop_abundance), y = prop_abundance, fill = Species.y)) +
   geom_bar(stat = "identity") +
   facet_wrap(~Marker, ncol = 1, scales = "free_x") +
   labs(title = "Proportional Abundance of Species by Marker",
@@ -39,7 +39,7 @@ ggplot(abundance_by_marker, aes(x = reorder(Species, prop_abundance), y = prop_a
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
 
 # By marker and predator
-ggplot(abundance_by_marker, aes(x = reorder(Species, prop_abundance), y = prop_abundance, fill = Species)) +
+ggplot(abundance_by_marker, aes(x = reorder(Species.y, prop_abundance), y = prop_abundance, fill = Species.y)) +
   geom_bar(stat = "identity") +
   facet_grid(Predator ~ Marker, scales = "free_x") +
   labs(title = "Proportional Abundance of Species by Marker and Predator",
@@ -63,7 +63,7 @@ for(name in names(split_data)) {
   
   # Select columns you want to export
   data_to_write <- split_data[[name]] %>%
-    select(Marker, Species, prop_abundance, Predator)
+    select(Marker, Species.y, prop_abundance, Predator)
   
   # Add worksheet named by predator_marker, truncating if needed for Excel sheet name length limits (max 31 chars)
   addWorksheet(wb, sheetName = substr(sheet_name, 1, 31))
