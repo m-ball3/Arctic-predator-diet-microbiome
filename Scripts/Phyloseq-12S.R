@@ -27,8 +27,12 @@ library(patchwork)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-addSpecies-130;30-3.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-addSpecies-130;30-4.Rdata")
 
+
+# ------------------------------------------------------------------
+# FORMATS METADATASHEET FOR PHYLOSEQ OBJ
+# ------------------------------------------------------------------
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
 
@@ -81,11 +85,15 @@ setdiff(rownames(seqtab.nochim), rownames(samdf))
 rownames(samdf)
 rownames(seqtab.nochim)
 
+# ------------------------------------------------------------------
+# CREATES PHYLOSEQ
+# ------------------------------------------------------------------
+
 # Creates master phyloseq object
 ps.12s <- phyloseq(
     otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
     sample_data(samdf), 
-    tax_table(species)
+    tax_table(merged.taxa)
   )
 
 # Creates a dataframe that maps ADFG IDs to sequences in taxa
@@ -112,7 +120,7 @@ mapped.sequences <- mapped.sequences %>%
     by = "WADE_ID"
   )
 
-mapped.taxa <- as.data.frame(species)
+mapped.taxa <- as.data.frame(merged.taxa)
 
 # Add Sequence as a column from the row names
 mapped.taxa$Sequence <- rownames(mapped.taxa)
@@ -146,13 +154,13 @@ ps.12s <- prune_samples(sample_sums(ps.12s) > 0, ps.12s)
 saveRDS(ps.12s, "ps.12s")
 
 # Plots stacked bar plot of abundance
-plot_bar(ps.12s, fill="Species.1")
+plot_bar(ps.12s, fill="Species.y")
 
 ## MERGE TO SPECIES HERE (TAX GLOM)
-ps.12s = tax_glom(ps.12s, "Species.1", NArm = FALSE)
+ps.12s = tax_glom(ps.12s, "Species.y", NArm = FALSE)
 
 # Plots stacked bar plot of abundance - to confirm presence of NA's
-plot_bar(ps.12s, fill="Species.1")
+plot_bar(ps.12s, fill="Species.y")
 
 # Transforms read counts to relative abundance of each species 
 ## Transforms NaN (0/0) to 0
@@ -169,26 +177,24 @@ which(is.nan(as.matrix(otu_table(ps12s.rel))), arr.ind = TRUE)
 label_map <- sample_data(ps12s.rel)$Specimen.ID
 names(label_map) <- rownames(sample_data(ps12s.rel))
 
+# ------------------------------------------------------------------
+# PLOTS
+# ------------------------------------------------------------------
 # Creates bar plot of relative abundance
 
 # Plots with WADE IDs
-sp.rel.plot <- plot_bar(ps12s.rel, fill="Species")+
+sp.rel.plot <- plot_bar(ps12s.rel, fill="Species.y")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-
-sp1.rel.plot <- plot_bar(ps12s.rel, fill="Species.1")+
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-sp.rel.plot / sp1.rel.plot
+sp.rel.plot
 
 # Plots with ADFG IDs
 sp.rel.plot +
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")
 
-gen.rel.plot <- plot_bar(ps12s.rel, fill="Genus")+
+gen.rel.plot <- plot_bar(ps12s.rel, fill="Genus.y")+
   theme_minimal() +
-  
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 gen.rel.plot
 
@@ -198,7 +204,7 @@ gen.rel.plot +
 
 fam.rel.plot <- plot_bar(ps12s.rel, fill="Family")+
   theme_minimal() +
-  labs(y= "Proportion")
+  labs(y= "Proportion")+
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 fam.rel.plot 
 
@@ -208,7 +214,7 @@ fam.rel.plot +
 
 # Facet wrapped by predator species
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
-faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species") +
+faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species.y") +
   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
   theme_minimal() +
   theme(
@@ -225,9 +231,13 @@ faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species") +
 
 faucet
 
+# ------------------------------------------------------------------
+# TABLES
+# ------------------------------------------------------------------
+
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
 otu.abs <- as.data.frame(otu_table(ps.12s))
-colnames(otu.abs) <- as.data.frame(tax_table(ps.12s))$Species
+colnames(otu.abs) <- as.data.frame(tax_table(ps.12s))$Species.y
 
 ## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
 otu.abs$Specimen.ID <- samdf$Specimen.ID
@@ -237,7 +247,7 @@ otu.abs <- otu.abs[, c(ncol(otu.abs), 1:(ncol(otu.abs)-1))]
 
 # CREATES RELATIVE SAMPLES X SPECIES TABLE
 otu.prop <- as.data.frame(otu_table(ps12s.rel))
-colnames(otu.prop) <- as.data.frame(tax_table(ps12s.rel))$Species
+colnames(otu.prop) <- as.data.frame(tax_table(ps12s.rel))$Species.y
 
 ## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
 otu.prop$Specimen.ID <- samdf$Specimen.ID
@@ -253,8 +263,8 @@ is.num <- sapply(otu.prop, is.numeric)
 otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
 
 # Writes to CSV
-write.csv(otu.abs, "ADFG_12s_absolute_speciesxsamples-trunc130.csv", row.names = FALSE)
-write.csv(otu.prop, "ADFG_12s_relative_speciesxsamples-trunc130.csv", row.names = FALSE)
+write.csv(otu.abs, "ADFG_12s_absolute_speciesxsamples-trunc130-4.csv", row.names = FALSE)
+write.csv(otu.prop, "ADFG_12s_relative_speciesxsamples-trunc130-4.csv", row.names = FALSE)
 
 
 
