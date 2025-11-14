@@ -27,7 +27,7 @@ library(patchwork)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-addSpecies-130;30-4.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-Addspecies-5.Rdata")
 
 
 # ------------------------------------------------------------------
@@ -189,18 +189,20 @@ sp.rel.plot <- plot_bar(ps12s.rel, fill="Species.y")+
 sp.rel.plot
 
 # Plots with ADFG IDs
-sp.rel.plot +
+ADFG.sp<- sp.rel.plot +
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")
+ADFG.sp
 
 gen.rel.plot <- plot_bar(ps12s.rel, fill="Genus.y")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 gen.rel.plot
 
-gen.rel.plot + 
+ADFG.gen<- gen.rel.plot + 
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")
+ADFG.gen
 
 fam.rel.plot <- plot_bar(ps12s.rel, fill="Family")+
   theme_minimal() +
@@ -208,9 +210,10 @@ fam.rel.plot <- plot_bar(ps12s.rel, fill="Family")+
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 fam.rel.plot 
 
-fam.rel.plot + 
+ADFG.fam <- fam.rel.plot + 
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")
+ADFG.fam
 
 # Facet wrapped by predator species
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
@@ -223,13 +226,29 @@ faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species.y") +
     strip.placement = "outside",
     panel.spacing = unit(0.5, "lines"),
     axis.title.x = element_text(margin = margin(t = 10))
-  ) +
+  ) 
+
+ADFG.faucet <- faucet+
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")+
   guides(fill = guide_legend(title = "Species"))
 
 
-faucet
+ADFG.faucet
+
+#saves plots
+ggsave("Deliverables/12S/1S-species.png", plot = sp.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/ADFG-12S-species.png", plot = ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/12S/12S-genus.png", plot = gen.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/ADFG-12S-genus.png", plot = ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/12S/12S-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/ADFG-12S-family.png", plot = ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/12S/12S-species-by-pred.111125.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/ADFG-12S-species-by-pred.111125.png", plot = ADFG.faucet, width = 16, height = 8, units = "in", dpi = 300)
+
 
 # ------------------------------------------------------------------
 # TABLES

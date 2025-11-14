@@ -22,7 +22,7 @@ library(tibble)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output-ADFGnotes.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output-Addspecies.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
@@ -75,7 +75,7 @@ rownames(seqtab.nochim)
 # Creates master phyloseq object
 ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
                    sample_data(samdf), 
-                   tax_table(taxa))
+                   tax_table(merged.taxa))
 
 # Creates a dataframe that maps ADFG IDs to sequences in taxa
 
@@ -101,7 +101,7 @@ mapped.sequences <- mapped.sequences %>%
     by = "WADE_ID"
   )
 
-mapped.taxa <- as.data.frame(taxa)
+mapped.taxa <- as.data.frame(merged.taxa)
 
 # Add Sequence as a column from the row names
 mapped.taxa$Sequence <- rownames(mapped.taxa)
@@ -133,7 +133,6 @@ ps.16s <- subset_taxa(ps.16s, Kingdom!="Bacteria")
 row_to_remove <- "WADE-003-146"
 samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
 
-
 # Remove samples with total abundance == 0
 ps.16s <- prune_samples(sample_sums(ps.16s) > 0, ps.16s)
 
@@ -142,13 +141,13 @@ saveRDS(ps.16s, "ps.16s")
 
 
 # Plots stacked bar plot of abundance - to confirm presence of NA's
-plot_bar(ps.16s, fill="Species")
+plot_bar(ps.16s, fill="Species.y")
 
 ## MERGE TO SPECIES HERE (TAX GLOM)
-ps.16s = tax_glom(ps.16s, "Species", NArm = FALSE)
+ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)
 
 # Plots stacked bar plot of abundance - to confirm presence of NA's
-plot_bar(ps.16s, fill="Species")
+plot_bar(ps.16s, fill="Species.y")
 
 # Calculates relative abundance of each species 
 ## Transforms NaN (0/0) to 0
@@ -165,40 +164,46 @@ which(is.nan(as.matrix(otu_table(ps16s.rel))), arr.ind = TRUE)
 label_map <- sample_data(ps16s.rel)$Specimen.ID
 names(label_map) <- rownames(sample_data(ps16s.rel))
 
+# ------------------------------------------------------------------
+# PLOTS
+# ------------------------------------------------------------------
 # Creates bar plot of relative abundance
 
 # Plots with WADE IDs
-sp.rel.plot <- plot_bar(ps16s.rel, fill="Species")+
+sp.rel.plot <- plot_bar(ps16s.rel, fill="Species.y")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 sp.rel.plot
 
 # Plots with ADFG IDs
-sp.rel.plot +
+ADFG.sp<- sp.rel.plot +
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")
+ADFG.sp
 
-gen.rel.plot <- plot_bar(ps16s.rel, fill="Genus")+
+gen.rel.plot <- plot_bar(ps16s.rel, fill="Genus.y")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 gen.rel.plot
 
-gen.rel.plot + 
+ADFG.gen<- gen.rel.plot + 
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")
+ADFG.gen
 
 fam.rel.plot <- plot_bar(ps16s.rel, fill="Family")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-fam.rel.plot 
+fam.rel.plot
 
-fam.rel.plot + 
+ADFG.fam <- fam.rel.plot + 
   scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")
+ADFG.fam
 
 # Facet wrapped by predator species
 ### I WANT BOXES AROUND THE DIFFERENT FACETS
-faucet <- plot_bar(ps16s.rel, fill = "Species") +
+faucet <- plot_bar(ps16s.rel, fill = "Species.y") +
   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
   theme_minimal() +
   theme(
@@ -207,17 +212,36 @@ faucet <- plot_bar(ps16s.rel, fill = "Species") +
     strip.placement = "outside",
     panel.spacing = unit(0.5, "lines"),
     axis.title.x = element_text(margin = margin(t = 10))
-  ) +
+  ) 
+
+ADFG.faucet <- faucet+
     scale_x_discrete(labels = label_map) +
   labs(x = "ADFG ID")+
   guides(fill = guide_legend(title = "Species"))
 
 
-faucet
+ADFG.faucet
+
+#saves plots 
+ggsave("Deliverables/16S/16S-species.png", plot = sp.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/ADFG-16S-species.png", plot = ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/16S/16S-genus.png", plot = gen.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/ADFG-16S-genus.png", plot = ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/16S/16S-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/ADFG-16S-family.png", plot = ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/16S/16S-species-by-pred.111125.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.faucet, width = 16, height = 8, units = "in", dpi = 300)
+
+# ------------------------------------------------------------------
+# TABLES
+# ------------------------------------------------------------------
 
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
 otu.abs <- as.data.frame(otu_table(ps.16s))
-colnames(otu.abs) <- as.data.frame(tax_table(ps.16s))$Species
+colnames(otu.abs) <- as.data.frame(tax_table(ps.16s))$Species.y
 
 ## Adds ADFG Sample ID as a column
 otu.abs$Specimen.ID <- samdf$Specimen.ID
@@ -227,7 +251,7 @@ otu.abs <- otu.abs[, c(ncol(otu.abs), 1:(ncol(otu.abs)-1))]
 
 # CREATES RELATIVE SAMPLES X SPECIES TABLE
 otu.prop <- as.data.frame(otu_table(ps16s.rel))
-colnames(otu.prop) <- as.data.frame(tax_table(ps16s.rel))$Species
+colnames(otu.prop) <- as.data.frame(tax_table(ps16s.rel))$Species.y
 
 ## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
 otu.prop$Specimen.ID <- samdf$Specimen.ID

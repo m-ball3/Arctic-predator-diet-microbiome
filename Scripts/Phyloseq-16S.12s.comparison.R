@@ -104,41 +104,44 @@ rel.plot.sidebyside <-
 rel.plot.sidebyside
 
 # Overrides the x-axis labels with ADFG Sample IDs
-rel.plot.sidebyside + scale_x_discrete(labels = adfg_ids)
+ADFG.sidebysde <- rel.plot.sidebyside + scale_x_discrete(labels = adfg_ids)
 
+ggsave("Deliverables/Comparisons/12S+16S.species-by-pred.111125.png", plot = ADFG.sidebysde, width = 16, height = 10, units = "in", dpi = 300)
 
-# ------------------------------------------------------------------
-# Creates .csv of absolute and proportional samplexspecies
-# ------------------------------------------------------------------
-
-# CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
-otu.abs <- cbind(combined_df$Specimen.ID, combined_df$Abundance)
-colnames(otu.abs) <- combined_df$Species
-
-## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
-otu.abs$Specimen.ID <- samdf$Specimen.ID
-
-## Moves ADFG_SampleID to the first column
-otu.abs <- otu.abs[, c(ncol(otu.abs), 1:(ncol(otu.abs)-1))]
-
-# CREATES RELATIVE SAMPLES X SPECIES TABLE
-otu.prop <- as.data.frame(otu_table(ps12s.rel))
-colnames(otu.prop) <- as.data.frame(tax_table(ps12s.rel))$Species
-
-## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
-otu.prop$Specimen.ID <- samdf$Specimen.ID
-
-## Moves ADFG_SampleID to the first column
-otu.prop <- otu.prop[, c(ncol(otu.prop), 1:(ncol(otu.prop)-1))]
-
-# Changes NaN to 0
-otu.prop[is.na(otu.prop)] <- 0
-
-# Rounds to three decimal places
-is.num <- sapply(otu.prop, is.numeric)
-otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
-
-# Writes to CSV
-write.csv(otu.abs, "ADFG_12s_absolute_speciesxsamples-trunc110.csv", row.names = FALSE)
-write.csv(otu.prop, "ADFG_12s_relative_speciesxsamples-trunc110.csv", row.names = FALSE)
-
+# 
+# 
+# # ------------------------------------------------------------------
+# # Creates .csv of absolute and proportional samplexspecies
+# # ------------------------------------------------------------------
+# 
+# # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
+# otu.abs <- cbind(combined_df$Specimen.ID, combined_df$Abundance)
+# colnames(otu.abs) <- combined_df$Species
+# 
+# ## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
+# otu.abs$Specimen.ID <- samdf$Specimen.ID
+# 
+# ## Moves ADFG_SampleID to the first column
+# otu.abs <- otu.abs[, c(ncol(otu.abs), 1:(ncol(otu.abs)-1))]
+# 
+# # CREATES RELATIVE SAMPLES X SPECIES TABLE
+# otu.prop <- as.data.frame(otu_table(ps12s.rel))
+# colnames(otu.prop) <- as.data.frame(tax_table(ps12s.rel))$Species
+# 
+# ## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
+# otu.prop$Specimen.ID <- samdf$Specimen.ID
+# 
+# ## Moves ADFG_SampleID to the first column
+# otu.prop <- otu.prop[, c(ncol(otu.prop), 1:(ncol(otu.prop)-1))]
+# 
+# # Changes NaN to 0
+# otu.prop[is.na(otu.prop)] <- 0
+# 
+# # Rounds to three decimal places
+# is.num <- sapply(otu.prop, is.numeric)
+# otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
+# 
+# # Writes to CSV
+# write.csv(otu.abs, "ADFG_12s_absolute_speciesxsamples.csv", row.names = FALSE)
+# write.csv(otu.prop, "ADFG_12s_relative_speciesxsamples.csv", row.names = FALSE)
+# 
