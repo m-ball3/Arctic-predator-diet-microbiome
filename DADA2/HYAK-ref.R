@@ -36,7 +36,7 @@ scp -r C:/Users/Intern/Desktop/arctic-pred/scripts/ mball3@klone.hyak.uw.edu:/gs
   # MUST BE RUN FROM LOCAL TERMINAL! NOT HYAK SSH SESSION
 
 
-scp -r "Z:/Arctic predator diet sequences/16SP1/good/*" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/rawdata/16SP2
+scp -r "Z:/Arctic predator diet sequences/16S/*" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/rawdata/16SP2
 # ------------------------------------------------------------------
 # Uploads reference Db to HYAK
 # ------------------------------------------------------------------
