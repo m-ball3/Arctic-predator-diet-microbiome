@@ -22,7 +22,7 @@ library(tibble)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output-Addspecies.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP1+2.Rdata")
 
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
@@ -67,6 +67,12 @@ setdiff(rownames(samdf), rownames(seqtab.nochim))
 
 # Samples in OTU table but not in metadata
 setdiff(rownames(seqtab.nochim), rownames(samdf))
+
+sample_to_remove <- "WADE-003-118-C"
+
+# Remove from metadata and OTU table early
+samdf <- samdf[!rownames(samdf) %in% sample_to_remove, ]
+seqtab.nochim <- seqtab.nochim[!rownames(seqtab.nochim) %in% sample_to_remove, ]
 
 # Sanity check: row names are the same
 rownames(samdf)

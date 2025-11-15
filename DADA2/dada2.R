@@ -13,18 +13,19 @@ dir.create("/gscratch/coenv/mball/WADE003-arctic-pred/R_libs", recursive = TRUE,
 
 ### set up working environment
 
-devtools::install_github("benjjneb/dada2", ref="v1.16", lib = .libPaths()[1])
-BiocManager::install("dada2", lib = .libPaths()[1])
-BiocManager::install("S4Vectors")
+# devtools::install_github("benjjneb/dada2", ref="v1.16", lib = .libPaths()[1])
+#BiocManager::install("dada2", lib = .libPaths()[1], force = TRUE)
+#BiocManager::install("S4Vectors")
 
 library(dada2)
 library(tidyverse)
 library(ggplot2)
 library(seqinr)
+library(dplyr)
 
 diet.seqs.file <- "/gscratch/coenv/mball3/WADE003-arctic-pred/rawdata/12SP1"
 taxref <- "/gscratch/coenv/mball3/WADE003-arctic-pred/MURI_MFU_07_2025.fasta"
-
+speciesref <- "/gscratch/coenv/mball3/WADE003-arctic-pred/12S-AddSpecies_11-25.fasta"
 
 ### read fastq files in working directory
 fnFs <- sort(list.files(diet.seqs.file, pattern="_R1_001.fastq", full.names = TRUE))
@@ -44,6 +45,8 @@ names(filtFs) <- sample.names
 names(filtRs) <- sample.names
 
 ### Filter and Trim
+## for 12S trimLeft = 30, truncLen= 130, 130
+## for 16S trimLeft = 40, truncLen = 280, 180
 out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, trimLeft = 30, truncLen=c(130, 130),
                      maxN=0, maxEE=c(2,2), truncQ=2, rm.phix=TRUE,
                      compress=TRUE, multithread=TRUE, verbose=TRUE)
@@ -71,12 +74,14 @@ dadaRs <- dada(derepRs, err=errR, multithread=TRUE)
 ### Merge Paired Reads
 mergers <- mergePairs(dadaFs, derepFs, dadaRs, derepRs, minOverlap = 20, verbose=TRUE)
 
-### Construct sequence table
+### Construct sequence table 
 seqtab <- makeSequenceTable(mergers)
-obect <- as.data.frame(colnames(seqtab)) %>% 
-  rename("sequence" = 1) %>% 
-  mutate(seq_length = nchar(sequence)) %>% 
-  mutate(new_sequence = substr(sequence, 1, 185)) %>% 
+
+# # FOR 12S!! ONLY
+obect <- as.data.frame(colnames(seqtab)) %>%
+  rename("sequence" = 1) %>%
+  mutate(seq_length = nchar(sequence)) %>%
+  mutate(new_sequence = substr(sequence, 1, 185)) %>%
   mutate(seq2_length = nchar(new_sequence))
 
 colnames(seqtab) <- obect$new_sequence
@@ -94,8 +99,50 @@ rownames(track) <- sample.names
 
 
 ### Assign Taxonomy
-taxa <- assignTaxonomy(seqtab.nochim, taxref, tryRC = TRUE, minBoot = 95, outputBootstraps = FALSE)
+taxa <- assignTaxonomy(seqtab.nochim, taxref, tryRC = TRUE, minBoot = 95)
+
+getwd()
+# Loads in Assign Taxonomy (taxa) table
+#rdata <- load("WADE003-arcticpred_dada2_QAQC_12SP1_output-addSpecies-130;30-2.Rdata")
+
+# Assign Species
+genus.species <- assignSpecies(seqtab.nochim, speciesref)
+unname(genus.species)
+
+### Add Species to Tax table
+species <- addSpecies(taxa, speciesref, verbose=TRUE)
+
+# Replaces any character string "NA" with actual R NA
+taxa[taxa == "NA"] <- NA
+species[species == "NA"] <- NA
+genus.species[genus.species == "NA"] <- NA
+
+# Leftjoins taxa and genus.species
+taxa.df <- as.data.frame(taxa)
+gs.df <- as.data.frame(genus.species)
+
+taxa.df <- taxa.df %>%
+  rownames_to_column(var = "seq")
+gs.df <- gs.df %>%
+  rownames_to_column((var = "seq"))
+
+# Create new column with combined genus and species binomial (space-separated)
+gs.df$Species <- ifelse(
+  is.na(gs.df$Genus) | is.na(gs.df$Species),
+  NA,
+  paste(gs.df$Genus, gs.df$Species, sep = " ")
+)
+
+#Joins
+merged.taxa <- left_join(taxa.df, gs.df, by = "seq")
+merged.taxa$seq <- NULL
+
+
+merged.taxa <- as.matrix(merged.taxa)
+rownames(merged.taxa) <- taxa.df$seq
+
 
 ### Save data
-save(seqtab.nochim, freq.nochim, track, taxa, file = "WADE003-arcticpred_dada2_QAQC_12SP1_output-130trunc2.Rdata")
+save(seqtab.nochim, freq.nochim, track, taxa, genus.species, species, merged.taxa, file = "WADE003-arcticpred_dada2_QAQC_12SP1_output-Addspecies-5.Rdata")
+
 
