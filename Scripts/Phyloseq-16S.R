@@ -273,6 +273,60 @@ otu.prop <- otu.prop[, c(ncol(otu.prop), 1:(ncol(otu.prop)-1))]
 is.num <- sapply(otu.prop, is.numeric)
 otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
 
+
+# Replace NA column names in abs & prop
+na_cols <- which(is.na(colnames(otu.abs)))
+if(length(na_cols) > 0) colnames(otu.abs)[na_cols] <- "UNASSIGNED"
+
+na_cols <- which(is.na(colnames(otu.prop)))
+if(length(na_cols) > 0) colnames(otu.prop)[na_cols] <- "UNASSIGNED"
+
+# Function to merge species variant columns (except for NA variants)
+collapse_species <- function(df) {
+  # Extract column names (assuming first is Specimen.ID)
+  sp_cols <- colnames(df)[-1]
+  # Only collapse if not 'NA' or an NA variant
+  collapse_name <- function(x) {
+    if (grepl('^NA(\\.|$)', x)) {
+      return(x)
+    } else {
+      sub('\\.\\d+$', '', x)  # Remove trailing .number
+    }
+  }
+  collapsed_names <- sapply(sp_cols, collapse_name)
+  colnames(df)[-1] <- collapsed_names
+  # Gather to long format
+  df_long <- df %>% pivot_longer(-Specimen.ID, names_to = "Species", values_to = "Abundance")
+  # Sum across variants for each specimen/species, keeping NA/NA.n separate
+  df_sum <- df_long %>% group_by(Specimen.ID, Species) %>% summarize(Abundance = sum(Abundance), .groups = "drop")
+  # Wide format back (Specimen.ID first)
+  df_wide <- df_sum %>% pivot_wider(names_from = Species, values_from = Abundance, values_fill = 0)
+  return(df_wide)
+}
+
+#---- 1. Apply to 16S ----#
+otu.abs <- collapse_species(otu.abs)
+otu.prop <- collapse_species(otu.prop)
+
+# List of species names/keywords to remove
+species_remove <- c(
+  "Helicobacter",
+  "Erignathus",
+  "Pusa hispida"
+)
+
+remove_species_cols <- function(df, remove_terms) {
+  # TRUE if column matches ANY of the patterns in remove_terms
+  match_any <- Reduce(`|`, lapply(remove_terms, function(term) grepl(term, colnames(df)[-1], ignore.case = TRUE)))
+  # These columns to keep (not matched) plus 'Specimen.ID'
+  keep_cols <- c('Specimen.ID', colnames(df)[-1][!match_any])
+  df[, keep_cols, drop = FALSE]
+}
+
+# Apply for both 
+otu.abs <- remove_species_cols(otu.abs, species_remove)
+otu.prop <- remove_species_cols(otu.prop, species_remove)
+
 # Writes to CSV
 write.csv(otu.abs, "ADFG_16s_absolute_speciesxsamples.csv", row.names = FALSE)
 write.csv(otu.prop, "ADFG_16s_relative_speciesxsamples.csv", row.names = FALSE)
