@@ -64,7 +64,7 @@ scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/SRKW-diet-16SP1.Rdata" "C:/U
 #16S
 scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_16SP1+2.Rdata" "C:/Users/Intern/arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
 
-
+scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/SRKW-diet-16SP1.Rdata" "C:/Users/Intern/SRKW/DADA2/DADA2 Outputs"
 
 scp -r "C:\Users\Intern\Desktop\arctic-pred\16S_Arctic_predator_reference_database_05_2025.fasta" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/scripts
 
