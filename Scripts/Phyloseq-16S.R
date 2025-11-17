@@ -150,7 +150,7 @@ saveRDS(ps.16s, "ps.16s")
 # Plots stacked bar plot of abundance - to confirm presence of NA's
 plot_bar(ps.16s, fill="Species.y")
 
-## MERGE TO SPECIES HERE (TAX GLOM)
+## MERGE TO SPECIES HERE
 ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)
 
 # Plots stacked bar plot of abundance - to confirm presence of NA's
