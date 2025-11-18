@@ -10,6 +10,10 @@ library(RColorBrewer)
 # Loads in data
 combined_df <- read.csv("Deliverables/allrows-abundance.csv")
 
+# Removes mammals and bacteria
+combined_df <- subset(combined_df, Class!="Mammalia")
+combined_df <- subset(combined_df, Kingdom!="Bacteria")
+
 # Checks relativbe abundance is calculated correctly 
 equal.one <- combined_df %>%
   group_by(Sample, Marker, Predator) %>%
@@ -17,7 +21,7 @@ equal.one <- combined_df %>%
 
 # Creates a table with only desired columns
 abundance_df <- combined_df %>%
-  select(Abundance, Sample, Marker, Species.y, Predator)%>%
+  dplyr::select(Abundance, Sample, Marker, Species.y, Predator)%>%
   drop_na()
 
 abundance_by_marker <- abundance_df %>%
@@ -63,7 +67,7 @@ for(name in names(split_data)) {
   
   # Select columns you want to export
   data_to_write <- split_data[[name]] %>%
-    select(Marker, Species.y, prop_abundance, Predator)
+    dplyr::select(Marker, Species.y, prop_abundance, Predator)
   
   # Add worksheet named by predator_marker, truncating if needed for Excel sheet name length limits (max 31 chars)
   addWorksheet(wb, sheetName = substr(sheet_name, 1, 31))
