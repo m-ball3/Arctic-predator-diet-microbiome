@@ -35,6 +35,7 @@ samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
 
 # Renames "species" column to "Predator"
 samdf <- dplyr::rename(samdf, Predator = Species)
+samdf$Predator <- tolower(samdf$Predator)
 
 # Creates a column corresponding ADFG sample IDs with WADE sample IDs
 samdf <- samdf %>%
@@ -247,11 +248,13 @@ ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.fauce
 # ------------------------------------------------------------------
 
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
+
+
 otu.abs <- as.data.frame(otu_table(ps.16s))
 colnames(otu.abs) <- as.data.frame(tax_table(ps.16s))$Species.y
 
 ## Adds ADFG Sample ID as a column
-otu.abs$Specimen.ID <- samdf$Specimen.ID
+otu.abs$Specimen.ID <- samdf[rownames(otu.abs), "Specimen.ID"]
 
 ## Moves ADFG_SampleID to the first column
 otu.abs <- otu.abs[, c(ncol(otu.abs), 1:(ncol(otu.abs)-1))]
@@ -260,8 +263,8 @@ otu.abs <- otu.abs[, c(ncol(otu.abs), 1:(ncol(otu.abs)-1))]
 otu.prop <- as.data.frame(otu_table(ps16s.rel))
 colnames(otu.prop) <- as.data.frame(tax_table(ps16s.rel))$Species.y
 
-## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
-otu.prop$Specimen.ID <- samdf$Specimen.ID
+## Adds ADFG Sample ID as a column
+otu.prop$Specimen.ID <- samdf[rownames(otu.prop), "Specimen.ID"]
 
 ## Moves ADFG_SampleID to the first column
 otu.prop <- otu.prop[, c(ncol(otu.prop), 1:(ncol(otu.prop)-1))]

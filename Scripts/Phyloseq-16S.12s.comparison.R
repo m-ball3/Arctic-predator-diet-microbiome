@@ -80,7 +80,12 @@ rel.plot
 adfg_ids <- ADFG_sample_df$Specimen.ID[match(rel.plot$data$Sample, rownames(ADFG_sample_df))]
 
 # Overrides the x-axis labels with ADFG Sample IDs
-rel.plot + scale_x_discrete(labels = adfg_ids)
+p1 <- rel.plot + scale_x_discrete(labels = adfg_ids)
+p1
+
+
+ggsave("Deliverables/Comparisons/12S+16S.species-by-pred.111125.png", plot = p1, width = 16, height = 10, units = "in", dpi = 300)
+
 
 
 
@@ -106,7 +111,66 @@ rel.plot.sidebyside
 # Overrides the x-axis labels with ADFG Sample IDs
 ADFG.sidebysde <- rel.plot.sidebyside + scale_x_discrete(labels = adfg_ids)
 
-ggsave("Deliverables/Comparisons/12S+16S.species-by-pred.111125.png", plot = ADFG.sidebysde, width = 16, height = 10, units = "in", dpi = 300)
+
+# ------------------------------------------------------------------
+# NOT READY
+# -----------------------------------------------------------------
+library(ggplot2)
+library(dplyr)
+library(forcats)
+
+# # Get the sample order as a factor (desired order)
+# # (This should have all the sample names, ordered as you want them to appear on x-axis)
+# ordered_samples <- unique(combined_df$Sample)
+# 
+# combined_df$Sample <- factor(combined_df$Sample, levels = ordered_samples)
+# combined_df$Marker <- factor(combined_df$Marker, levels = c("12S", "16S"))
+# 
+# # Now create a grouping for Sample+Marker and adjust ordering for side-by-side effect
+# # You want: x = Sample, fill = Species.y, group = Marker, color = Marker
+# # position_dodge separates 12S and 16S for each Sample
+# 
+# rel.plot.grouped <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species.y)) +
+#   geom_col(aes(group = Marker, color = Marker), position = position_dodge(width = 0.8), width = 0.7) +
+#   facet_wrap(~ Marker, nrow = 1) +   # Optional: if you want a separate facet for each marker
+#   theme_minimal() +
+#   theme(
+#     axis.text.x = element_text(angle = 45, hjust = 1),
+#     legend.position = "bottom"
+#   )
+# 
+# # If you want no facet, just have pairs side-by-side for each sample:
+# rel.plot.grouped <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species.y, group = Marker)) +
+#   geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+#   theme_minimal() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "bottom")
+# 
+# # Use Specimen.ID as x labels (once per pair)
+# ADFG_sample_df <- as.data.frame(sample_data(ps.12s))
+# adfg_ids <- ADFG_sample_df$Specimen.ID[match(levels(combined_df$Sample), rownames(ADFG_sample_df))]
+# 
+# rel.plot.grouped + scale_x_discrete(labels = adfg_ids)
+# 
+# 
+# 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # 
 # 
