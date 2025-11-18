@@ -41,7 +41,7 @@ samdf$Predator <- tolower(samdf$Predator)
 samdf <- samdf %>%
   left_join(
     labdf %>% 
-      select(Specimen.ID, Repeat.or.New.Specimen., LabID),
+      dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID),
       by = c("Specimen.ID", "Repeat.or.New.Specimen.")
   )
 
@@ -105,7 +105,7 @@ mapped.sequences <- seqtab_long[, c("Sequence", "WADE_ID")]
 # Turns rownames into a column for joining to mapped.sequences
 mapped.sequences <- mapped.sequences %>%
   left_join(
-    samdf %>% rownames_to_column("WADE_ID") %>% select(WADE_ID, Specimen.ID),
+    samdf %>% rownames_to_column("WADE_ID") %>% dplyr::select(WADE_ID, Specimen.ID),
     by = "WADE_ID"
   )
 
