@@ -2,10 +2,9 @@
 # FROM DADA2 TO PHYLOSEQ
 # ------------------------------------------------------------------
 
-## Sets Working Directory
-setwd("Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs")
-
-## Sets up the Environment and Libraries
+# ------------------------------------------------------------------
+# Sets up the Environment and Loads in data
+# ------------------------------------------------------------------
 
 # if(!requireNamespace("BiocManager")){
 #   install.packages("BiocManager")
@@ -22,8 +21,11 @@ library(tibble)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP1+2-2.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP1+2.Rdata")
 
+# ------------------------------------------------------------------
+# FORMATS METADATASHEET FOR PHYLOSEQ OBJ
+# ------------------------------------------------------------------
 # Removes file extensions from OTU table names
 rownames(seqtab.nochim) <- sub("^((WADE-003-\\d+|WADE-003-\\d+-C|WADE-003-\\d+-UC))_.*", "\\1", rownames(seqtab.nochim))
 rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
@@ -70,6 +72,7 @@ setdiff(rownames(samdf), rownames(seqtab.nochim))
 # Samples in OTU table but not in metadata
 setdiff(rownames(seqtab.nochim), rownames(samdf))
 
+# Removes (worst) replicate
 sample_to_remove <- "WADE-003-118-C"
 
 # Remove from metadata and OTU table early
@@ -79,6 +82,10 @@ seqtab.nochim <- seqtab.nochim[!rownames(seqtab.nochim) %in% sample_to_remove, ]
 # Sanity check: row names are the same
 rownames(samdf)
 rownames(seqtab.nochim)
+
+# ------------------------------------------------------------------
+# CREATES PHYLOSEQ
+# ------------------------------------------------------------------
 
 # Creates master phyloseq object
 ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
@@ -130,31 +137,24 @@ taxa_names(ps.16s) <- paste0("ASV", seq(ntaxa(ps.16s)))
 
 nsamples(ps.16s)
 
-# Filters out any Mammalia and NA
+# Filters out any Mammalia and Bacteria
 ps.16s <- subset_taxa(ps.16s, Class!="Mammalia")
 ps.16s <- subset_taxa(ps.16s, Kingdom!="Bacteria")
-#ps.16s <- prune_samples(sample_sums(ps.16s) > 0, ps.16s)
-#ps.16s <- subset_taxa(ps.16s, !is.na(Species))
-
-
-#sample 146 removed; need to remove from samdf
-row_to_remove <- "WADE-003-146"
-samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
 
 # Remove samples with total abundance == 0
 ps.16s <- prune_samples(sample_sums(ps.16s) > 0, ps.16s)
 
+# Ensures samples removed in filtering are removed from samdf
+row_to_remove <- "WADE-003-146"
+samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
+
 # Saves phyloseq obj
 saveRDS(ps.16s, "ps.16s")
 
-
-# Plots stacked bar plot of abundance - to confirm presence of NA's
-plot_bar(ps.16s, fill="Species.y")
-
-## MERGE TO SPECIES HERE
+## Merges same species
 ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)
 
-# Plots stacked bar plot of abundance - to confirm presence of NA's
+# Plots stacked bar plot of absolute abundance
 plot_bar(ps.16s, fill="Species.y")
 
 # Calculates relative abundance of each species 
@@ -210,7 +210,6 @@ ADFG.fam <- fam.rel.plot +
 ADFG.fam
 
 # Facet wrapped by predator species
-### I WANT BOXES AROUND THE DIFFERENT FACETS
 faucet <- plot_bar(ps16s.rel, fill = "Species.y") +
   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
   theme_minimal() +
@@ -248,8 +247,6 @@ ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.fauce
 # ------------------------------------------------------------------
 
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
-
-
 otu.abs <- as.data.frame(otu_table(ps.16s))
 colnames(otu.abs) <- as.data.frame(tax_table(ps.16s))$Species.y
 
@@ -270,7 +267,7 @@ otu.prop$Specimen.ID <- samdf[rownames(otu.prop), "Specimen.ID"]
 otu.prop <- otu.prop[, c(ncol(otu.prop), 1:(ncol(otu.prop)-1))]
 
 # Changes NaN to 0
-#otu.prop[is.na(otu.prop)] <- 0
+otu.prop[is.na(otu.prop)] <- 0
 
 # Rounds to three decimal places
 is.num <- sapply(otu.prop, is.numeric)
@@ -307,15 +304,13 @@ collapse_species <- function(df) {
   return(df_wide)
 }
 
-#---- 1. Apply to 16S ----#
+# Apply
 otu.abs <- collapse_species(otu.abs)
 otu.prop <- collapse_species(otu.prop)
 
 # List of species names/keywords to remove
 species_remove <- c(
-  "Helicobacter",
-  "Erignathus",
-  "Pusa hispida"
+  "delphinapterus"
 )
 
 remove_species_cols <- function(df, remove_terms) {

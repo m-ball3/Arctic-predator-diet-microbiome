@@ -10,10 +10,6 @@ library(RColorBrewer)
 # Loads in data
 combined_df <- read.csv("Deliverables/allrows-abundance.csv")
 
-# Removes mammals and bacteria
-combined_df <- subset(combined_df, Class!="Mammalia")
-combined_df <- subset(combined_df, Kingdom!="Bacteria")
-
 # Checks relativbe abundance is calculated correctly 
 equal.one <- combined_df %>%
   group_by(Sample, Marker, Predator) %>%
@@ -79,45 +75,69 @@ for(name in names(split_data)) {
 # Save workbook
 saveWorkbook(wb, "Deliverables/predator_marker_species_proportions.xlsx", overwrite = TRUE)
 
+
+
+
+
+
+
+
+
+
+
+
 # ------------------------------------------------------------------
-# SPECIES BY ABUNDANCE TABLE
+# PLAYING WITH PLOTS
 # ------------------------------------------------------------------
-# Reads in the sheets
-file <- "Deliverables/predator_marker_species_proportions.xlsx"
-wb_sheets <- getSheetNames(file)
-
-
-# Extracts all unique species present in all dfs
-all_species <- unique(unlist(lapply(list_of_dfs, function(df) df$Species)))
-
-# Generates distinct colors for all species
-palette_colors <- brewer.pal(min(length(all_species), 12), "Set3")  # use 12 max colors from Set3 palette as example
-if(length(all_species) > length(palette_colors)) {
-  # Expands colors if more species than palette colors
-  palette_colors <- colorRampPalette(palette_colors)(length(all_species))
-}
-species_colors <- setNames(palette_colors, all_species)
-
-# Applies manual color scale in plot loop
-plots <- list()
-for(sheet_name in names(list_of_dfs)) {
-  df <- list_of_dfs[[sheet_name]]
-  df_filtered <- df %>% filter(prop_abundance > 0)
-  
-  p <- ggplot(df_filtered, aes(x = reorder(Species, prop_abundance), y = prop_abundance, fill = Species)) +
-    geom_bar(stat = "identity") +
-    scale_fill_manual(values = species_colors) +  # consistent colors across all plots
-    labs(title = paste(sheet_name),
-         x = "",
-         y = "Proportional Abundance") +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
-  
-  plots[[sheet_name]] <- p
-}
-
-grid.arrange(grobs = plots, ncol = 3)
-
+# # Reads in the sheets
+# file <- "Deliverables/predator_marker_species_proportions.xlsx"
+# wb_sheets <- getSheetNames(file)
+# 
+# # Reads all sheets into a list of data frames
+# list_of_dfs <- lapply(wb_sheets, function(sheet) {
+#   read.xlsx(file, sheet = sheet)
+# })
+# 
+# # Extracts all unique species present in all dfs
+# all_species <- unique(unlist(lapply(list_of_dfs, function(df) df$Species.y)))
+# 
+# # Generates distinct colors for all species
+# palette_colors <- brewer.pal(min(length(all_species), 12), "Set3")  # use 12 max colors from Set3 palette as example
+# if(length(all_species) > length(palette_colors)) {
+#   # Expands colors if more species than palette colors
+#   palette_colors <- colorRampPalette(palette_colors)(length(all_species))
+# }
+# species_colors <- setNames(palette_colors, all_species)
+# 
+# # Applies manual color scale in plot loop
+# plots <- list()
+# 
+# for(i in seq_along(list_of_dfs)) {
+#   df <- list_of_dfs[[i]]
+#   
+#   # Use the sheet name from wb_sheets vector for title
+#   sheet_name <- wb_sheets[i]
+#   
+#   df_filtered <- df %>% filter(prop_abundance > 0)
+#   
+#   # Skip if no data after filtering
+#   if(nrow(df_filtered) == 0) next
+#   
+#   p <- ggplot(df_filtered, aes(x = reorder(Species.y, prop_abundance), y = prop_abundance, fill = Species.y)) +
+#     geom_bar(stat = "identity") +
+#     scale_fill_manual(values = species_colors) +  # consistent colors across all plots
+#     labs(title = sheet_name,
+#          x = "",
+#          y = "Proportional Abundance") +
+#     theme_minimal() +
+#     theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
+#   
+#   plots[[sheet_name]] <- p
+# }
+# 
+# # Now only non-empty plots are in `plots`
+# grid.arrange(grobs = plots, ncol = 3)
+# 
 
 
 

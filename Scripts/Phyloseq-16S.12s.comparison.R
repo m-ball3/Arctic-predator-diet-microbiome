@@ -2,12 +2,9 @@
 # FROM DADA2 TO PHYLOSEQ
 # ------------------------------------------------------------------
 
-## Sets Working Directory
-# setwd("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic Predator/DADA2/DADA2 Outputs")
-setwd("Arctic-predator-diet-microbiome/")
-
-## Sets up the Environment and Libraries
-
+# ------------------------------------------------------------------
+# Sets up the Environment and Loads in data
+# ------------------------------------------------------------------
 # if(!requireNamespace("BiocManager")){
 #   install.packages("BiocManager")
 # }
@@ -66,7 +63,7 @@ write.csv(combined_df, "Deliverables/allrows-abundance.csv")
 ADFG_sample_df <- as.data.frame(sample_data(ps.12s))
 
 
-# Plots absolute comparison
+# Plots comparison
 rel.plot <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species.y)) +
   geom_col(position = "stack") +
   facet_wrap(. ~ Marker, ncol=1, strip.position = "right") +
@@ -87,37 +84,37 @@ p1
 ggsave("Deliverables/Comparisons/12S+16S.species-by-pred.111125.png", plot = p1, width = 16, height = 10, units = "in", dpi = 300)
 
 
-
-
-rel.plot.sidebyside <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species.y)) +
-  geom_col(aes(group = Marker), position = position_dodge(width = 1)) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
-  theme(legend.position = "bottom")
-
-combined_df$Sample_Marker <- interaction(combined_df$Sample, combined_df$Marker)
-
-## NOT READY
-rel.plot.sidebyside <-
-  ggplot(combined_df, aes(x = Sample_Marker, y = Abundance, fill = Species.y)) +
-  geom_col() +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-  theme(legend.position = "bottom")
-
-
-rel.plot.sidebyside
-
-# Overrides the x-axis labels with ADFG Sample IDs
-ADFG.sidebysde <- rel.plot.sidebyside + scale_x_discrete(labels = adfg_ids)
-
-
-# ------------------------------------------------------------------
-# NOT READY
-# -----------------------------------------------------------------
-library(ggplot2)
-library(dplyr)
-library(forcats)
+# 
+# 
+# rel.plot.sidebyside <- ggplot(combined_df, aes(x = Sample, y = Abundance, fill = Species.y)) +
+#   geom_col(aes(group = Marker), position = position_dodge(width = 1)) +
+#   theme_minimal() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
+#   theme(legend.position = "bottom")
+# 
+# combined_df$Sample_Marker <- interaction(combined_df$Sample, combined_df$Marker)
+# 
+# ## NOT READY
+# rel.plot.sidebyside <-
+#   ggplot(combined_df, aes(x = Sample_Marker, y = Abundance, fill = Species.y)) +
+#   geom_col() +
+#   theme_minimal() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+#   theme(legend.position = "bottom")
+# 
+# 
+# rel.plot.sidebyside
+# 
+# # Overrides the x-axis labels with ADFG Sample IDs
+# ADFG.sidebysde <- rel.plot.sidebyside + scale_x_discrete(labels = adfg_ids)
+# 
+# 
+# # ------------------------------------------------------------------
+# # NOT READY
+# # -----------------------------------------------------------------
+# library(ggplot2)
+# library(dplyr)
+# library(forcats)
 
 # # Get the sample order as a factor (desired order)
 # # (This should have all the sample names, ordered as you want them to appear on x-axis)
