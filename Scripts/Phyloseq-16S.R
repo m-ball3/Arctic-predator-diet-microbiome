@@ -155,7 +155,7 @@ saveRDS(ps.16s, "ps.16s")
 ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)
 
 # Plots stacked bar plot of absolute abundance
-plot_bar(ps.16s, fill="Species.y")
+plot_bar(ps.16s, x="Sex", fill="Species.y")
 
 # Calculates relative abundance of each species 
 ## Transforms NaN (0/0) to 0
@@ -248,7 +248,17 @@ ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.fauce
 
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
 otu.abs <- as.data.frame(otu_table(ps.16s))
-colnames(otu.abs) <- as.data.frame(tax_table(ps.16s))$Species.y
+
+
+taxa.names <- as.data.frame(tax_table(ps.16s)) %>% 
+  rownames_to_column("ASV") %>% 
+  mutate(Species.y = case_when(is.na(Species.y)~ASV,
+                               TRUE~Species.y)) %>% 
+  pull(Species.y)
+
+colnames(otu.abs) <- taxa.names
+
+tax_table <- as.data.frame(tax_table(ps.16s))
 
 ## Adds ADFG Sample ID as a column
 otu.abs$Specimen.ID <- samdf[rownames(otu.abs), "Specimen.ID"]

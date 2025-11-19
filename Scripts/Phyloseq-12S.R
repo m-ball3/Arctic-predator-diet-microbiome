@@ -43,7 +43,7 @@ samdf$Predator <- tolower(samdf$Predator)
 # Creates a column corresponding ADFG sample IDs with WADE sample IDs
 samdf <- samdf %>%
   left_join(
-    labdf %>% select(Specimen.ID, Repeat.or.New.Specimen., LabID),
+    labdf %>% dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID),
     by = c("Specimen.ID", "Repeat.or.New.Specimen.")
   )
 
@@ -140,7 +140,8 @@ ps.12s <- subset_taxa(ps.12s, Class!="Mammalia")
 ps.12s <- subset_taxa(ps.12s, Kingdom!="Bacteria")
 
 # Remove samples with total abundance == 0
-ps.12s <- prune_samples(sample_sums(ps.12s) > 0, ps.12s)
+ps.12s <- prune_samples(sample_sums(ps.12s) >= 100, ps.12s)
+sample_sums(ps.12s)
 
 # Saves phyloseq obj
 saveRDS(ps.12s, "ps.12s")
