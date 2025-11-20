@@ -342,8 +342,8 @@ otu.prop <- remove_species_cols(otu.prop, species_remove)
 
 
 # Writes to CSV
-write.csv(otu.abs, "ADFG_12s_absolute_speciesxsamples-trunc130-4.csv", row.names = FALSE)
-write.csv(otu.prop, "ADFG_12s_relative_speciesxsamples-trunc130-4.csv", row.names = FALSE)
+write.csv(otu.abs, "./Deliverables/12S/ADFG_12s_absolute_speciesxsamples-trunc130-4.csv", row.names = FALSE)
+write.csv(otu.prop, "./Deliverables/12S/ADFG_12s_relative_speciesxsamples-trunc130-4.csv", row.names = FALSE)
 
 
 
