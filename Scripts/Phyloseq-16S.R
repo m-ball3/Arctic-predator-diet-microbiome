@@ -83,6 +83,7 @@ seqtab.nochim <- seqtab.nochim[!rownames(seqtab.nochim) %in% sample_to_remove, ]
 rownames(samdf)
 rownames(seqtab.nochim)
 
+
 # ------------------------------------------------------------------
 # CREATES PHYLOSEQ
 # ------------------------------------------------------------------
@@ -92,42 +93,36 @@ ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE),
                    sample_data(samdf), 
                    tax_table(merged.taxa))
 
-# Creates a dataframe that maps ADFG IDs to sequences in taxa
+# ------------------------------------------------------------------
+# DEALS WITH TECHNICAL REPLICATES
+# ------------------------------------------------------------------
 
-## Converts seqtab.nochim to long format (SampleID = WADE sample ID, Sequence = sequence column names)
-seqtab_long <- as.data.frame(seqtab.nochim)
-seqtab_long$WADE_ID <- rownames(seqtab_long)
+# Identifies rows in Specimen.ID that appear more than once (replicates)
+duplicated_ids <- samdf$Specimen.ID[duplicated(samdf$Specimen.ID) | duplicated(samdf$Specimen.ID, fromLast = TRUE)]
+unique_dup_ids <- unique(duplicated_ids) # "PH22SH036-S" = WADE 115 and WADE 123
 
-seqtab_long <- seqtab_long %>%
-  pivot_longer(
-    cols = -WADE_ID,
-    names_to = "Sequence",
-    values_to = "Abundance"
-  ) %>%
-  filter(Abundance > 0)   # Keep only entries where the sequence is present in the sample
+# Subset phyloseq object to keep only samples with duplicated Specimen.IDs
+ps.16s.replicates <- subset_samples(ps.16s, Specimen.ID %in% unique_dup_ids)
 
-## Keeps only the Sequence and WADE_ID columns
-mapped.sequences <- seqtab_long[, c("Sequence", "WADE_ID")]
+# Removes species assignments less than 100 reads for readability
+ps.16s.replicates <- prune_taxa(taxa_sums(ps.16s.replicates) > 100, ps.16s.replicates)
 
-# Turns rownames into a column for joining to mapped.sequences
-mapped.sequences <- mapped.sequences %>%
-  left_join(
-    samdf %>% rownames_to_column("WADE_ID") %>% dplyr::select(WADE_ID, Specimen.ID),
-    by = "WADE_ID"
-  )
+# Create the stacked bar plot
+plot_bar(ps.16s.replicates, x = "LabID", fill = "Species.y")
 
-mapped.taxa <- as.data.frame(merged.taxa)
+# Ensures samples removed in filtering are removed from samdf
+replicate_to_remove <- "WADE-003-115"
+samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
 
-# Add Sequence as a column from the row names
-mapped.taxa$Sequence <- rownames(mapped.taxa)
+# RECREATES PHYLOSEQ OBJECT WITHOUT REPLICATES
+# Creates master phyloseq object
+ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
+                   sample_data(samdf), 
+                   tax_table(merged.taxa))
 
-# Merge with mapped.taxa to add ADFG_ID for each Sequence
-mapped.taxa <- merge(mapped.taxa, mapped.sequences[, c("Sequence", "Specimen.ID")], by = "Sequence", all.x = TRUE)
-
-# Reorders columns to put Sequence and ADFG_ID first
-other_cols <- setdiff(names(mapped.taxa), c("Sequence", "Specimen.ID"))
-mapped.taxa <- mapped.taxa[, c("Sequence", "Specimen.ID", other_cols)]
-
+# ------------------------------------------------------------------
+# CLEANS PHYLOSEQ
+# ------------------------------------------------------------------
 
 ### shorten ASV seq names, store sequences as reference
 dna <- Biostrings::DNAStringSet(taxa_names(ps.16s))
@@ -137,12 +132,13 @@ taxa_names(ps.16s) <- paste0("ASV", seq(ntaxa(ps.16s)))
 
 nsamples(ps.16s)
 
-# Filters out any Mammalia and Bacteria
-ps.16s <- subset_taxa(ps.16s, Class!="Mammalia")
-ps.16s <- subset_taxa(ps.16s, Kingdom!="Bacteria")
+# Filters out anything not in Actinopteri
+ps.16s <- subset_taxa(ps.16s, Class == "Actinopteri")
+nsamples(ps.16s)
 
-# Remove samples with total abundance == 0
-ps.16s <- prune_samples(sample_sums(ps.16s) > 0, ps.16s)
+# Remove samples with total abundance < 100
+ps.16s <- prune_samples(sample_sums(ps.16s) >= 100, ps.16s)
+nsamples(ps.16s)
 
 # Ensures samples removed in filtering are removed from samdf
 row_to_remove <- "WADE-003-146"
@@ -155,7 +151,7 @@ saveRDS(ps.16s, "ps.16s")
 ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)
 
 # Plots stacked bar plot of absolute abundance
-plot_bar(ps.16s, x="Sex", fill="Species.y")
+plot_bar(ps.16s, x="Specimen.ID", fill="Species.y")
 
 # Calculates relative abundance of each species 
 ## Transforms NaN (0/0) to 0
@@ -167,10 +163,6 @@ ps16s.rel <- transform_sample_counts(ps.16s, function(x) {
 
 #Checks for NaN's 
 which(is.nan(as.matrix(otu_table(ps16s.rel))), arr.ind = TRUE)
-
-# Creates a label map (WADE ID = ADFG ID)
-label_map <- sample_data(ps16s.rel)$Specimen.ID
-names(label_map) <- rownames(sample_data(ps16s.rel))
 
 # ------------------------------------------------------------------
 # PLOTS
@@ -184,9 +176,9 @@ sp.rel.plot <- plot_bar(ps16s.rel, fill="Species.y")+
 sp.rel.plot
 
 # Plots with ADFG IDs
-ADFG.sp<- sp.rel.plot +
-  scale_x_discrete(labels = label_map) +
-  labs(x = "ADFG ID")
+ADFG.sp<- plot_bar(ps16s.rel, x = "Specimen.ID", fill="Species.y")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 ADFG.sp
 
 gen.rel.plot <- plot_bar(ps16s.rel, fill="Genus.y")+
@@ -194,9 +186,9 @@ gen.rel.plot <- plot_bar(ps16s.rel, fill="Genus.y")+
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 gen.rel.plot
 
-ADFG.gen<- gen.rel.plot + 
-  scale_x_discrete(labels = label_map) +
-  labs(x = "ADFG ID")
+ADFG.gen <- plot_bar(ps16s.rel, x = 'Specimen.ID', fill="Genus.y")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 ADFG.gen
 
 fam.rel.plot <- plot_bar(ps16s.rel, fill="Family")+
@@ -204,9 +196,9 @@ fam.rel.plot <- plot_bar(ps16s.rel, fill="Family")+
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 fam.rel.plot
 
-ADFG.fam <- fam.rel.plot + 
-  scale_x_discrete(labels = label_map) +
-  labs(x = "ADFG ID")
+ADFG.fam <- plot_bar(ps16s.rel, "Specimen.ID", fill="Family")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 ADFG.fam
 
 # Facet wrapped by predator species
@@ -221,25 +213,31 @@ faucet <- plot_bar(ps16s.rel, fill = "Species.y") +
     axis.title.x = element_text(margin = margin(t = 10))
   ) 
 
-ADFG.faucet <- faucet+
-    scale_x_discrete(labels = label_map) +
-  labs(x = "ADFG ID")+
-  guides(fill = guide_legend(title = "Species"))
+ADFG.faucet <- plot_bar(ps16s.rel, x ="Specimen.ID", fill = "Species.y") +
+  facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) 
 
 
 ADFG.faucet
 
 #saves plots 
-ggsave("Deliverables/16S/16S-species.png", plot = sp.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/WADE labels/16S-species.png", plot = sp.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
 ggsave("Deliverables/16S/ADFG-16S-species.png", plot = ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/16S/16S-genus.png", plot = gen.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/WADE labels/16S-genus.png", plot = gen.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
 ggsave("Deliverables/16S/ADFG-16S-genus.png", plot = ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/16S/16S-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/WADE labels/16S-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
 ggsave("Deliverables/16S/ADFG-16S-family.png", plot = ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/16S/16S-species-by-pred.111125.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/WADE labels/16S-species-by-pred.111125.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
 ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.faucet, width = 16, height = 8, units = "in", dpi = 300)
 
 # ------------------------------------------------------------------
@@ -249,7 +247,7 @@ ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.fauce
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
 otu.abs <- as.data.frame(otu_table(ps.16s))
 
-
+# Changes NA.1 to it's corresponding ASV
 taxa.names <- as.data.frame(tax_table(ps.16s)) %>% 
   rownames_to_column("ASV") %>% 
   mutate(Species.y = case_when(is.na(Species.y)~ASV,
@@ -336,6 +334,55 @@ otu.abs <- remove_species_cols(otu.abs, species_remove)
 otu.prop <- remove_species_cols(otu.prop, species_remove)
 
 # Writes to CSV
-write.csv(otu.abs, "ADFG_16s_absolute_speciesxsamples.csv", row.names = FALSE)
-write.csv(otu.prop, "ADFG_16s_relative_speciesxsamples.csv", row.names = FALSE)
+write.csv(otu.abs, "./Deliverables/16S/ADFG_16s_absolute_speciesxsamples.csv", row.names = FALSE)
+write.csv(otu.prop, "./Deliverables/16S/ADFG_16s_relative_speciesxsamples.csv", row.names = FALSE)
+
+
+
+
+
+
+
+
+
+
+
+
+# OLD CODE
+# # Creates a dataframe that maps ADFG IDs to sequences in taxa
+# 
+# ## Converts seqtab.nochim to long format (SampleID = WADE sample ID, Sequence = sequence column names)
+# seqtab_long <- as.data.frame(seqtab.nochim)
+# seqtab_long$WADE_ID <- rownames(seqtab_long)
+# 
+# seqtab_long <- seqtab_long %>%
+#   pivot_longer(
+#     cols = -WADE_ID,
+#     names_to = "Sequence",
+#     values_to = "Abundance"
+#   ) %>%
+#   filter(Abundance > 0)   # Keep only entries where the sequence is present in the sample
+# 
+# ## Keeps only the Sequence and WADE_ID columns
+# mapped.sequences <- seqtab_long[, c("Sequence", "WADE_ID")]
+# 
+# # Turns rownames into a column for joining to mapped.sequences
+# mapped.sequences <- mapped.sequences %>%
+#   left_join(
+#     samdf %>% rownames_to_column("WADE_ID") %>% dplyr::select(WADE_ID, Specimen.ID),
+#     by = "WADE_ID"
+#   )
+# 
+# mapped.taxa <- as.data.frame(merged.taxa)
+# 
+# # Add Sequence as a column from the row names
+# mapped.taxa$Sequence <- rownames(mapped.taxa)
+# 
+# # Merge with mapped.taxa to add ADFG_ID for each Sequence
+# mapped.taxa <- merge(mapped.taxa, mapped.sequences[, c("Sequence", "Specimen.ID")], by = "Sequence", all.x = TRUE)
+# 
+# # Reorders columns to put Sequence and ADFG_ID first
+# other_cols <- setdiff(names(mapped.taxa), c("Sequence", "Specimen.ID"))
+# mapped.taxa <- mapped.taxa[, c("Sequence", "Specimen.ID", other_cols)]
+# 
 
