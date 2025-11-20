@@ -1,5 +1,7 @@
 #installing marmap can take 30-60 seconds
 #make sure R is up to date (v 4.0.x) with "version" in console
+install.packages("tidygeocoder")  # run this line if not installed
+library(tidygeocoder)
 library(raster) #may need to reinstall
 library(marmap)
 library(tidyverse)
@@ -10,7 +12,7 @@ library(sf)
 
 # Get Alaska polygon data correctly
 alaska <- subset(map_data("world"), region == "USA")
-alaska <- subset(map_data("world"), region == "USA" & long < -130 & lat > 50)
+alaska <- subset(map_data("world"), region == "USA" & long < -150 & lat > 57.5)
 
 
 ggplot(data = alaska, aes(x = long, y = lat, group = group)) + 
@@ -21,7 +23,7 @@ ggplot(data = alaska, aes(x = long, y = lat, group = group)) +
 mean_lat <- mean(alaska$lat)
 ratio <- 1 / cos(mean_lat * pi / 180)
 
-ggplot(data = alaska, aes(x = long, y = lat, group = group)) +
+map1 <- ggplot(data = alaska, aes(x = long, y = lat, group = group)) +
   geom_polygon(fill = "lightblue", color = "black") +
   coord_fixed(ratio = ratio) +
   theme_minimal()
@@ -47,14 +49,51 @@ map <- autoplot.bathy(bathy, geom=c('raster', 'contour'),
 map
 
 
+# Loads in data
+combined_df <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
+combined_df$Species <- tolower(combined_df$Species)
+
+combined_df <- combined_df %>%
+  mutate(Location = paste(Location, "Alaska"))
+
+
+locations <- unique(combined_df$Location)
+
+locations <- tibble(Location = paste(locations)) %>%
+  distinct() %>%
+  geocode(Location, method = 'osm', lat = latitude, long = longitude)
+
+# Merge/join the data frames
+combined_df_with_coords <- combined_df %>%
+  left_join(locations, by = "Location")
+
+
+# jitter map points
+combined_df_with_coords <- mutate(combined_df_with_coords, lat_jittered = combined_df_with_coords$latitude + runif(n(), -0.2, 0.2))
+combined_df_with_coords <- mutate(combined_df_with_coords, long_jittered = combined_df_with_coords$longitude + runif(n(), -0.2, 0.2))
+
+final_map <- ggplot(data = alaska, aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group), fill = "lightblue", color = "black") +
+  coord_fixed(ratio = ratio) +
+  theme_minimal() +
+  geom_point(
+    data = combined_df_with_coords,
+    aes(x = long_jittered, y = lat_jittered, color = Species), # color by Predator category
+    size = 2,
+    alpha = 0.7
+  ) +
+  scale_color_brewer(palette = "Set1") # optional: set a color palette
+print(final_map)
+
+
+
+ggsave("./Deliverables/Beautiful Graphics in R/alaska_sample_map.png", final_map, width = 8, height = 6, dpi = 300)
 
 
 ## EXAMPLE CODE from STACKOVERFLOW
 
 
-# Example sample data: your samples by region (make sure regions are lowercase to match map_data)
-# Loads in data
-combined_df <- read.csv("Deliverables/allrows-abundance.csv")
+
 
 # Reads in shapefile
 alaska_coastal_regions <- st_read("path/to/alaska_coastal_regions.shp")

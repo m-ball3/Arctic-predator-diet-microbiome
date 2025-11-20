@@ -105,7 +105,7 @@ unique_dup_ids <- unique(duplicated_ids) # "PH22SH036-S" = WADE 115 and WADE 123
 ps.16s.replicates <- subset_samples(ps.16s, Specimen.ID %in% unique_dup_ids)
 
 # Removes species assignments less than 100 reads for readability
-ps.16s.replicates <- prune_taxa(taxa_sums(ps.16s.replicates) > 100, ps.16s.replicates)
+ps.16s.replicates <- prune_taxa(taxa_sums(ps.16s.replicates) > 0, ps.16s.replicates)
 
 # Create the stacked bar plot
 plot_bar(ps.16s.replicates, x = "LabID", fill = "Species.y")
