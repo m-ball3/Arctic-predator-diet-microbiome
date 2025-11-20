@@ -168,6 +168,7 @@ which(is.nan(as.matrix(otu_table(ps12s.rel))), arr.ind = TRUE)
 label_map <- sample_data(ps12s.rel)$Specimen.ID
 names(label_map) <- rownames(sample_data(ps12s.rel))
 
+TEST <- as.data.frame(tax_table(ps.12s))
 # ------------------------------------------------------------------
 # PLOTS
 # ------------------------------------------------------------------
@@ -242,7 +243,7 @@ ggsave("Deliverables/12S/ADFG-12S-genus.png", plot = ADFG.gen, width = 16, heigh
 ggsave("Deliverables/12S/WADE labels/12S-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
 ggsave("Deliverables/12S/ADFG-12S-family.png", plot = ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/12S/WADE labels/12S-species-by-pred.111125.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/WADE labels/12S-species-by-pred.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
 ggsave("Deliverables/12S/ADFG-12S-species-by-pred.111125.png", plot = ADFG.faucet, width = 16, height = 8, units = "in", dpi = 300)
 
 
@@ -287,9 +288,9 @@ otu.prop[is.na(otu.prop)] <- 0
 is.num <- sapply(otu.prop, is.numeric)
 otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
 
-# Replace NA column names in abs & prop
-na_cols <- which(is.na(colnames(otu.abs)))
-if(length(na_cols) > 0) colnames(otu.abs)[na_cols] <- "UNASSIGNED"
+# # Replace NA column names in abs & prop
+# na_cols <- which(is.na(colnames(otu.abs)))
+# if(length(na_cols) > 0) colnames(otu.abs)[na_cols] <- "UNASSIGNED"
 
 na_cols <- which(is.na(colnames(otu.prop)))
 if(length(na_cols) > 0) colnames(otu.prop)[na_cols] <- "UNASSIGNED"
