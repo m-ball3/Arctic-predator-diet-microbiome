@@ -14,8 +14,6 @@ sp.fam <- df %>%
 
 # Saves combined_df as a .csv for Amy's abundance table
 write.csv(sp.fam, "Deliverables/Beautiful Graphics in R/wanna/sp.fam.csv")
-
-# Assign season based on month
 df <- df %>%
   mutate(Season = case_when(
     Month %in% c("DEC", "JAN", "FEB") ~ "Winter",
