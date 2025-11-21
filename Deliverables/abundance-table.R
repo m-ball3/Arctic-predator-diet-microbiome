@@ -7,8 +7,34 @@ library(openxlsx)
 library(gridExtra)
 library(RColorBrewer)
 
-# Loads in data
-combined_df <- read.csv("Deliverables/allrows-abundance.csv")
+# Loads in phyloseq objects
+ps.12s <- readRDS("ps.12s")
+ps.16s <- readRDS("ps.16s")
+
+# Gets the samples
+sam.12s <- sample_names(ps.12s)
+sam.16s <- sample_names(ps.16s)
+
+# Gets the relative abundance pf each species
+rel.12s <- transform_sample_counts(ps.12s, function(x) x / sum(x))
+rel.16s <- transform_sample_counts(ps.16s, function(x) x / sum(x))
+
+df_12s <- psmelt(rel.12s)
+df_16s <- psmelt(rel.16s)
+df_12s$Marker <- "12S"
+df_16s$Marker <- "16S"
+
+# Creates the combined df
+combined_df <- bind_rows(df_12s, df_16s)
+
+# Checks relativbe abundance is calculated correctly 
+equal.one <- combined_df %>%
+  group_by(Sample, Marker) %>%
+  summarise(total_abundance = sum(Abundance)) %>%
+  print(n = 22)
+
+# Saves combined_df as a .csv for Amy's abundance table
+write.csv(combined_df, "Deliverables/allrows-abundance.csv")
 
 # Checks relativbe abundance is calculated correctly 
 equal.one <- combined_df %>%
@@ -73,7 +99,7 @@ for(name in names(split_data)) {
 }
 
 # Save workbook
-saveWorkbook(wb, "Deliverables/predator_marker_species_proportions.xlsx", overwrite = TRUE)
+saveWorkbook(wb, "Deliverables/predator_marker_species_proportions_FIXED.xlsx", overwrite = TRUE)
 
 
 

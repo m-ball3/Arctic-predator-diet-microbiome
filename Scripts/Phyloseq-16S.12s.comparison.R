@@ -50,9 +50,6 @@ equal.one <- combined_df %>%
   summarise(total_abundance = sum(Abundance)) %>%
   print(n = 22)
 
-# Saves combined_df as a .csv for Amy's abundance table
-write.csv(combined_df, "Deliverables/allrows-abundance.csv")
-
 # # Ensures normalization after combination
 # combined_df <- combined_df %>%
 #   group_by(Sample, Marker) %>%
@@ -81,7 +78,7 @@ p1 <- rel.plot + scale_x_discrete(labels = adfg_ids)
 p1
 
 
-ggsave("Deliverables/Comparisons/12S+16S.species-by-pred.111125.png", plot = p1, width = 16, height = 10, units = "in", dpi = 300)
+ggsave("Deliverables/Comparisons/12S+16S.species-by-pred.png", plot = p1, width = 16, height = 10, units = "in", dpi = 300)
 
 
 # 
