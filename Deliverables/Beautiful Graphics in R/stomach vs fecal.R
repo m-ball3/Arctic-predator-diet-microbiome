@@ -44,16 +44,30 @@ result <- result %>% filter(!is.na(Abundance))
 
 # 8. Calculate relative abundance per sample (Specimen.ID)
 result <- result %>%
-  group_by(Specimen.ID) %>%
+  group_by(Specimen.ID, Marker) %>%
   mutate(rel_abundance = Abundance / sum(Abundance, na.rm = TRUE)) %>%
   ungroup()
 
+result <- result %>%
+  mutate(Specimen.ID = str_trim(Specimen.ID),
+         base_id = str_remove(Specimen.ID, "-[SF]$"))
+
 # 9. Plot: Relative abundance by sample and location
-rel.plot <- ggplot(result, aes(x = Specimen.ID, y = rel_abundance, fill = Species.y)) +
+rel.plot <- ggplot(result, aes(x = base_id, y = rel_abundance, fill = Species.y)) +
   geom_col(position = "stack") +
-  facet_wrap(. ~ Location.in.body, ncol=1, strip.position = "right") +
+  facet_grid(Location.in.body ~ Marker, switch = "y") +  # Facet rows by Location.in.body, columns by marker
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
   theme(legend.position = "bottom")
 
 print(rel.plot)
+
+ggsave("Deliverables/Comparisons/stomach.vs.fecal.png", plot = rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+
+
+# renames results table because I'll want to use this downstream?
+
+# Saves combined_df as a .csv for Amy's abundance table
+write.csv(combined_df, "Deliverables/allrows-abundance.csv")
+
+

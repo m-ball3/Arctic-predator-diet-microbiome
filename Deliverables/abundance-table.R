@@ -15,7 +15,7 @@ ps.16s <- readRDS("ps.16s")
 sam.12s <- sample_names(ps.12s)
 sam.16s <- sample_names(ps.16s)
 
-# Gets the relative abundance pf each species
+# Gets the relative abundance of each species by marker
 rel.12s <- transform_sample_counts(ps.12s, function(x) x / sum(x))
 rel.16s <- transform_sample_counts(ps.16s, function(x) x / sum(x))
 

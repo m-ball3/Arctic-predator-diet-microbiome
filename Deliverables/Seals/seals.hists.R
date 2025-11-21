@@ -4,6 +4,8 @@
 library(dplyr)
 library(ggplot2)
 library(lubridate)
+library(patchwork)
+library(RColorBrewer)
 
 # Loads in data
 combined_df <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
@@ -12,22 +14,13 @@ combined_df <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
 combined_df <- dplyr::rename(combined_df, Predator = Species)
 combined_df$Predator <- tolower(combined_df$Predator)
 
-# Create a year and month field (if not present)
-combined_df <- combined_df %>%
-  mutate(
-    Year = substr(Specimen.ID, 6, 9),   # Adjust according to your Sample format
-    Month = substr(Specimen.ID, 11, 12) # Likewise, adjust as necessary
-  )
-
 # Assign season based on month
 combined_df <- combined_df %>%
-  mutate(
-    Month = as.numeric(Month),
-    Season = case_when(
-      Month %in% c(12, 1, 2) ~ "Winter",
-      Month %in% c(3, 4, 5) ~ "Spring",
-      Month %in% c(6, 7, 8) ~ "Summer",
-      Month %in% c(9, 10, 11) ~ "Fall",
+  mutate(Season = case_when(
+      Month %in% c("DEC", "JAN", "FEB") ~ "Winter",
+      Month %in% c('MAR', "APR", 'MAY') ~ "Spring",
+      Month %in% c('JUN', 'JUL', 'AUG') ~ "Summer",
+      Month %in% c('SEP', 'OCT', 'NOV') ~ "Fall",
       TRUE ~ NA_character_
     )
   )
@@ -37,17 +30,37 @@ seal_species <- c("ringed seal", "bearded seal", "spotted seal")
 seal_df <- combined_df %>% filter(Predator %in% seal_species)
 
 # Number of samples per location for each seal species
-ggplot(seal_df, aes(x = Location, fill = Predator)) +
+p1 <- ggplot(seal_df, aes(x = Location, fill = Predator)) +
   geom_histogram(stat = "count", position = "dodge") +
-  labs(title = "Number of Samples per Location (Seals)", x = "Location", y = "Sample Count") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  labs(title = "", x = "Location", y = "Sample Count") + 
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(legend.position = "none")+
+  scale_fill_brewer(palette = "Paired")  # Apply the BrBG palette
+
 
 # Number of samples per year for each seal species
-ggplot(seal_df, aes(x = Year, fill = Predator)) +
-  geom_histogram(stat = "count", position = "dodge") +
-  labs(title = "Number of Samples per Year (Seals)", x = "Year", y = "Sample Count")
+ p2 <- ggplot(seal_df, aes(x = Year, fill = Predator)) +
+  geom_histogram(stat = "count", position = "stack") +
+  scale_x_continuous(breaks = 2008:2024) +  # Set tick marks for each year from 2008 to 2024
+  labs(title = "", x = "Year", y = "Sample Count") + 
+   theme_minimal()+ 
+   theme(legend.position = "bottom") +
+   scale_fill_brewer(palette = "Paired")  # Apply the BrBG palette
+
 
 # Number of samples per season for each seal species
-ggplot(seal_df, aes(x = Season, fill = Predator)) +
+p3<- ggplot(seal_df, aes(x = Season, fill = Predator)) +
   geom_histogram(stat = "count", position = "dodge") +
-  labs(title = "Number of Samples per Season (Seals)", x = "Season", y = "Sample Count")
+  labs(title = "", x = "Season", y = "") +
+  theme_minimal()+
+  theme(legend.position = "none") +
+  scale_fill_brewer(palette = "Paired")  # Apply the BrBG palette
+
+
+
+seals<- (p1 + p3) / p2
+seals
+
+
+ggsave("Deliverables/Seals.png", plot = seals, width = 16, height = 8, units = "in", dpi = 300)
