@@ -132,6 +132,9 @@ taxa_names(ps.16s) <- paste0("ASV", seq(ntaxa(ps.16s)))
 
 nsamples(ps.16s)
 
+# Saves phyloseq obj
+saveRDS(ps.16s, "ps.16s.raw")
+
 # Filters out anything not in Actinopteri
 ps.16s <- subset_taxa(ps.16s, Class == "Actinopteri")
 nsamples(ps.16s)

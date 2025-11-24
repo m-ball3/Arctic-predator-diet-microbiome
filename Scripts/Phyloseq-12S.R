@@ -16,7 +16,6 @@ library(Biostrings); packageVersion("Biostrings")
 library(ggplot2); packageVersion("ggplot2")
 library(tidyverse)
 library(dplyr)
-library(dada2)
 library(patchwork)
 
 # Loads dada2 output
@@ -131,6 +130,9 @@ ps.raw <- merge_phyloseq(ps.12s, dna)
 taxa_names(ps.12s) <- paste0("ASV", seq(ntaxa(ps.12s)))
 
 nsamples(ps.12s)
+
+# Saves phyloseq obj
+saveRDS(ps.12s, "ps.12s.raw")
 
 # Filters out anything not in Actinopteri
 ps.12s <- subset_taxa(ps.12s, Class == "Actinopteri")

@@ -76,7 +76,7 @@ fish_cols3<-c(
   "#445859","#678585","#89b1b2","#ABDDDE")#"#d5eeef","#eef8f8")
 
 
-p2 <- ggplot(df_sum, aes(x = Season, y = Abundance, fill = Species.y, na.rm = TRUE)) +
+p2 <- ggplot(df_sum, aes(x = Specimen.ID, y = Abundance, fill = Species.y, na.rm = TRUE)) +
   geom_bar(stat = "identity", position = "fill") +
   facet_grid(Predator ~ Marker + Family) +  # Facet grid: rows by Predator, cols by Marker+Family
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
