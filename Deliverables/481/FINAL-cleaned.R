@@ -186,7 +186,7 @@ plot_anova_letters <- function(df, factor_col, response = "Species.Richness",
   
   p <- ggplot(df, aes_string(x = varname, y = response, fill = varname)) +
     geom_boxplot() +
-    scale_fill_brewer(palette = "Accent") +
+    #scale_fill_brewer(palette = "Accent") +
     theme_light() +
     theme(
       legend.position = "none",
