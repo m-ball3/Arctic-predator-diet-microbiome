@@ -23,8 +23,8 @@ library(patchwork)   # for plot layout (if not already loaded)
 samdf <- data.frame(read.csv(file="metadata/workable.df.csv")) 
 
 # Reads im proportion tables
-otu.abs.16s <- read.csv("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE LAB/Arctic-predator-diet-microbiome/Deliverables/16S/ADFG_16s_absolute_speciesxsamples.csv")
-otu.abs.12s <- read.csv("C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE LAB/Arctic-predator-diet-microbiome/Deliverables/12S/ADFG_12s_absolute_speciesxsamples-trunc130-4.csv")
+otu.abs.16s <- read.csv("./Deliverables/16S/ADFG_16s_absolute_speciesxsamples.csv")
+otu.abs.12s <- read.csv("./Deliverables/12S/ADFG_12s_absolute_speciesxsamples-trunc130-4.csv")
 
 # ------------------------------------------------------------------
 # keeps only the rows where the Specimen.ID appears in samdf and in otu.abs.12s or otu.abs 16s
@@ -108,127 +108,6 @@ species_richness_long_all <- species_richness_long_all %>%
               select(Specimen.ID, Location, Sex, Season, Location.in.body, Predator, Year),
             by = "Specimen.ID")
 
-
-
-# ------------------------------------------------------------------
-# Makes a large plot with one way anovas
-# ------------------------------------------------------------------
-
-custom_titles <- c(
-  Marker = "Genetic Marker",
-  Location = "Location in Alaska",
-  Sex = "Sex",
-  Season = "Season",
-  `Location.in.body` = "Location in Body",
-  Predator = "Predator",
-  Year = "Year"
-)
-
-
-
-plot_anova_letters <- function(df, factor_col, response = "Species.Richness",
-                               show_yaxis = TRUE) {
-  factor_col <- enquo(factor_col)
-  varname <- quo_name(factor_col)
-  
-  if (varname == "Location.in.body") {
-    df <- df %>%
-      filter(Location.in.body != "" & !is.na(Location.in.body) & Location.in.body %in% c("stomach", "feces"))
-  }
-  
-  df[[varname]] <- as.factor(df[[varname]])
-  
-  if (nlevels(df[[varname]]) < 2) {
-    message("Not enough levels in ", varname, " for ANOVA. Plotting boxplot only.")
-    p <- ggplot(df, aes_string(x = varname, y = response, fill = varname)) +
-      geom_boxplot() +
-      scale_fill_brewer(palette = "Paired") +
-      theme_light() +
-      theme(
-        legend.position = "none",
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()
-      ) +
-      xlab(NULL) +  # remove x-axis label
-      ggtitle(varname)  # use plot title for variable name
-    
-    if (show_yaxis) {
-      p <- p + ylab(response)
-    } else {
-      p <- p + ylab(NULL) + theme(axis.title.y = element_blank(),
-                                  axis.ticks.y = element_blank(),
-                                  axis.text.y = element_blank())
-    }
-    return(p)
-  }
-  
-  formula <- as.formula(paste(response, "~", varname))
-  aov_res <- aov(formula, data = df)
-  
-  tukey <- tryCatch({
-    agricolae::HSD.test(aov_res, varname, group = TRUE)
-  }, error = function(e) NULL)
-  
-  if (is.null(tukey) || is.null(tukey$groups)) {
-    message("No Tukey groups for ", varname, ". Plotting without letters.")
-    letters_df <- NULL
-  } else {
-    letters_df <- data.frame(Level = rownames(tukey$groups),
-                             Letter = tukey$groups$groups)
-  }
-  
-  means <- aggregate(as.formula(paste(response, "~", varname)), data = df, FUN = mean)
-  means <- means[order(means[[varname]]), ]
-  if (!is.null(letters_df)) {
-    means <- merge(means, letters_df, by.x = varname, by.y = "Level", all.x = TRUE)
-  }
-  
-  p <- ggplot(df, aes_string(x = varname, y = response, fill = varname)) +
-    geom_boxplot() +
-    #scale_fill_brewer(palette = "Accent") +
-    theme_light() +
-    theme(
-      legend.position = "none",
-      axis.text.x = element_text(angle = 45, hjust = 1),
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      plot.title = element_text(hjust = 0.5)   # centers title
-    ) +
-    xlab(NULL) +
-    ggtitle(custom_titles[[varname]])
-  
-  
-  if (show_yaxis) {
-    p <- p + ylab(response)
-  } else {
-    p <- p + ylab(NULL) + theme(axis.title.y = element_blank(),
-                                axis.ticks.y = element_blank(),
-                                axis.text.y = element_blank())
-  }
-  
-  if (!is.null(letters_df)) {
-    p <- p + geom_text(data = means,
-                       aes_string(x = varname, y = max(df[[response]], na.rm = TRUE) * 1.05, label = "Letter"),
-                       inherit.aes = FALSE, size = 5)
-  }
-  return(p)
-}
-
-P_Marker <- plot_anova_letters(species_richness_long_all, Marker, show_yaxis = TRUE)
-P_Location <- plot_anova_letters(species_richness_long_all, Location, show_yaxis = FALSE)
-P_Sex <- plot_anova_letters(species_richness_long_all, Sex, show_yaxis = FALSE)
-P_Season <- plot_anova_letters(species_richness_long_all, Season, show_yaxis = TRUE)
-P_LocBody <- plot_anova_letters(species_richness_long_all, Location.in.body, show_yaxis = FALSE)
-P_Predator <- plot_anova_letters(species_richness_long_all, Predator, show_yaxis = FALSE)
-P_Year <- plot_anova_letters(species_richness_long_all, Year, show_yaxis = TRUE)
-
-(P_Marker + P_Location + P_Sex) / (P_Season + P_LocBody + P_Predator) / P_Year
-
-combined_plot <- (P_Marker + P_Location + P_Sex) / (P_Season + P_LocBody + P_Predator) / P_Year
-
-# Save the combined plot to a file
-# ggsave("./Deliverables/Beautiful Graphics in R/species_richness_anova_plots.png", combined_plot, width = 12, height = 10, dpi = 300)
 
 
 # ------------------------------------------------------------------
@@ -326,5 +205,135 @@ plot(species.richness_glm, which = 1)  # Residuals vs Fitted
 
 # Cook's distance
 plot(species.richness_glm, which = 4)  # Cook's distance plot
+
+
+
+
+
+
+
+
+
+
+# OLD CODE
+# # ------------------------------------------------------------------
+# # Makes a large plot with one way anovas
+# # ------------------------------------------------------------------
+# 
+# custom_titles <- c(
+#   Marker = "Genetic Marker",
+#   Location = "Location in Alaska",
+#   Sex = "Sex",
+#   Season = "Season",
+#   `Location.in.body` = "Location in Body",
+#   Predator = "Predator",
+#   Year = "Year"
+# )
+# 
+# 
+# 
+# plot_anova_letters <- function(df, factor_col, response = "Species.Richness",
+#                                show_yaxis = TRUE) {
+#   factor_col <- enquo(factor_col)
+#   varname <- quo_name(factor_col)
+#   
+#   if (varname == "Location.in.body") {
+#     df <- df %>%
+#       filter(Location.in.body != "" & !is.na(Location.in.body) & Location.in.body %in% c("stomach", "feces"))
+#   }
+#   
+#   df[[varname]] <- as.factor(df[[varname]])
+#   
+#   if (nlevels(df[[varname]]) < 2) {
+#     message("Not enough levels in ", varname, " for ANOVA. Plotting boxplot only.")
+#     p <- ggplot(df, aes_string(x = varname, y = response, fill = varname)) +
+#       geom_boxplot() +
+#       scale_fill_brewer(palette = "Paired") +
+#       theme_light() +
+#       theme(
+#         legend.position = "none",
+#         axis.text.x = element_text(angle = 45, hjust = 1),
+#         panel.grid.major = element_blank(),
+#         panel.grid.minor = element_blank()
+#       ) +
+#       xlab(NULL) +  # remove x-axis label
+#       ggtitle(varname)  # use plot title for variable name
+#     
+#     if (show_yaxis) {
+#       p <- p + ylab(response)
+#     } else {
+#       p <- p + ylab(NULL) + theme(axis.title.y = element_blank(),
+#                                   axis.ticks.y = element_blank(),
+#                                   axis.text.y = element_blank())
+#     }
+#     return(p)
+#   }
+#   
+#   formula <- as.formula(paste(response, "~", varname))
+#   aov_res <- aov(formula, data = df)
+#   
+#   tukey <- tryCatch({
+#     agricolae::HSD.test(aov_res, varname, group = TRUE)
+#   }, error = function(e) NULL)
+#   
+#   if (is.null(tukey) || is.null(tukey$groups)) {
+#     message("No Tukey groups for ", varname, ". Plotting without letters.")
+#     letters_df <- NULL
+#   } else {
+#     letters_df <- data.frame(Level = rownames(tukey$groups),
+#                              Letter = tukey$groups$groups)
+#   }
+#   
+#   means <- aggregate(as.formula(paste(response, "~", varname)), data = df, FUN = mean)
+#   means <- means[order(means[[varname]]), ]
+#   if (!is.null(letters_df)) {
+#     means <- merge(means, letters_df, by.x = varname, by.y = "Level", all.x = TRUE)
+#   }
+#   
+#   p <- ggplot(df, aes_string(x = varname, y = response, fill = varname)) +
+#     geom_boxplot() +
+#     #scale_fill_brewer(palette = "Accent") +
+#     theme_light() +
+#     theme(
+#       legend.position = "none",
+#       axis.text.x = element_text(angle = 45, hjust = 1),
+#       panel.grid.major = element_blank(),
+#       panel.grid.minor = element_blank(),
+#       plot.title = element_text(hjust = 0.5)   # centers title
+#     ) +
+#     xlab(NULL) +
+#     ggtitle(custom_titles[[varname]])
+#   
+#   
+#   if (show_yaxis) {
+#     p <- p + ylab(response)
+#   } else {
+#     p <- p + ylab(NULL) + theme(axis.title.y = element_blank(),
+#                                 axis.ticks.y = element_blank(),
+#                                 axis.text.y = element_blank())
+#   }
+#   
+#   if (!is.null(letters_df)) {
+#     p <- p + geom_text(data = means,
+#                        aes_string(x = varname, y = max(df[[response]], na.rm = TRUE) * 1.05, label = "Letter"),
+#                        inherit.aes = FALSE, size = 5)
+#   }
+#   return(p)
+# }
+# 
+# P_Marker <- plot_anova_letters(species_richness_long_all, Marker, show_yaxis = TRUE)
+# P_Location <- plot_anova_letters(species_richness_long_all, Location, show_yaxis = FALSE)
+# P_Sex <- plot_anova_letters(species_richness_long_all, Sex, show_yaxis = FALSE)
+# P_Season <- plot_anova_letters(species_richness_long_all, Season, show_yaxis = TRUE)
+# P_LocBody <- plot_anova_letters(species_richness_long_all, Location.in.body, show_yaxis = FALSE)
+# P_Predator <- plot_anova_letters(species_richness_long_all, Predator, show_yaxis = FALSE)
+# P_Year <- plot_anova_letters(species_richness_long_all, Year, show_yaxis = TRUE)
+# 
+# (P_Marker + P_Location + P_Sex) / (P_Season + P_LocBody + P_Predator) / P_Year
+# 
+# combined_plot <- (P_Marker + P_Location + P_Sex) / (P_Season + P_LocBody + P_Predator) / P_Year
+# 
+# # Save the combined plot to a file
+# # ggsave("./Deliverables/Beautiful Graphics in R/species_richness_anova_plots.png", combined_plot, width = 12, height = 10, dpi = 300)
 
 

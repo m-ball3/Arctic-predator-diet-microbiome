@@ -115,6 +115,9 @@ replicate_to_remove <- "WADE-003-115"
 samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
 
 # RECREATES PHYLOSEQ OBJECT WITHOUT REPLICATES
+ps.16s <- ps.16s%>% 
+  subset_samples(LabID != replicate_to_remove)
+
 # Creates master phyloseq object
 ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
                    sample_data(samdf), 
@@ -151,7 +154,8 @@ samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
 saveRDS(ps.16s, "ps.16s")
 
 ## Merges same species
-ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)
+ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)%>% 
+  prune_taxa(taxa_sums(.) > 0, .)
 
 # Plots stacked bar plot of absolute abundance
 plot_bar(ps.16s, x="Specimen.ID", fill="Species.y")
@@ -249,6 +253,12 @@ ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.fauce
 
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
 otu.abs <- as.data.frame(otu_table(ps.16s))
+
+# Add Lab ID to otu.abs
+write.csv(otu.abs %>% 
+            rownames_to_column("LabID"), 
+          "./Deliverables/16S/ADFG_16s_absolute_speciesxsamples.csv", 
+          row.names = FALSE)
 
 # Changes NA.1 to it's corresponding ASV
 taxa.names <- as.data.frame(tax_table(ps.16s)) %>% 
