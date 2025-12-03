@@ -22,7 +22,6 @@ library(patchwork)
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
 load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output.Rdata")
 
-
 # ------------------------------------------------------------------
 # FORMATS METADATASHEET FOR PHYLOSEQ OBJ
 # ------------------------------------------------------------------
