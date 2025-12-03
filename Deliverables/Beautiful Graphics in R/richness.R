@@ -22,23 +22,36 @@ ylim_shannon <- range(c(
   pr16s_data$value[pr16s_data$variable == "Shannon"]
 ), na.rm = TRUE)
 
-# Create 12S diversity plot (legend on bottom)
+dd_box   <- position_dodge2(width = 0.7, preserve = "single")
+dd_point <- position_jitterdodge(jitter.width = 0.01,
+                                 dodge.width  = 0.45)
+
 div.12 <- ggplot(pr12s_data, aes(x = Year, y = value, color = Predator)) +
-  geom_jitter(position = dd, size = 3, alpha = 0.85) +
   geom_boxplot(aes(group = interaction(Year, Predator)),
-               position = dd, fill = NA, outlier.shape = NA, width = 0.45, color = "grey40") +
+               position = dd_box,
+               fill = NA, outlier.shape = NA,
+               width = 0.45, color = "grey40") +
+  geom_jitter(position = dd_point, size = 3, alpha = 0.85) +
   scale_color_brewer(palette = "Set2") +
   facet_wrap(~ variable, ncol = 1, scales = "free") +
   labs(title = "Alpha Diversity", y = "Diversity Index", x = "Year") +
   scale_y_continuous(limits = ylim_shannon, name = "Diversity Index") +
-  theme_minimal(base_size = 14) +
+  theme_minimal(base_size = 18) +  # global bump
   theme(
-    legend.position = "bottom",
-    axis.text.x = element_text(hjust = 1, angle = 45),
-    plot.title = element_text(hjust = 0.5, face = "bold"),
+    legend.position = "none",
+    axis.text.x  = element_text(hjust = 1, angle = 45, size = 16),
+    axis.text.y  = element_text(size = 16),
+    axis.title   = element_text(size = 18),
+    plot.title   = element_text(hjust = 0.5, face = "bold", size = 22),
+    strip.text   = element_text(size = 18),
+    legend.title = element_text(size = 16),
+    legend.text  = element_text(size = 14),
     strip.background = element_blank(),
     panel.grid.minor = element_blank()
   )
+
+div.12
+
 
 # Create 12S NMDS plot (legend hidden)
 ps.prop.12s <- transform_sample_counts(ps.12s.raw, function(otu) otu / sum(otu))
@@ -67,40 +80,58 @@ nmds.12.shapes <- ggplot(plot_data, aes(x = MDS1, y = MDS2, color = Predator, sh
     x = "NMDS1", y = "NMDS2",
     color = "Predator", shape = "Location"
   ) +
-  theme_minimal(base_size = 14) +
+  theme_bw(base_size = 14) +
   theme(legend.position = "bottom", legend.box = "vertical", 
         panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 
 nmds.12.shapes
 
-
-nmds.12 <- ggplot(plot_data, aes(x = MDS1, y = MDS2, color = Predator, shape = Location)) +
+nmds.12 <- ggplot(plot_data, aes(x = MDS1, y = MDS2, color = Predator)) +
+  # ellipses first so points are on top
+  stat_ellipse(
+    aes(fill = Predator),
+    geom   = "polygon",
+    alpha  = 0.25,
+    color  = NA,        # borders off; or set = "black" if you want outlines
+    level  = 0.95,      # confidence level
+    type   = "t"        # or "norm" depending on your preference
+  ) +
   geom_point(size = 3, alpha = 0.85) +
   scale_color_brewer(palette = "Set2") +
+  scale_fill_brewer(palette = "Set2") +
   labs(
     title = "Bray NMDS",
     x = "NMDS1",
     y = "NMDS2",
-    color = "Predator"
+    color = "Predator",
+    fill  = "Predator"
   ) +
-  theme_minimal(base_size = 14) +
+  theme_minimal(base_size = 18) +
   theme(
-    legend.position = "bottom",
-    plot.title = element_text(hjust = 0.5, face = "bold"),
-    axis.text = element_text(size = 12)
+    legend.position = "none",
+    plot.title = element_text(
+      hjust = 0.5,
+      face  = "bold",
+      size  = 22
+    ),
+    axis.title = element_text(size = 18),
+    axis.text  = element_text(size = 16)
   )
+
 nmds.12
+
+
 # Combine plots and center legend
 final_plot <- (div.12 + nmds.12) +
-  plot_layout(guides = "collect") & theme(legend.position = "bottom")
+  plot_layout(guides = "collect") & theme(legend.position = "none")
 
 
 
 final_plot / faucet.12s
 
 ggsave(
-  filename = "./Deliverables/Beautiful Graphics in R/final_patchwork_12s-tall.png",
+  filename = "./Deliverables/Beautiful Graphics in R/final_patchwork_12s-revised.png",
   plot = final_plot / faucet.12s,
   width = 18,
   height = 16,
