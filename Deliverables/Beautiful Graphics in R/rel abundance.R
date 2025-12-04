@@ -63,7 +63,7 @@ sp.rel.plot.12s
 # --------- Facet-wrapped by Predator (Species-level)
 faucet.12s <- plot_bar(ps12s.rel, fill = "Family") +
   scale_fill_manual(values = palette_fam_12s) +
-  facet_wrap(~ Location + Predator, ncol = 1, scales = "free_x", strip.position = "right") +
+  facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
   theme_minimal() +
   theme(
     axis.text.x = element_blank(),
@@ -79,6 +79,36 @@ faucet.12s <- plot_bar(ps12s.rel, fill = "Family") +
     panel.grid.major = element_blank(), panel.grid.minor = element_blank()
   )
 faucet.12s
+
+
+faucet.12s <- plot_bar(ps12s.rel, fill = "Family") +
+  scale_fill_manual(values = palette_fam_12s) +
+  facet_wrap(
+    ~ Predator,
+    nrow = 1,
+    scales = "free_x"
+  ) +
+  theme_minimal(base_size = 18) +  # bump everything
+  theme(
+    axis.text.x  = element_blank(),
+    axis.title.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.text.y  = element_text(size = 14, color = "grey60"),
+    axis.title.y = element_text(size = 18, color = "grey40"),
+    axis.line.y  = element_line(color = "grey80"),
+    axis.ticks.y = element_line(color = "grey80"),
+    strip.text   = element_text(size = 16, face = "bold"),  # facet labels
+    legend.title = element_text(size = 16),
+    legend.text  = element_text(size = 14),
+    legend.position = "bottom",
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+faucet.12s
+
+
 
 
 ggsave(

@@ -170,9 +170,64 @@ anova_locbody <- aov(Species.Richness ~ Location.in.body, data = species_richnes
 anova_predator <- aov(Species.Richness ~ Predator, data = species_richness_long)
 anova_year <- aov(Species.Richness ~ Year, data = species_richness_long)
 
+# Plots histogram of species richness
+hist(species_richness_long_all$Species.Richness)
+
+#fits linear model
+species.richness_glm <- lm(Species.Richness ~ 
+                             (Location + Sex + Season + 
+                                Location.in.body + Predator + 
+                                Year + Marker)^2, 
+                           data = species_richness_long_all)
+
+# Output of summary from model
+summary(species.richness_glm)
+
+# Analysis of deviance table for the model
+anova(species.richness_glm)
+
+# Residuals
+res <- residuals(species.richness_glm)
+plot(res)
+
+# QQ for normality
+qqnorm(res)
+qqline(res)
+
+# Shapiro test for normality
+shapiro.test(res) #p-value = 0.0004514
+
+# levene test for homogeneity of variance
+leveneTest(Species.Richness ~ Marker, data = species_richness_long)
+# F = 0.3133 p = 0.5788
+
+
+# Checking for influenial outliers
+plot(model, which = 1)  # Residuals vs Fitted
+
+# Cook's distance
+plot(model, which = 4)  # Cook's distance plot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Example for Marker
-ggplot(species_richness_long, aes(x = Marker, y = Abundance, fill = Marker)) + 
+ggplot(species_richness_long, aes(x = Marker, y = Species.Richness, fill = Marker)) + 
   geom_boxplot() + 
   theme_bw()
 

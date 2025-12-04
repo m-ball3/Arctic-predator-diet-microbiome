@@ -115,6 +115,9 @@ replicate_to_remove <- "WADE-003-115"
 samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
 
 # RECREATES PHYLOSEQ OBJECT WITHOUT REPLICATES
+ps.16s <- ps.16s%>% 
+  subset_samples(LabID != replicate_to_remove)
+
 # Creates master phyloseq object
 ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
                    sample_data(samdf), 
@@ -151,7 +154,8 @@ samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
 saveRDS(ps.16s, "ps.16s")
 
 ## Merges same species
-ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)
+ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)%>% 
+  prune_taxa(taxa_sums(.) > 0, .)
 
 # Plots stacked bar plot of absolute abundance
 plot_bar(ps.16s, x="Specimen.ID", fill="Species.y")
@@ -250,6 +254,12 @@ ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.fauce
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
 otu.abs <- as.data.frame(otu_table(ps.16s))
 
+# Add Lab ID to otu.abs
+write.csv(otu.abs %>% 
+            rownames_to_column("LabID"), 
+          "./Deliverables/16S/ADFG_16s_absolute_speciesxsamples.csv", 
+          row.names = FALSE)
+
 # Changes NA.1 to it's corresponding ASV
 taxa.names <- as.data.frame(tax_table(ps.16s)) %>% 
   rownames_to_column("ASV") %>% 
@@ -314,78 +324,4 @@ collapse_species <- function(df) {
   df_wide <- df_sum %>% pivot_wider(names_from = Species, values_from = Abundance, values_fill = 0)
   return(df_wide)
 }
-
-# Apply
-otu.abs <- collapse_species(otu.abs)
-otu.prop <- collapse_species(otu.prop)
-
-# List of species names/keywords to remove
-species_remove <- c(
-  "delphinapterus"
-)
-
-remove_species_cols <- function(df, remove_terms) {
-  # TRUE if column matches ANY of the patterns in remove_terms
-  match_any <- Reduce(`|`, lapply(remove_terms, function(term) grepl(term, colnames(df)[-1], ignore.case = TRUE)))
-  # These columns to keep (not matched) plus 'Specimen.ID'
-  keep_cols <- c('Specimen.ID', colnames(df)[-1][!match_any])
-  df[, keep_cols, drop = FALSE]
-}
-
-# Apply for both 
-otu.abs <- remove_species_cols(otu.abs, species_remove)
-otu.prop <- remove_species_cols(otu.prop, species_remove)
-
-# Writes to CSV
-write.csv(otu.abs, "./Deliverables/16S/ADFG_16s_absolute_speciesxsamples.csv", row.names = FALSE)
-write.csv(otu.prop, "./Deliverables/16S/ADFG_16s_relative_speciesxsamples.csv", row.names = FALSE)
-
-
-
-
-
-
-
-
-
-
-
-
-# OLD CODE
-# # Creates a dataframe that maps ADFG IDs to sequences in taxa
-# 
-# ## Converts seqtab.nochim to long format (SampleID = WADE sample ID, Sequence = sequence column names)
-# seqtab_long <- as.data.frame(seqtab.nochim)
-# seqtab_long$WADE_ID <- rownames(seqtab_long)
-# 
-# seqtab_long <- seqtab_long %>%
-#   pivot_longer(
-#     cols = -WADE_ID,
-#     names_to = "Sequence",
-#     values_to = "Abundance"
-#   ) %>%
-#   filter(Abundance > 0)   # Keep only entries where the sequence is present in the sample
-# 
-# ## Keeps only the Sequence and WADE_ID columns
-# mapped.sequences <- seqtab_long[, c("Sequence", "WADE_ID")]
-# 
-# # Turns rownames into a column for joining to mapped.sequences
-# mapped.sequences <- mapped.sequences %>%
-#   left_join(
-#     samdf %>% rownames_to_column("WADE_ID") %>% dplyr::select(WADE_ID, Specimen.ID),
-#     by = "WADE_ID"
-#   )
-# 
-# mapped.taxa <- as.data.frame(merged.taxa)
-# 
-# # Add Sequence as a column from the row names
-# mapped.taxa$Sequence <- rownames(mapped.taxa)
-# 
-# # Merge with mapped.taxa to add ADFG_ID for each Sequence
-# mapped.taxa <- merge(mapped.taxa, mapped.sequences[, c("Sequence", "Specimen.ID")], by = "Sequence", all.x = TRUE)
-# 
-# # Reorders columns to put Sequence and ADFG_ID first
-# other_cols <- setdiff(names(mapped.taxa), c("Sequence", "Specimen.ID"))
-# mapped.taxa <- mapped.taxa[, c("Sequence", "Specimen.ID", other_cols)]
-# 
 
