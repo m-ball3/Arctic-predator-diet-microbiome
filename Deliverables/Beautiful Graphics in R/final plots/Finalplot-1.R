@@ -13,7 +13,7 @@ library(ggplot2)
 
 ps.12s <- readRDS("ps.12s")
 # ======== 12S ========
-ps.12s <- tax_glom(ps.12s, "Species.y", NArm = FALSE)
+ps.12s <- tax_glom(ps.12s, "Species", NArm = FALSE)
 # Filters out anything not in Actinopteri
 ps.12s <- subset_taxa(ps.12s, Class == "Actinopteri")
 nsamples(ps.12s)
@@ -40,24 +40,24 @@ fam.rel.plot.12s <- plot_bar(ps12s.rel, fill = "Family") +
 fam.rel.plot.12s
 
 # --------- Genus
-genera_12s <- sort(unique(as.character(tax_table(ps12s.rel)[,"Genus.y"])))
+genera_12s <- sort(unique(as.character(tax_table(ps12s.rel)[,"Genus"])))
 n_gen_12s <- length(genera_12s)
 palette_gen_12s <- rep(c(brewer.pal(8,"Pastel1"), brewer.pal(8,"Pastel2"), brewer.pal(12, "Set3"), brewer.pal(8, "Set2")), length.out = n_gen_12s)
 names(palette_gen_12s) <- genera_12s
 
-gen.rel.plot.12s <- plot_bar(ps12s.rel, fill = "Genus.y") +
+gen.rel.plot.12s <- plot_bar(ps12s.rel, fill = "Genus") +
   scale_fill_manual(values = palette_gen_12s) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
 gen.rel.plot.12s
 
 # --------- Species
-species_12s <- sort(unique(as.character(tax_table(ps12s.rel)[,"Species.y"])))
+species_12s <- sort(unique(as.character(tax_table(ps12s.rel)[,"Species"])))
 n_sp_12s <- length(species_12s)
 palette_sp_12s <- rep(c(brewer.pal(8,"Pastel2"), brewer.pal(8,"Pastel1"), brewer.pal(12, "Set3"), brewer.pal(8, "Set2")),, length.out = n_sp_12s)
 names(palette_sp_12s) <- species_12s
 
-sp.rel.plot.12s <- plot_bar(ps12s.rel, fill = "Species.y") +
+sp.rel.plot.12s <- plot_bar(ps12s.rel, fill = "Species") +
   scale_fill_manual(values = palette_sp_12s) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
@@ -111,6 +111,8 @@ faucet.12s <- plot_bar(ps12s.rel, fill = "Family") +
   )
 faucet.12s
 
+
+
 # OTHERS
 library(phyloseq)
 library(ggplot2)
@@ -140,17 +142,25 @@ dd_box   <- position_dodge2(width = 0.7, preserve = "single")
 dd_point <- position_jitterdodge(jitter.width = 0.01,
                                  dodge.width  = 0.45)
 
+# Define your manual color palette for Predators (adjust colors as needed)
+predator_colors <- c(
+  "bearded seal" = "#54463A",
+  "beluga whale" = "#367588",
+  "ringed seal"  = "#A6A59F"
+)
 div.12 <- ggplot(pr12s_data, aes(x = Year, y = value, color = Predator)) +
-  geom_boxplot(aes(group = interaction(Year, Predator)),
-               position = dd_box,
-               fill = NA, outlier.shape = NA,
-               width = 0.45, color = "grey40") +
+  # Boxplot with fill matching Predator color (lighter alpha)
+  geom_boxplot(aes(group = interaction(Year, Predator), fill = Predator),
+               position = dd_box, outlier.shape = NA, width = 0.45,
+               color = "grey40", alpha = 0.3) +  # light fill matching dots
   geom_jitter(position = dd_point, size = 3, alpha = 0.85) +
-  scale_color_brewer(palette = "Set2") +
+  # Manual colors for both color AND fill scales
+  scale_color_manual(values = predator_colors) +
+  scale_fill_manual(values = predator_colors) +
   facet_wrap(~ variable, ncol = 1, scales = "free") +
-  labs(title = "Alpha Diversity", y = "Diversity Index", x = "Year") +
+  labs(title = NA, y = "Diversity Index", x = "Year") +
   scale_y_continuous(limits = ylim_shannon, name = "Diversity Index") +
-  theme_minimal(base_size = 18) +  # global bump
+  theme_minimal(base_size = 18) +
   theme(
     legend.position = "none",
     axis.text.x  = element_text(hjust = 1, angle = 45, size = 16),
@@ -158,13 +168,12 @@ div.12 <- ggplot(pr12s_data, aes(x = Year, y = value, color = Predator)) +
     axis.title   = element_text(size = 18),
     plot.title   = element_text(hjust = 0.5, face = "bold", size = 22),
     strip.text   = element_text(size = 18),
-    legend.title = element_text(size = 16),
-    legend.text  = element_text(size = 14),
     strip.background = element_blank(),
     panel.grid.minor = element_blank()
   )
 
 div.12
+
 
 
 # Create 12S NMDS plot (legend hidden)
@@ -178,43 +187,21 @@ metadata <- as.data.frame(sample_data(ps.prop.12s))
 metadata$SampleID <- rownames(metadata)
 plot_data <- left_join(nmds_scores, metadata, by = "SampleID")
 
-# Choose distinct shape codes, e.g.
-shape_values <- c(21, 22, 23, 24, 25, 3, 4, 8, 7)  # Give each unique Location its own shape
-
-# Assign colors/shapes in your plot:
-nmds.12.shapes <- ggplot(plot_data, aes(x = MDS1, y = MDS2, color = Predator, shape = Location)) +
-  geom_point(size = 3, alpha = 0.85) +
-  scale_color_brewer(palette = "Set2") +
-  scale_shape_manual(values = shape_values) +
-  labs(
-    title = "Bray NMDS",
-    x = "NMDS1", y = "NMDS2",
-    color = "Predator", shape = "Location"
-  ) +
-  theme_bw(base_size = 14) +
-  theme(legend.position = "bottom", legend.box = "vertical", 
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-
-
-nmds.12.shapes
-
-
 
 nmds.12 <- ggplot(plot_data, aes(x = MDS1, y = MDS2, color = Predator)) +
-  # ellipses first so points are on top
   stat_ellipse(
     aes(fill = Predator),
-    geom   = "polygon",
-    alpha  = 0.25,
-    color  = NA,        # borders off; or set = "black" if you want outlines
-    level  = 0.95,      # confidence level
-    type   = "t"        # or "norm" depending on your preference
+    geom  = "polygon",
+    alpha = 0.25,
+    color = NA,
+    level = 0.95,
+    type  = "t"
   ) +
   geom_point(size = 3, alpha = 0.85) +
-  scale_color_brewer(palette = "Set2") +
-  scale_fill_brewer(palette = "Set2") +
+  scale_color_manual(values = predator_colors) +
+  scale_fill_manual(values = predator_colors) +
   labs(
-    title = "Bray NMDS",
+    title = NA,
     x = "NMDS1",
     y = "NMDS2",
     color = "Predator",
@@ -223,11 +210,7 @@ nmds.12 <- ggplot(plot_data, aes(x = MDS1, y = MDS2, color = Predator)) +
   theme_minimal(base_size = 18) +
   theme(
     legend.position = "none",
-    plot.title = element_text(
-      hjust = 0.5,
-      face  = "bold",
-      size  = 22
-    ),
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 22),
     axis.title = element_text(size = 18),
     axis.text  = element_text(size = 16)
   )
@@ -262,23 +245,79 @@ silhouettes <- list(
 #   )
 nmds.12
 
+
+# IMAGES
+library(png)
+library(grid)
+library(ggplot2)
+library(patchwork)
+
+library(magick)
+library(grid)
+library(ggplot2)
+
+# read any format (avif, jpg, png...)
+beluga_img  <- image_read("./Deliverables/Beautiful Graphics in R/silhouettes/belugawhalepic.avif")
+ringed_img  <- image_read("./Deliverables/Beautiful Graphics in R/silhouettes/ringedsealpic.jpg")
+bearded_img <- image_read("./Deliverables/Beautiful Graphics in R/silhouettes/beardedsealpic.jpg")
+
+# convert to rasterGrob
+beluga_grob  <- rasterGrob(as.raster(beluga_img),  interpolate = TRUE)
+ringed_grob  <- rasterGrob(as.raster(ringed_img),  interpolate = TRUE)
+bearded_grob <- rasterGrob(as.raster(bearded_img), interpolate = TRUE)
+
+img_plot <- function(g) {
+  ggplot() +
+    annotation_custom(g) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE) +
+    theme_void()
+}
+
+beluga_plot  <- img_plot(beluga_grob)
+ringed_plot  <- img_plot(ringed_grob)
+bearded_plot <- img_plot(bearded_grob)
+
+# order here should match facet order in faucet.12s
+pred_img_row <- bearded_plot +
+  plot_spacer() +   # space between bearded and beluga
+  beluga_plot  +
+  plot_spacer() +   # space between beluga and ringed
+  ringed_plot +
+  plot_layout(
+    nrow   = 1,
+    widths = c(1, 0.14, 1, 0.14, 1)  # control gap width
+  )+
+  theme(plot.margin = margin(t = 0, r = 5, b = 0, l = 5))
+
 # Turn off legend on faucet plot
 faucet.12s <- faucet.12s + theme(legend.position = "none")
+
+#make top margin of plot smaller
+faucet.12s <- faucet.12s +
+  theme(plot.margin = margin(t = -5, r = 5, b = 5, l = 5))
+
+
+faucet_with_imgs <- pred_img_row / faucet.12s +
+  plot_layout(heights = c(20, 20))  # adjust relative height as needed
+
+faucet_with_imgs
+
+
 
 # Collect guides only for the top row
 final_plot <- (div.12 + nmds.12) +
   plot_layout(guides = "collect") &
   theme(legend.position = "none")
 
-final_plot / faucet.12s
+imgs <- final_plot / faucet_with_imgs
 
 
 
 ggsave(
-  filename = "./Deliverables/Beautiful Graphics in R/final_patchwork_12s-revised.png",
-  plot = final_plot / faucet.12s,
+  filename = "./Deliverables/Beautiful Graphics in R/final_patchwork_12s-imgs.png",
+  plot = imgs,
   width = 22,
-  height = 16,
+  height = 20,
   dpi = 350,
   units = "in",
   bg = "white"

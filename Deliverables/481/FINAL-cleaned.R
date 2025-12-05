@@ -14,6 +14,7 @@ library(RColorBrewer)
 library(agricolae)   # for post-hoc tests and letters
 library(patchwork)   # for plot layout (if not already loaded)
 library(MuMIn)
+library(lmtest)
 
 # ------------------------------------------------------------------
 # Loads in sample data
@@ -144,8 +145,29 @@ hist(na.omit(sex.df$Species.Richness), main = "Histogram: Richness 12s", xlab = 
 #
 # par(mfrow = c(1, 1))
 
+pred.p <- ggplot(sex.df, aes(x = Predator, y = Species.Richness)) +
+  geom_boxplot(fill = "lightblue", color = "grey30") +
+  theme_light() +
+  theme(
+    legend.position   = "none",
+    axis.text.x       = element_text(angle = 45, hjust = 1),
+    panel.grid.major  = element_blank(),
+    panel.grid.minor  = element_blank()
+  )
+pred.p
 
+sex.p <- ggplot(sex.df, aes(x = Sex, y = Species.Richness)) +
+  geom_boxplot(fill = "skyblue3", color = "grey30") +
+  theme_light() +
+  theme(
+    legend.position   = "none",
+    axis.text.x       = element_text(angle = 45, hjust = 1),
+    panel.grid.major  = element_blank(),
+    panel.grid.minor  = element_blank()
+  )
+sex.p
 
+pred.p | sex.p
 
 # ------------------------------------------------------------------
 # Fits Model
@@ -158,23 +180,22 @@ hist(na.omit(sex.df$Species.Richness), main = "Histogram: Richness 12s", xlab = 
 pred.lm <- lm(Species.Richness ~ Predator, sex.df, na.action = na.fail)
 pred.sex <- lm(Species.Richness ~ Predator + Sex, sex.df, na.action = na.fail)
 pred.sex.int <- lm(Species.Richness ~ Predator + Sex + Predator:Sex, sex.df, na.action = na.fail)
-#loc.lm <- lm(Species.Richness ~ Predator + Sex + Predator:Sex, sex.df, na.action = na.fail)
-summary(loc.lm)
-dredge(loc.lm)
 
-lrtest(pred.lm, pred.sex, pred.sex.int)
+# log transformation
+sex.df <- sex.df %>%
+  mutate(Species.Richness.log = log(Species.Richness))
 
-# Report AICS 
+#model with log transformation
+pred.lm.log <- lm(Species.Richness.log ~ Predator, sex.df, na.action = na.fail)
+pred.sex.log <- lm(Species.Richness.log ~ Predator + Sex, sex.df, na.action = na.fail)
+pred.sex.int.log <- lm(Species.Richness.log ~ Predator + Sex + Predator:Sex, sex.df, na.action = na.fail)
 
-
-library(lmtest)
-
-aov.2 <- aov(Species.Richness ~ Predator*Sex, sex.df)
-summary(aov.2)
-
+summary(pred.lm.log)
+summary(pred.sex.log)
+summary(pred.sex.int.log)
 
 # Residuals
-res <- residuals(loc.lm)
+res <- residuals(pred.sex.int.log)
 plot(res)
 
 # QQ for normality
@@ -182,16 +203,23 @@ qqnorm(res)
 qqline(res)
 
 # Shapiro test for normality
-shapiro.test(res) #p-value = 0.1123
+shapiro.test(res) #p-value = 0.1891
 
 # levene test for homogeneity of variance 3 NEED TO DO THIS FOR OTHER INDEPENDENT VARIABLES
-leveneTest(aov.2)
+leveneTest(pred.lm)
 
 # Checking for influenial outliers
-plot(loc.lm, which = 1)  # Residuals vs Fitted
+plot(pred.lm.log, which = 1)  # Residuals vs Fitted
 
 # Cook's distance
-plot(species.richness_lm.log, which = 4)  # Cook's distance plot
+plot(pred.lm, which = 4)  # Cook's distance plot
 
+# MODEL CHECKS
+dredge(pred.sex.int.log)
+
+??lrtest()
+lrtest(pred.lm.log, pred.sex.log, pred.sex.int.log)
+
+# Report AICS 
 
 
