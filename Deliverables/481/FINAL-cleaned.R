@@ -13,7 +13,11 @@ library(ggplot2)
 library(RColorBrewer)
 library(agricolae)   # for post-hoc tests and letters
 library(patchwork)   # for plot layout (if not already loaded)
-
+library(MuMIn)
+library(lmtest)
+library(ggeffects)
+library(png)
+library(grid)
 
 # ------------------------------------------------------------------
 # Loads in sample data
@@ -43,7 +47,7 @@ samdf_unique <- samdf_filtered %>%
   distinct(Specimen.ID, .keep_all = TRUE)
 
 # ------------------------------------------------------------------
-# Calculates the species richness 
+# Calculates the species richness **I WANT TO CHANGE TO ALPHA DIVERSITY!!! --> shannon or simposon? something else?
 # ------------------------------------------------------------------
 richness.16s <- apply(otu.abs.16s[, -1], 1, function(x) sum(x > 0))
 names(richness.16s) <- otu.abs.16s$Specimen.ID
@@ -55,11 +59,11 @@ samdf_unique$Species_Richness.12s <- richness.12s[samdf_unique$Specimen.ID]
 
 rich.12s <- as.data.frame(richness.12s)
 
-# checks what is being counted: 
-sample_row <- which(otu.abs.12s$Specimen.ID == '2023295')
-colnames(otu.abs.12s)[-1][otu.abs.12s[sample_row, -1] > 0]
-
-colnames(otu.abs.12s)
+# # checks what is being counted: 
+# sample_row <- which(otu.abs.12s$Specimen.ID == '2023295')
+# colnames(otu.abs.12s)[-1][otu.abs.12s[sample_row, -1] > 0]
+# 
+# colnames(otu.abs.12s)
 
 # ------------------------------------------------------------------
 # Dataframe to compare species richness across markers
@@ -102,90 +106,100 @@ species_richness_long_all <- samdf_unique %>%
     TRUE ~ Marker
   ))
 
-
+# df that includes all sucessfully amplified ssamples in 12s and 16s 
+# (not just the ones that were successful for both 12s and 16s)
 species_richness_long_all <- species_richness_long_all %>%
   left_join(samdf_unique %>% 
               select(Specimen.ID, Location, Sex, Season, Location.in.body, Predator, Year),
             by = "Specimen.ID")
 
-
-
 # ------------------------------------------------------------------
 # Descriptive statistics
 # ------------------------------------------------------------------
-nrow(samdf_unique) # = 51
+# Histogram of years
+hist(na.omit(species_richness_long_all$Year), main = NA, xlab = "Year", ylab= "Number of Samples", col = "skyblue")
 
-# mean species richness
-mean(species_richness_long_all$Species.Richness, na.rm = TRUE) # = 4.194444
+# Creates a df with just sames and whether they were male or female
+sex.df <- species_richness_long_all %>%
+  filter(Sex %in% c("M", "F")) %>%
+  select(Specimen.ID, Species.Richness, Sex, Predator)%>%
+  mutate(Sex = as.factor(Sex))%>%
+  mutate(Predator = as.factor(Predator))
 
-# mean species richness per marker
-mean(samdf_unique$Species_Richness.16s, na.rm = TRUE) # = 4.08
-mean(samdf_unique$Species_Richness.12s, na.rm = TRUE) # = 4.255319
+
+# samdf_unique is filtered by sample ID's that passed QAQC
+nrow(sex.df) # = 61
+
+#mean species richness
+mean(sex.df$Species.Richness, na.rm = TRUE) # = 4.262295
 
 # range of species richness
-range(species_richness_long_all$Species.Richness, na.rm = TRUE) # = 4.194444
+range(sex.df$Species.Richness, na.rm = TRUE) # = 1 - 14
 
-range(samdf_unique$Species_Richness.16s, na.rm = TRUE) # 1 - 11
-range(samdf_unique$Species_Richness.12s, na.rm = TRUE) # 1 - 14
+# variance of species richness
+var(sex.df$Species.Richness, na.rm = TRUE) # 8.263388
 
-var(samdf_unique$Species_Richness.16s, na.rm = TRUE) # 5.993333
-var(samdf_unique$Species_Richness.12s, na.rm = TRUE) # 8.672525
+# standard deviation of species richness
+sd(sex.df$Species.Richness, na.rm = TRUE) # 2.874611
 
-sd(samdf_unique$Species_Richness.16s, na.rm = TRUE) # 2.448129
-sd(samdf_unique$Species_Richness.12s, na.rm = TRUE) # 2.944915
+# histogram of species richness
+hist(na.omit(sex.df$Species.Richness), main = NA, xlab = "Species Richness", ylab= "Frequency", col = "skyblue")
 
-par(mfrow = c(2, 2))
+hist(na.omit(sex.df$Species.Richness), main = "Histogram: Richness 12s", xlab = "Species Richness 12s", col = "lightgreen")
+#
+# boxplot(na.omit(samdf_unique$Species_Richness.16s), main = "Boxplot: Richness 16s", ylab = "Species Richness 16s", col = "skyblue")
+# boxplot(na.omit(samdf_unique$Species_Richness.12s), main = "Boxplot: Richness 12s", ylab = "Species Richness 12s", col = "lightgreen")
+#
+# par(mfrow = c(1, 1))
 
-hist(na.omit(samdf_unique$Species_Richness.16s), main = "Histogram: Richness 16s", xlab = "Species Richness 16s", col = "skyblue")
-hist(na.omit(samdf_unique$Species_Richness.12s), main = "Histogram: Richness 12s", xlab = "Species Richness 12s", col = "lightgreen")
+pred.p <- ggplot(sex.df, aes(x = Predator, y = Species.Richness)) +
+  geom_boxplot(fill = "lightblue", color = "grey30") +
+  theme_light() +
+  theme(
+    legend.position   = "none",
+    axis.text.x       = element_text(angle = 45, hjust = 1),
+    panel.grid.major  = element_blank(),
+    panel.grid.minor  = element_blank()
+  )
+pred.p
 
-boxplot(na.omit(samdf_unique$Species_Richness.16s), main = "Boxplot: Richness 16s", ylab = "Species Richness 16s", col = "skyblue")
-boxplot(na.omit(samdf_unique$Species_Richness.12s), main = "Boxplot: Richness 12s", ylab = "Species Richness 12s", col = "lightgreen")
+sex.p <- ggplot(sex.df, aes(x = Sex, y = Species.Richness)) +
+  geom_boxplot(fill = "skyblue3", color = "grey30") +
+  theme_light() +
+  theme(
+    legend.position   = "none",
+    axis.text.x       = element_text(angle = 45, hjust = 1),
+    panel.grid.major  = element_blank(),
+    panel.grid.minor  = element_blank()
+  )
+sex.p
 
-par(mfrow = c(1, 1))
-
+pred.p | sex.p
 
 # ------------------------------------------------------------------
-# Explores independent variables with many anovas
+# Fits Model
 # ------------------------------------------------------------------
+# Models
 
-### MANY ANOVAS
-# Example for Marker
-anova_marker <- aov(Species.Richness ~ Marker, data = species_richness_long)
-summary(anova_marker)
+pred.lm <- lm(Species.Richness ~ Predator, sex.df, na.action = na.fail)
+pred.sex <- lm(Species.Richness ~ Predator + Sex, sex.df, na.action = na.fail)
+pred.sex.int <- lm(Species.Richness ~ Predator + Sex + Predator:Sex, sex.df, na.action = na.fail)
 
-# Repeat for other factors
-# e.g. Location, Sex, Season, Location.in.body, Predator, Year
-anova_location <- aov(Species.Richness ~ Location, data = species_richness_long)
-anova_sex <- aov(Species.Richness ~ Sex, data = species_richness_long)
-anova_season <- aov(Species.Richness ~ Season, data = species_richness_long)
-anova_locbody <- aov(Species.Richness ~ Location.in.body, data = species_richness_long)
-anova_predator <- aov(Species.Richness ~ Predator, data = species_richness_long)
-anova_year <- aov(Species.Richness ~ Year, data = species_richness_long)
+# log transformation
+sex.df <- sex.df %>%
+  mutate(Species.Richness.log = log(Species.Richness))
 
+#model with log transformation
+pred.lm.log <- lm(Species.Richness.log ~ Predator, sex.df, na.action = na.fail)
+pred.sex.log <- lm(Species.Richness.log ~ Predator + Sex, sex.df, na.action = na.fail)
+pred.sex.int.log <- lm(Species.Richness.log ~ Predator + Sex + Predator:Sex, sex.df, na.action = na.fail)
 
-# ------------------------------------------------------------------
-# explores further & fits glm
-# ------------------------------------------------------------------
-
-# Plots histogram of species richness
-hist(species_richness_long_all$Species.Richness)
-
-#fits linear model
-species.richness_glm <- lm(Species.Richness ~ 
-                             (Location + Sex + Season + 
-                                Location.in.body + Predator + 
-                                Year + Marker)^2, 
-                           data = species_richness_long_all)
-
-# Output of summary from model
-summary(species.richness_glm)
-
-# Analysis of deviance table for the model
-anova(species.richness_glm)
+summary(pred.lm.log)
+summary(pred.sex.log)
+summary(pred.sex.int.log)
 
 # Residuals
-res <- residuals(species.richness_glm)
+res <- residuals(pred.sex.int.log)
 plot(res)
 
 # QQ for normality
@@ -193,147 +207,55 @@ qqnorm(res)
 qqline(res)
 
 # Shapiro test for normality
-shapiro.test(res) #p-value = 0.0004514
+shapiro.test(res) #p-value = 0.1891
 
-# levene test for homogeneity of variance 3 NEED TO DO THIS FOR OTHER INDEPENDENT VARIABLES
-leveneTest(Species.Richness ~ Marker, data = species_richness_long)
-# F = 0.3133 p = 0.5788
-
+# levene test for homogeneity of variance
+leveneTest(pred.lm)
 
 # Checking for influenial outliers
-plot(species.richness_glm, which = 1)  # Residuals vs Fitted
+plot(pred.lm.log, which = 1)  # Residuals vs Fitted
 
 # Cook's distance
-plot(species.richness_glm, which = 4)  # Cook's distance plot
+plot(pred.lm, which = 4)
 
+# MODEL CHECKS
+dredge(pred.sex.int.log)
 
+??lrtest()
+lrtest(pred.lm.log, pred.sex.log, pred.sex.int.log)
 
+# CHOSEN MODEL
+summary(pred.sex.log)
+plot(pred.sex.log)
 
+# creates predicted values
 
+pred <- ggpredict(pred.sex.log, terms = c("Predator", "Sex"))
 
+# Model fitness plot
+f.pred <- ggplot(pred,
+       aes(x = x, y = predicted, fill = group)) +
+  geom_col(position = "dodge", alpha = 0.8, width = 0.7) +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high),
+                position = position_dodge(0.7), width = 0.25) +
+  geom_point(data = sex.df, 
+             aes(x = Predator, y = Species.Richness.log, color = Sex),
+             inherit.aes = FALSE,
+             position = position_jitterdodge(dodge.width = 0.7, jitter.width = 0.15), 
+             alpha = 0.7, size = 2) +
+  labs(title = "Predicted log(Species Richness) by Predator and Sex",
+       x = "Predator", y = "log(Species Richness)", 
+       fill = "Sex", color = "Sex") +
+  scale_fill_manual(values = c("F" = "#1f78b4", "M" = "lightblue")) +
+  scale_color_manual(values = c("F" = "#153e5e", "M" = "lightblue4")) +
+  theme_light() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom",
+        panel.grid.minor = element_blank())
+f.pred
 
-
-
-
-# OLD CODE
-# # ------------------------------------------------------------------
-# # Makes a large plot with one way anovas
-# # ------------------------------------------------------------------
-# 
-# custom_titles <- c(
-#   Marker = "Genetic Marker",
-#   Location = "Location in Alaska",
-#   Sex = "Sex",
-#   Season = "Season",
-#   `Location.in.body` = "Location in Body",
-#   Predator = "Predator",
-#   Year = "Year"
-# )
-# 
-# 
-# 
-# plot_anova_letters <- function(df, factor_col, response = "Species.Richness",
-#                                show_yaxis = TRUE) {
-#   factor_col <- enquo(factor_col)
-#   varname <- quo_name(factor_col)
-#   
-#   if (varname == "Location.in.body") {
-#     df <- df %>%
-#       filter(Location.in.body != "" & !is.na(Location.in.body) & Location.in.body %in% c("stomach", "feces"))
-#   }
-#   
-#   df[[varname]] <- as.factor(df[[varname]])
-#   
-#   if (nlevels(df[[varname]]) < 2) {
-#     message("Not enough levels in ", varname, " for ANOVA. Plotting boxplot only.")
-#     p <- ggplot(df, aes_string(x = varname, y = response, fill = varname)) +
-#       geom_boxplot() +
-#       scale_fill_brewer(palette = "Paired") +
-#       theme_light() +
-#       theme(
-#         legend.position = "none",
-#         axis.text.x = element_text(angle = 45, hjust = 1),
-#         panel.grid.major = element_blank(),
-#         panel.grid.minor = element_blank()
-#       ) +
-#       xlab(NULL) +  # remove x-axis label
-#       ggtitle(varname)  # use plot title for variable name
-#     
-#     if (show_yaxis) {
-#       p <- p + ylab(response)
-#     } else {
-#       p <- p + ylab(NULL) + theme(axis.title.y = element_blank(),
-#                                   axis.ticks.y = element_blank(),
-#                                   axis.text.y = element_blank())
-#     }
-#     return(p)
-#   }
-#   
-#   formula <- as.formula(paste(response, "~", varname))
-#   aov_res <- aov(formula, data = df)
-#   
-#   tukey <- tryCatch({
-#     agricolae::HSD.test(aov_res, varname, group = TRUE)
-#   }, error = function(e) NULL)
-#   
-#   if (is.null(tukey) || is.null(tukey$groups)) {
-#     message("No Tukey groups for ", varname, ". Plotting without letters.")
-#     letters_df <- NULL
-#   } else {
-#     letters_df <- data.frame(Level = rownames(tukey$groups),
-#                              Letter = tukey$groups$groups)
-#   }
-#   
-#   means <- aggregate(as.formula(paste(response, "~", varname)), data = df, FUN = mean)
-#   means <- means[order(means[[varname]]), ]
-#   if (!is.null(letters_df)) {
-#     means <- merge(means, letters_df, by.x = varname, by.y = "Level", all.x = TRUE)
-#   }
-#   
-#   p <- ggplot(df, aes_string(x = varname, y = response, fill = varname)) +
-#     geom_boxplot() +
-#     #scale_fill_brewer(palette = "Accent") +
-#     theme_light() +
-#     theme(
-#       legend.position = "none",
-#       axis.text.x = element_text(angle = 45, hjust = 1),
-#       panel.grid.major = element_blank(),
-#       panel.grid.minor = element_blank(),
-#       plot.title = element_text(hjust = 0.5)   # centers title
-#     ) +
-#     xlab(NULL) +
-#     ggtitle(custom_titles[[varname]])
-#   
-#   
-#   if (show_yaxis) {
-#     p <- p + ylab(response)
-#   } else {
-#     p <- p + ylab(NULL) + theme(axis.title.y = element_blank(),
-#                                 axis.ticks.y = element_blank(),
-#                                 axis.text.y = element_blank())
-#   }
-#   
-#   if (!is.null(letters_df)) {
-#     p <- p + geom_text(data = means,
-#                        aes_string(x = varname, y = max(df[[response]], na.rm = TRUE) * 1.05, label = "Letter"),
-#                        inherit.aes = FALSE, size = 5)
-#   }
-#   return(p)
-# }
-# 
-# P_Marker <- plot_anova_letters(species_richness_long_all, Marker, show_yaxis = TRUE)
-# P_Location <- plot_anova_letters(species_richness_long_all, Location, show_yaxis = FALSE)
-# P_Sex <- plot_anova_letters(species_richness_long_all, Sex, show_yaxis = FALSE)
-# P_Season <- plot_anova_letters(species_richness_long_all, Season, show_yaxis = TRUE)
-# P_LocBody <- plot_anova_letters(species_richness_long_all, Location.in.body, show_yaxis = FALSE)
-# P_Predator <- plot_anova_letters(species_richness_long_all, Predator, show_yaxis = FALSE)
-# P_Year <- plot_anova_letters(species_richness_long_all, Year, show_yaxis = TRUE)
-# 
-# (P_Marker + P_Location + P_Sex) / (P_Season + P_LocBody + P_Predator) / P_Year
-# 
-# combined_plot <- (P_Marker + P_Location + P_Sex) / (P_Season + P_LocBody + P_Predator) / P_Year
-# 
-# # Save the combined plot to a file
-# # ggsave("./Deliverables/Beautiful Graphics in R/species_richness_anova_plots.png", combined_plot, width = 12, height = 10, dpi = 300)
-
+# Add Lab ID to otu.abs
+write.csv(sex.df,
+          "./Deliverables/481/pred.sex.df.csv", 
+          row.names = FALSE)
 

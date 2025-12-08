@@ -41,7 +41,7 @@ final_map <- ggplot() +
   coord_fixed(xlim = c(-180, -140), ylim = c(50, 74),
               ratio = 1 / cos(mean(alaska$lat, na.rm = TRUE) * pi / 180)) +
   theme_minimal(base_size = 14) +
-  theme(legend.position = "none",
+  theme(legend.position = "left",
         plot.title = element_text(hjust = 0.5, face = "bold"), 
         panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   labs(title = "Alaska Sample Sites", x = NULL, y = NULL)

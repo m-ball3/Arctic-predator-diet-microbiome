@@ -64,9 +64,9 @@ plot_data <- plot_data %>%
       TRUE                              ~ NA_character_
     )
   )
-nmds.12.season <- ggplot(
-  plot_data,
-  aes(x = MDS1, y = MDS2, color = Predator, shape = Season)
+nmds.12.loc <- ggplot(
+  combined_df,
+  aes(x = MDS1, y = MDS2, color = Predator, shape = Location)
 ) +
   stat_ellipse(
     aes(fill = Predator),
@@ -95,7 +95,7 @@ nmds.12.season <- ggplot(
     axis.text  = element_text(size = 16)
   )
 
-nmds.12.season
+nmds.12.loc
 
 
 # ------------------------------------------------------------------
