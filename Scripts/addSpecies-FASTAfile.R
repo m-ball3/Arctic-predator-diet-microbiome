@@ -3,7 +3,7 @@
 library(Biostrings)
 
 # 12S
-fasta <- readDNAStringSet("DADA2/Ref-DB/16S_Arctic_predator_reference_database_07_2025.fasta")
+fasta <- readDNAStringSet("./DADA2/Ref-DB/12S/12S_S-Bering-DB.fasta")
 headers <- names(fasta)
 
 # Split headers by ";" and extract the last two entries as genus and species
@@ -31,7 +31,7 @@ gs_names <- gs_names[valid]
 names(fasta_gs) <- gs_names
 
 # Step 2: Write intermediate fasta with Genus_species headers
-intermediate_file <- "DADA2/Ref-DB/16s-ADDSPECIES_INTERMEDIATE.fasta"
+intermediate_file <- "DADA2/Ref-DB/12S/12s-ADDSPECIES_INTERMEDIATE.fasta"
 writeXStringSet(fasta_gs, intermediate_file)
 
 # Step 3: Rename sequence IDs to sq1, sq2, etc., preserving Genus_species
@@ -51,5 +51,5 @@ for (i in seq_along(lines)) {
 }
 
 # Step 4: Write final fixed fasta
-output_file <- "DADA2/Ref-DB/16S-AddSpecies_11-25.fasta"
+output_file <- "DADA2/Ref-DB/12S/12S_S-Bering-addspecies-DB.fasta"
 writeLines(lines, output_file)
