@@ -146,6 +146,11 @@ nsamples(ps.16s)
 ps.16s <- prune_samples(sample_sums(ps.16s) >= 100, ps.16s)
 nsamples(ps.16s)
 
+# Filtering to remove taxa with less than 1% of reads assigned in at least 1 sample.
+f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
+lowcount.filt <- genefilter_sample(ps.16s, f1, A=1)
+ps.16s <- prune_taxa(lowcount.filt, ps.16s) # WONDREING IF I SHOULD NOW RENAME PS.12S !!
+
 # Ensures samples removed in filtering are removed from samdf
 row_to_remove <- "WADE-003-146"
 samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
@@ -254,12 +259,6 @@ ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.fauce
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
 otu.abs <- as.data.frame(otu_table(ps.16s))
 
-# Add Lab ID to otu.abs
-write.csv(otu.abs %>% 
-            rownames_to_column("LabID"), 
-          "./Deliverables/16S/ADFG_16s_absolute_speciesxsamples.csv", 
-          row.names = FALSE)
-
 # Changes NA.1 to it's corresponding ASV
 taxa.names <- as.data.frame(tax_table(ps.16s)) %>% 
   rownames_to_column("ASV") %>% 
@@ -278,50 +277,31 @@ otu.abs$Specimen.ID <- samdf[rownames(otu.abs), "Specimen.ID"]
 otu.abs <- otu.abs[, c(ncol(otu.abs), 1:(ncol(otu.abs)-1))]
 
 # CREATES RELATIVE SAMPLES X SPECIES TABLE
-otu.prop <- as.data.frame(otu_table(ps16s.rel))
-colnames(otu.prop) <- as.data.frame(tax_table(ps16s.rel))$Species.y
+# Removes column for relative abundance calc
+otu_counts <- otu.abs[, -1]
 
-## Adds ADFG Sample ID as a column
-otu.prop$Specimen.ID <- samdf[rownames(otu.prop), "Specimen.ID"]
+# row-wise proportions
+otu.prop <- otu_counts / rowSums(otu_counts)
 
-## Moves ADFG_SampleID to the first column
+# add Specimen.ID back and reorder columns
+otu.prop$Specimen.ID <- otu.abs$Specimen.ID
 otu.prop <- otu.prop[, c(ncol(otu.prop), 1:(ncol(otu.prop)-1))]
 
-# Changes NaN to 0
+# replace NaN (rows that were all zero) with 0
 otu.prop[is.na(otu.prop)] <- 0
 
-# Rounds to three decimal places
+# round numeric columns
 is.num <- sapply(otu.prop, is.numeric)
 otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
 
+# Add Lab ID to otu.abs
+write.csv(otu.abs %>% 
+            rownames_to_column("LabID"), 
+          "./Deliverables/16S/ADFG_16s_absolute_speciesxsamples.csv", 
+          row.names = FALSE)
 
-# Replace NA column names in abs & prop
-na_cols <- which(is.na(colnames(otu.abs)))
-if(length(na_cols) > 0) colnames(otu.abs)[na_cols] <- "UNASSIGNED"
-
-na_cols <- which(is.na(colnames(otu.prop)))
-if(length(na_cols) > 0) colnames(otu.prop)[na_cols] <- "UNASSIGNED"
-
-# Function to merge species variant columns (except for NA variants)
-collapse_species <- function(df) {
-  # Extract column names (assuming first is Specimen.ID)
-  sp_cols <- colnames(df)[-1]
-  # Only collapse if not 'NA' or an NA variant
-  collapse_name <- function(x) {
-    if (grepl('^NA(\\.|$)', x)) {
-      return(x)
-    } else {
-      sub('\\.\\d+$', '', x)  # Remove trailing .number
-    }
-  }
-  collapsed_names <- sapply(sp_cols, collapse_name)
-  colnames(df)[-1] <- collapsed_names
-  # Gather to long format
-  df_long <- df %>% pivot_longer(-Specimen.ID, names_to = "Species", values_to = "Abundance")
-  # Sum across variants for each specimen/species, keeping NA/NA.n separate
-  df_sum <- df_long %>% group_by(Specimen.ID, Species) %>% summarize(Abundance = sum(Abundance), .groups = "drop")
-  # Wide format back (Specimen.ID first)
-  df_wide <- df_sum %>% pivot_wider(names_from = Species, values_from = Abundance, values_fill = 0)
-  return(df_wide)
-}
-
+# Add Lab ID to otu.abs
+write.csv(otu.prop %>% 
+            rownames_to_column("LabID"), 
+          "./Deliverables/16S/ADFG_16s_relative_speciesxsamples.csv", 
+          row.names = FALSE)
