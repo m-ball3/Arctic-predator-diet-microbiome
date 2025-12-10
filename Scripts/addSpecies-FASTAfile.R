@@ -3,7 +3,7 @@
 library(Biostrings)
 
 # 12S
-fasta <- readDNAStringSet("./DADA2/Ref-DB/12S/12S_S-Bering-DB.fasta")
+fasta <- readDNAStringSet("./DADA2/Ref-DB/12S/12S_Arctic-DB.fasta")
 headers <- names(fasta)
 
 # Split headers by ";" and extract the last two entries as genus and species
@@ -51,5 +51,5 @@ for (i in seq_along(lines)) {
 }
 
 # Step 4: Write final fixed fasta
-output_file <- "DADA2/Ref-DB/12S/12S_S-Bering-addspecies-DB.fasta"
+output_file <- "DADA2/Ref-DB/12S/12S_Arctic-addspecies-DB.fasta"
 writeLines(lines, output_file)

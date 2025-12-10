@@ -20,64 +20,9 @@ library(patchwork)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-regionalDB.Rdata")
 taxa <- tax_table
 rm(tax_table)
-# ------------------------------------------------------------------
-# FORMATS METADATASHEET FOR PHYLOSEQ OBJ
-# ------------------------------------------------------------------
-# Removes file extensions from OTU table names
-rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
-
-# Gets sample metadata; filters out NA's (shipment 1)
-labdf <- read.csv("metadata/ADFG_dDNA_labwork_metadata.csv")%>%
-  filter(!is.na(LabID))
-
-samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
-
-# Renames "species" column to "Predator" & makes all lowercase
-samdf <- dplyr::rename(samdf, Predator = Species)
-samdf$Predator <- tolower(samdf$Predator)
-
-# Creates a column corresponding ADFG sample IDs with WADE sample IDs
-samdf <- samdf %>%
-  left_join(
-    labdf %>% dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID),
-    by = c("Specimen.ID", "Repeat.or.New.Specimen.")
-  )
-
-# Remove rows where LabID is NA (because shipment 1 was bad & thus not extracted)
-samdf <- samdf[!is.na(samdf$LabID), ]
-
-# Then set row names to LabID
-rownames(samdf) <- samdf$LabID
-
-# Only keeps rows that appear in both metadata and seq.tab 
-## AKA only samples that made it through all steps 
-common_ids <- intersect(rownames(samdf), rownames(seqtab.nochim))
-samdf <- samdf[common_ids, ]
-seqtab.nochim <- seqtab.nochim[common_ids, ]
-
-# Checks for duplicates and identical sample rownames in both
-
-### should return FALSE
-any(duplicated(rownames(samdf)))
-any(duplicated(rownames(seqtab.nochim)))
-
-### should return TRUE
-all(rownames(samdf) %in% rownames(seqtab.nochim))
-all(rownames(seqtab.nochim) %in% rownames(samdf))
-
-# Checks for samples in metadata but not in OTU table
-setdiff(rownames(samdf), rownames(seqtab.nochim))
-
-# Checks for samples in OTU table but not in metadata
-setdiff(rownames(seqtab.nochim), rownames(samdf))
-
-# Sanity check: row names are the same
-rownames(samdf)
-rownames(seqtab.nochim)
-
 
 # ------------------------------------------------------------------
 # CREATES PHYLOSEQ
@@ -246,17 +191,17 @@ ADFG.faucet <- plot_bar(ps12s.rel, x="Specimen.ID", fill="Species") +
 ADFG.faucet
 
 #saves plots
-ggsave("Deliverables/12S/WADE labels/1S-species.png", plot = sp.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
-ggsave("Deliverables/12S/ADFG-12S-species.png", plot = ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/WADE labels/1S-species.png", plot = sp.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/ADFG-12S-species.png", plot = ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/12S/WADE labels/12S-genus.png", plot = gen.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
-ggsave("Deliverables/12S/ADFG-12S-genus.png", plot = ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/WADE labels/12S-genus.png", plot = gen.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/ADFG-12S-genus.png", plot = ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/12S/WADE labels/12S-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
-ggsave("Deliverables/12S/ADFG-12S-family.png", plot = ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/WADE labels/12S-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/ADFG-12S-family.png", plot = ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/12S/WADE labels/12S-species-by-pred.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
-ggsave("Deliverables/12S/ADFG-12S-species-by-pred.111125.png", plot = ADFG.faucet, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/WADE labels/12S-species-by-pred.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/ADFG-12S-species-by-pred.111125.png", plot = ADFG.faucet, width = 16, height = 8, units = "in", dpi = 300)
 
 
 # ------------------------------------------------------------------
@@ -303,11 +248,11 @@ otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
 
 # Writes to CSV and adds Lab ID to otu.abs
 write.csv(otu.abs %>% 
-            rownames_to_column("LabID"), "./Deliverables/12S/ADFG_12s_absolute_speciesxsamples.csv", row.names = FALSE)
+            rownames_to_column("LabID"), "./Deliverables/12S/regions/ADFG_12s_absolute_speciesxsamples.csv", row.names = FALSE)
 
 
 write.csv(otu.prop%>% 
-            rownames_to_column("LabID"), "./Deliverables/12S/ADFG_12s_relative_speciesxsamples-trunc130-4.csv", row.names = FALSE)
+            rownames_to_column("LabID"), "./Deliverables/12S/regions/ADFG_12s_relative_speciesxsamples-trunc130-4.csv", row.names = FALSE)
 
 
 
