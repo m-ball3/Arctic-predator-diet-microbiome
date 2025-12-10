@@ -13,11 +13,16 @@ if(!requireNamespace("BiocManager")){
 }
 BiocManager::install("phyloseq")
 
+devtools::install_github("benjjneb/dada2", ref="v1.16", lib = .libPaths()[1])
+BiocManager::install("dada2", lib = .libPaths()[1], force = TRUE)
+BiocManager::install("S4Vectors")
+
 library(phyloseq); packageVersion("phyloseq")
 library(Biostrings); packageVersion("Biostrings")
 library(ggplot2); packageVersion("ggplot2")
 library(tidyverse)
 library(dplyr)
+library(dada2)
 
 # Loads in dada2 output
 load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output.Rdata")
