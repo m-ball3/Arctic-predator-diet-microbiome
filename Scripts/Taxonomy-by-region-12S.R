@@ -8,14 +8,14 @@
 # Sets up the Environment and Loads in data
 # ------------------------------------------------------------------
 
-if(!requireNamespace("BiocManager")){
-  install.packages("BiocManager")
-}
-BiocManager::install("phyloseq")
-
-devtools::install_github("benjjneb/dada2", ref="v1.16", lib = .libPaths()[1])
-BiocManager::install("dada2", lib = .libPaths()[1], force = TRUE)
-BiocManager::install("S4Vectors")
+# if(!requireNamespace("BiocManager")){
+#   install.packages("BiocManager")
+# }
+# BiocManager::install("phyloseq")
+# 
+# devtools::install_github("benjjneb/dada2", ref="v1.16", lib = .libPaths()[1])
+# BiocManager::install("dada2", lib = .libPaths()[1], force = TRUE)
+# BiocManager::install("S4Vectors")
 
 library(phyloseq); packageVersion("phyloseq")
 library(Biostrings); packageVersion("Biostrings")
@@ -28,14 +28,14 @@ library(dada2)
 load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output.Rdata")
 
 # loads in regional DBs
-cookinletDB <- ".DADA2/Ref-DB/12S/12S_Cook-Inlet-DB.fasta"
-cookinletDB.sp <- ".DADA2/Ref-DB/12S/12S_Cook-Inlet-addspecies-DB.fasta"
+cookinletDB <- "DADA2/Ref-DB/12S/12S_Cook-Inlet-DB.fasta"
+cookinletDB.sp <- "DADA2/Ref-DB/12S/12S_Cook-Inlet-addspecies-DB.fasta"
 
-sberingDB <- ".DADA2/Ref-DB/12S/12S_S-Bering-DB.fasta"
-sberingDB.sp <- ".DADA2/Ref-DB/12S/12S_S-Bering-addspecies-DB.fasta"
+sberingDB <- "DADA2/Ref-DB/12S/12S_S-Bering-DB.fasta"
+sberingDB.sp <- "DADA2/Ref-DB/12S/12S_S-Bering-addspecies-DB.fasta"
 
-arcticDB <- ".DADA2/Ref-DB/12S/12S_Arctic-DB.fasta"
-arcticDB.sp<- ".DADA2/Ref-DB/12S/12S_Arctic-addspecies-DB.fasta"
+arcticDB <- "DADA2/Ref-DB/12S/12S_Arctic-DB.fasta"
+arcticDB.sp<- "DADA2/Ref-DB/12S/12S_Arctic-addspecies-DB.fasta"
 
 
 # ------------------------------------------------------------------
@@ -125,25 +125,84 @@ arctic.seqtab  <- seqtab.nochim[rownames(seqtab.nochim) %in% arctic.ids, ]
 
 # Assigns Taxonomy and Species
 
-cooktaxa <- assignTaxonomy(seqtab.nochimcook, cookinletDB, tryRC = TRUE, minBoot = 95)
-cooksp <- assignSpecies(seqtab.nochim, cookinletDB.sp)
+cooktaxa <- assignTaxonomy(cook.seqtab , cookinletDB, tryRC = TRUE, minBoot = 95)
+cooksp <- assignSpecies(cook.seqtab, cookinletDB.sp)%>%
+  as.data.frame()%>%
+  dplyr::rename(
+    Genus.x = Genus, 
+    Species.y = Species)%>%
+  mutate(DB = "cookinletDB")%>%
+  as.matrix()
 
-sberingtaxa <- assignTaxonomy(seqtab.nochim, sberingDB, tryRC = TRUE, minBoot = 95)
-sberingsp <- assignSpecies(seqtab.nochim, sberingDB.sp)
 
-arctictaxa <- assignTaxonomy(seqtab.nochim, arcticDB, tryRC = TRUE, minBoot = 95)
-arcticsp <-assignSpecies(seqtab.nochim, arcticDB.sp)
+sberingtaxa <- assignTaxonomy(sbering.seqtab, sberingDB, tryRC = TRUE, minBoot = 95)
+sberingsp <- assignSpecies(sbering.seqtab, sberingDB.sp)%>%
+  as.data.frame()%>%
+  dplyr::rename(
+    Genus.x = Genus, 
+    Species.y = Species)%>%
+  mutate(DB = "sberingDB")%>%
+  as.matrix()
 
-# Adds species to tax table
-cook <- addSpecies(cooktaxa, cooksp, verbose=TRUE)
+arctictaxa <- assignTaxonomy(arctic.seqtab, arcticDB, tryRC = TRUE, minBoot = 95)
+arcticsp <- assignSpecies(arctic.seqtab, arcticDB.sp) %>%
+  as.data.frame() %>%              
+  dplyr::rename(
+    Genus.x   = Genus,
+    Species.y = Species) %>%
+  mutate(DB = "arcticDB")%>%
+  as.matrix()                      
 
-sbering <- addSpecies(sberingtaxa, sberingsp, verbose=TRUE)
 
-arctic <- addSpecies(arctictaxa, arcticsp, verbose=TRUE)
+# Combines taxa tables
+taxam <- rbind(cooktaxa, sberingtaxa, arctictaxa)
 
-# Combines all three tax tables (same columns, stacked by rows)
-taxa <- rbind(cook, sbering, arctic)
-  
+# Combines species tables
+genus.species <- rbind(cooksp, sberingsp, arcticsp)
+
+taxa_na_fixed <- as.data.frame(taxam) %>% 
+  rownames_to_column("ASV") %>%
+  filter(is.na(Species)) %>%
+  left_join(
+    as.data.frame(genus.species) %>%
+      rownames_to_column("ASV"),
+    by = "ASV"
+  ) %>%
+  unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%
+  ungroup() %>%
+  mutate(addSpecies = case_when(
+    addSpecies == "NA NA" ~ NA_character_,
+    TRUE ~ addSpecies
+  )) %>%
+  mutate(addSpecies = gsub(" NA", " spp.", addSpecies)) %>%
+  mutate(.grp = ifelse(is.na(addSpecies),
+                       paste0("NA_grp_", row_number()),
+                       addSpecies)) %>%
+  group_by(.grp) %>%
+  mutate(Class  = if (length(unique(Class))  > 1) NA else Class) %>%
+  mutate(Order  = if (length(unique(Order))  > 1) NA else Order) %>%
+  mutate(Family = if (length(unique(Family)) > 1) NA else Family) %>%
+  mutate(Genus  = if (length(unique(Genus))       > 1) NA else Genus) %>%
+  ungroup() %>%
+  select(-Species)%>%
+  dplyr::rename(Species = addSpecies)
+
+taxa <- bind_rows(
+  taxa_na_fixed,
+  as.data.frame(taxam) %>%
+    rownames_to_column("ASV") %>%
+    filter(!is.na(Species))
+) %>%
+  mutate(.grp = ifelse(is.na(Species),
+                       paste0("NA_grp_", row_number()),
+                       Species)) %>%
+  group_by(.grp) %>%
+  fill(Order, Family, Genus, .direction = "updown") %>%
+  ungroup() %>%
+  select(-.grp) %>%
+  column_to_rownames("ASV") %>%
+  as.matrix()
+
 # Resaves output
 
 save(seqtab.nochim, freq.nochim, track, taxa, file = "WADE003-arcticpred_dada2_QAQC_12SP1_output-regionalDB.Rdata")
