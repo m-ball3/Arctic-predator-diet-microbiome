@@ -21,8 +21,6 @@ library(patchwork)
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
 load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-regionalDB.Rdata")
-taxa <- tax_table
-rm(tax_table)
 
 # ------------------------------------------------------------------
 # CREATES PHYLOSEQ
@@ -61,7 +59,7 @@ ps.12s <- ps.12s%>%
   subset_samples(LabID != replicate_to_remove)
 sample_names(ps.12s)
 
-# Creates master phyloseq object
+# Recreates master phyloseq object
 ps.12s <- phyloseq(
   otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
   sample_data(samdf), 
@@ -81,7 +79,7 @@ taxa_names(ps.12s) <- paste0("ASV", seq(ntaxa(ps.12s)))
 nsamples(ps.12s)
 
 # Saves phyloseq obj
-saveRDS(ps.12s, "ps.12s.raw")
+saveRDS(ps.12s, "ps.12s.raw.regions")
 
 # Filters out anything not in Actinopteri
 ps.12s <- subset_taxa(ps.12s, Class == "Actinopteri")
@@ -98,7 +96,7 @@ lowcount.filt <- genefilter_sample(ps.12s, f1, A=1)
 ps.12s <- prune_taxa(lowcount.filt, ps.12s) # WONDREING IF I SHOULD NOW RENAME PS.12S !!
 
 # Saves phyloseq obj
-saveRDS(ps.12s, "ps.12s")
+saveRDS(ps.12s, "ps.12s.regions")
 
 # Plots stacked bar plot of abundance
 plot_bar(ps.12s, fill="Species")

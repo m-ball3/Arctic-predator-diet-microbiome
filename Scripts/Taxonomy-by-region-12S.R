@@ -102,7 +102,7 @@ rownames(seqtab.nochim)
 # adds row specifying DB
 samdf <- samdf %>%
   mutate(
-    DB = case_when(
+    sample_DB = case_when(
       Location == "Cook Inlet" ~ "cookinletDB",
       Location %in% c("Hooper Bay", "Scammon Bay") ~ "sberingDB",
       TRUE ~ "arcticDB"
@@ -110,9 +110,9 @@ samdf <- samdf %>%
   )
 
 # Divides seqtab.nochim by lab ID into regions for Assign Taxonomy and Species
-cook.ids   <- samdf$LabID[samdf$DB == "cookinletDB"]
-sbering.ids <- samdf$LabID[samdf$DB == "sberingDB"]
-arctic.ids <- samdf$LabID[samdf$DB == "arcticDB"]
+cook.ids   <- samdf$LabID[samdf$sample_DB == "cookinletDB"]
+sbering.ids <- samdf$LabID[samdf$sample_DB == "sberingDB"]
+arctic.ids <- samdf$LabID[samdf$sample_DB == "arcticDB"]
 
 cook.seqtab   <- seqtab.nochim[rownames(seqtab.nochim) %in% cook.ids, ]
 sbering.seqtab <- seqtab.nochim[rownames(seqtab.nochim) %in% sbering.ids, ]
@@ -205,5 +205,5 @@ taxa <- bind_rows(
 
 # Resaves output
 
-save(seqtab.nochim, freq.nochim, track, taxa, file = "WADE003-arcticpred_dada2_QAQC_12SP1_output-regionalDB.Rdata")
+save(samdf, seqtab.nochim, freq.nochim, track, taxa, file = "DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-regionalDB.Rdata")
 
