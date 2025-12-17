@@ -218,7 +218,8 @@ taxa.names <- as.data.frame(tax_table(ps.12s)) %>%
 
 colnames(otu.abs) <- taxa.names
 
-tax_table <- as.data.frame(tax_table(ps.12s))
+tax_table <- as.data.frame(tax_table(ps.12s)) %>%
+  select(-DB)
 
 ## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
 otu.abs$Specimen.ID <- samdf[rownames(otu.abs), "Specimen.ID"]
@@ -248,10 +249,11 @@ otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
 write.csv(otu.abs %>% 
             rownames_to_column("LabID"), "./Deliverables/12S/regions/ADFG_12s_absolute_speciesxsamples.csv", row.names = FALSE)
 
-
 write.csv(otu.prop%>% 
             rownames_to_column("LabID"), "./Deliverables/12S/regions/ADFG_12s_relative_speciesxsamples-trunc130-4.csv", row.names = FALSE)
 
+write.csv(tax_table%>% 
+            rownames_to_column("ASV"), "./Deliverables/12S/regions/ADFG_12s_tax_table.csv", row.names = FALSE)
 
 
 

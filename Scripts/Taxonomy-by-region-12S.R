@@ -105,9 +105,11 @@ samdf <- samdf %>%
     sample_DB = case_when(
       Location == "Cook Inlet" ~ "cookinletDB",
       Location %in% c("Hooper Bay", "Scammon Bay") ~ "sberingDB",
+      Predator == "beluga whale" & Location == "Nome" ~ "sberingDB",
       TRUE ~ "arcticDB"
     )
   )
+
 
 # Divides seqtab.nochim by lab ID into regions for Assign Taxonomy and Species
 cook.ids   <- samdf$LabID[samdf$sample_DB == "cookinletDB"]

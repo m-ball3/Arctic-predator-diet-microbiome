@@ -305,3 +305,9 @@ write.csv(otu.prop %>%
             rownames_to_column("LabID"), 
           "./Deliverables/16S/ADFG_16s_relative_speciesxsamples.csv", 
           row.names = FALSE)
+
+write.csv(tax_table%>% 
+            rownames_to_column("ASV"), 
+          "./Deliverables/16S/ADFG_16s_tax_table.csv", row.names = FALSE)
+
+
