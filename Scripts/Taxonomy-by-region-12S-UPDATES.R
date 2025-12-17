@@ -99,17 +99,15 @@ rownames(seqtab.nochim)
 # FORMATS FOR REGION-SPECIFIC ASSIGNMENT
 # ------------------------------------------------------------------
 
-# adds row specifying DB
+# adds column specifying DB
 samdf <- samdf %>%
   mutate(
     sample_DB = case_when(
       Location == "Cook Inlet" ~ "cookinletDB",
       Location %in% c("Hooper Bay", "Scammon Bay") ~ "sberingDB",
-      Predator == "beluga whale" & Location == "Nome" ~ "sberingDB",
       TRUE ~ "arcticDB"
     )
   )
-
 
 # Divides seqtab.nochim by lab ID into regions for Assign Taxonomy and Species
 cook.ids   <- samdf$LabID[samdf$sample_DB == "cookinletDB"]
@@ -155,21 +153,23 @@ arcticsp <- assignSpecies(arctic.seqtab, arcticDB.sp) %>%
   mutate(DB = "arcticDB")%>%
   as.matrix()                      
 
-# ------------------------------------------------------------------
-# ADDRESSES NA AND COLUMN NON-AGREEMENT ISSUES BETWEEN ASSIGNTAXONOMY AND ADDSPECIES
-# ------------------------------------------------------------------
 
-# COOK INLET DB
-taxa_na_fixed.cook <- as.data.frame(cooktaxa) %>% 
+# Combines taxa tables
+taxam <- rbind(cooktaxa, sberingtaxa, arctictaxa)
+
+# Combines species tables
+genus.species <- rbind(cooksp, sberingsp, arcticsp)
+
+taxa_na_fixed <- as.data.frame(taxam) %>% 
   rownames_to_column("ASV") %>%
   filter(is.na(Species)) %>%
   left_join(
-    as.data.frame(cooksp) %>%
+    as.data.frame(genus.species) %>%
       rownames_to_column("ASV"),
     by = "ASV"
   ) %>%
   unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%
-  # ungroup() %>%
+  #ungroup() %>%
   mutate(addSpecies = case_when(
     addSpecies == "NA NA" ~ NA_character_,
     TRUE ~ addSpecies
@@ -187,103 +187,15 @@ taxa_na_fixed.cook <- as.data.frame(cooktaxa) %>%
   select(-Species)%>%
   dplyr::rename(Species = addSpecies)
 
-taxa.cook <- bind_rows(
-  taxa_na_fixed.cook,
-  as.data.frame(cooktaxa) %>%
+taxa <- bind_rows(
+  taxa_na_fixed,
+  as.data.frame(taxam) %>%
     rownames_to_column("ASV") %>%
     filter(!is.na(Species))
 ) %>%
-  mutate(.grp = ifelse(is.na(Species),
-                       paste0("NA_grp_", row_number()),
-                       Species)) %>%
-  group_by(.grp) %>%
-  fill(Order, Family, Genus, .direction = "updown") %>%
-  ungroup() %>%
-  select(-.grp) %>%
-  column_to_rownames("ASV") %>%
-  as.matrix()
-
-# S BERING DB
-taxa_na_fixed.sbering <- as.data.frame(sberingtaxa) %>% 
-  rownames_to_column("ASV") %>%
-  filter(is.na(Species)) %>%
-  left_join(
-    as.data.frame(sberingsp) %>%
-      rownames_to_column("ASV"),
-    by = "ASV"
-  ) %>%
-  unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%
-  # ungroup() %>%
-  mutate(addSpecies = case_when(
-    addSpecies == "NA NA" ~ NA_character_,
-    TRUE ~ addSpecies
-  )) %>%
-  mutate(addSpecies = gsub(" NA", " spp.", addSpecies)) %>%
-  mutate(.grp = ifelse(is.na(addSpecies),
-                       paste0("NA_grp_", row_number()),
-                       addSpecies)) %>%
-  group_by(.grp) %>%
-  mutate(Class  = if (length(unique(Class))  > 1) NA else Class) %>%
-  mutate(Order  = if (length(unique(Order))  > 1) NA else Order) %>%
-  mutate(Family = if (length(unique(Family)) > 1) NA else Family) %>%
-  mutate(Genus  = if (length(unique(Genus))       > 1) NA else Genus) %>%
-  ungroup() %>%
-  select(-Species)%>%
-  dplyr::rename(Species = addSpecies)
-
-taxa.sbering <- bind_rows(
-  taxa_na_fixed.sbering,
-  as.data.frame(sberingtaxa) %>%
-    rownames_to_column("ASV") %>%
-    filter(!is.na(Species))
-) %>%
-  mutate(.grp = ifelse(is.na(Species),
-                       paste0("NA_grp_", row_number()),
-                       Species)) %>%
-  group_by(.grp) %>%
-  fill(Order, Family, Genus, .direction = "updown") %>%
-  ungroup() %>%
-  select(-.grp) %>%
-  column_to_rownames("ASV") %>%
-  as.matrix()
-
-# ARCTIC DB
-taxa_na_fixed.arctic <- as.data.frame(arctictaxa) %>% 
-  rownames_to_column("ASV") %>%
-  filter(is.na(Species)) %>%
-  left_join(
-    as.data.frame(arcticsp) %>%
-      rownames_to_column("ASV"),
-    by = "ASV"
-  ) %>%
-  unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%
-  # ungroup() %>%
-  mutate(addSpecies = case_when(
-    addSpecies == "NA NA" ~ NA_character_,
-    TRUE ~ addSpecies
-  )) %>%
-  mutate(addSpecies = gsub(" NA", " spp.", addSpecies)) %>%
-  mutate(.grp = ifelse(is.na(addSpecies),
-                       paste0("NA_grp_", row_number()),
-                       addSpecies)) %>%
-  group_by(.grp) %>%
-  mutate(Class  = if (length(unique(Class))  > 1) NA else Class) %>%
-  mutate(Order  = if (length(unique(Order))  > 1) NA else Order) %>%
-  mutate(Family = if (length(unique(Family)) > 1) NA else Family) %>%
-  mutate(Genus  = if (length(unique(Genus))       > 1) NA else Genus) %>%
-  ungroup() %>%
-  select(-Species)%>%
-  dplyr::rename(Species = addSpecies)
-
-taxa.arctic <- bind_rows(
-  taxa_na_fixed.arctic,
-  as.data.frame(arctictaxa) %>%
-    rownames_to_column("ASV") %>%
-    filter(!is.na(Species))
-) %>%
-  mutate(.grp = ifelse(is.na(Species),
-                       paste0("NA_grp_", row_number()),
-                       Species)) %>%
+  # mutate(.grp = ifelse(is.na(Species),
+  #                      paste0("NA_grp_", row_number()),
+  #                      Species)) %>%
   group_by(.grp) %>%
   fill(Order, Family, Genus, .direction = "updown") %>%
   ungroup() %>%
@@ -293,7 +205,5 @@ taxa.arctic <- bind_rows(
 
 # Resaves output
 
-save(samdf, cook.seqtab, freq.nochim, track, taxa.cook, file = "DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-COOKINLET.Rdata")
-save(samdf, sbering.seqtab, freq.nochim, track, taxa.sbering, file = "DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-SBERING.Rdata")
-save(samdf, arctic.seqtab, freq.nochim, track, taxa.arctic, file = "DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-ARCTIC.Rdata")
+save(samdf, seqtab.nochim, freq.nochim, track, taxa, file = "DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-regionalDB.Rdata")
 
