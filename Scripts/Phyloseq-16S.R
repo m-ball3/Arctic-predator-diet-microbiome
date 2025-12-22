@@ -33,11 +33,9 @@ rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
 # Gets sample metadata
 labdf <- read.csv("metadata/ADFG_dDNA_labwork_metadata.csv")
 
-samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
-
-# Renames "species" column to "Predator"
-samdf <- dplyr::rename(samdf, Predator = Species)
-samdf$Predator <- tolower(samdf$Predator)
+samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv") %>%
+  dplyr::rename(Predator = Species) %>% # renames species column to predator
+  mutate(Predator = tolower(Predator))  # changes capitalization to all lowercase (fixes Beluga and beluga)
 
 # Creates a column corresponding ADFG sample IDs with WADE sample IDs
 samdf <- samdf %>%
@@ -72,18 +70,6 @@ setdiff(rownames(samdf), rownames(seqtab.nochim))
 # Samples in OTU table but not in metadata
 setdiff(rownames(seqtab.nochim), rownames(samdf))
 
-# Removes (worst) replicate
-sample_to_remove <- "WADE-003-118-C"
-
-# Remove from metadata and OTU table early
-samdf <- samdf[!rownames(samdf) %in% sample_to_remove, ]
-seqtab.nochim <- seqtab.nochim[!rownames(seqtab.nochim) %in% sample_to_remove, ]
-
-# Sanity check: row names are the same
-rownames(samdf)
-rownames(seqtab.nochim)
-
-
 # ------------------------------------------------------------------
 # CREATES PHYLOSEQ
 # ------------------------------------------------------------------
@@ -99,7 +85,7 @@ ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE),
 
 # Identifies rows in Specimen.ID that appear more than once (replicates)
 duplicated_ids <- samdf$Specimen.ID[duplicated(samdf$Specimen.ID) | duplicated(samdf$Specimen.ID, fromLast = TRUE)]
-unique_dup_ids <- unique(duplicated_ids) # "PH22SH036-S" = WADE 115 and WADE 123
+unique_dup_ids <- unique(duplicated_ids) # "PH22SH036-S" = WADE 115 and WADE 123 AND "PH23SH005-S" = WADE 118-C and WADE 118-UC
 
 # Subset phyloseq object to keep only samples with duplicated Specimen.IDs
 ps.16s.replicates <- subset_samples(ps.16s, Specimen.ID %in% unique_dup_ids)
@@ -107,21 +93,34 @@ ps.16s.replicates <- subset_samples(ps.16s, Specimen.ID %in% unique_dup_ids)
 # Removes species assignments less than 100 reads for readability
 ps.16s.replicates <- prune_taxa(taxa_sums(ps.16s.replicates) > 0, ps.16s.replicates)
 
-# Create the stacked bar plot
-plot_bar(ps.16s.replicates, x = "LabID", fill = "Species.y")
+# Create the stacked bar plot (absolute)
+plot_bar(ps.16s.replicates, x = "LabID", fill = "Species.y") +
+  facet_wrap(~ Specimen.ID, ncol = 2, scales = "free_x", strip.position = "top")
+
+# Transforms read counts to relative abundance of each species 
+## Transforms NaN (0/0) to 0
+ps16s.replicate.rel <- transform_sample_counts(ps.16s.replicates, function(x) {
+  x_rel <- x / sum(x)
+  x_rel[is.nan(x_rel)] <- 0
+  return(x_rel)
+})
+
+# Create the stacked bar plot (relative)
+plot_bar(ps16s.replicate.rel, x = "LabID", fill = "Species.y")+
+  facet_wrap(~ Specimen.ID, ncol = 2, scales = "free_x", strip.position = "top")
 
 # Ensures samples removed in filtering are removed from samdf
-replicate_to_remove <- "WADE-003-115"
+replicate_to_remove <- c("WADE-003-115", "WADE-003-118-C")
 samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
 
-# RECREATES PHYLOSEQ OBJECT WITHOUT REPLICATES
-ps.16s <- ps.16s%>% 
+# Recreates REGIONAL phyloseq objects without unwanted replicate
+ps.16s <- phyloseq(
+  otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
+  sample_data(samdf), 
+  tax_table(merged.taxa)
+)%>% 
   subset_samples(LabID != replicate_to_remove)
-
-# Creates master phyloseq object
-ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
-                   sample_data(samdf), 
-                   tax_table(merged.taxa))
+sample_names(ps.16s)
 
 # ------------------------------------------------------------------
 # CLEANS PHYLOSEQ

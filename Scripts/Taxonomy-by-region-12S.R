@@ -49,30 +49,57 @@ rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
 labdf <- read.csv("metadata/ADFG_dDNA_labwork_metadata.csv")%>%
   filter(!is.na(LabID))
 
-samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
-
-# Renames "species" column to "Predator" & makes all lowercase
-samdf <- dplyr::rename(samdf, Predator = Species)
-samdf$Predator <- tolower(samdf$Predator)
-
-# Creates a column corresponding ADFG sample IDs with WADE sample IDs
-samdf <- samdf %>%
-  left_join(
+samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv") %>%
+  dplyr::rename(Predator = Species) %>%
+  mutate(Predator = tolower(Predator)) %>%
+  left_join( # Creates a column corresponding ADFG sample IDs with WADE sample IDs
     labdf %>% dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID),
     by = c("Specimen.ID", "Repeat.or.New.Specimen.")
+  ) %>%
+  filter(!is.na(LabID)) %>% # Removes rows where LabID is NA (because shipment 1 was bad & thus not extracted)
+  mutate(
+    LabID = gsub("-C$", "", LabID)   # Removes "-C" (all 12s samples are cleaned)
   )
 
-# Remove rows where LabID is NA (because shipment 1 was bad & thus not extracted)
-samdf <- samdf[!is.na(samdf$LabID), ]
-
-# Then set row names to LabID
+#  Sets row names to LabID
 rownames(samdf) <- samdf$LabID
+
+# # TRIES TO FIND OUT WHY WE ADD 10 OBS FROM CREATING A CORRESPONDING ADFG SAMPLE ID WITH WADE ID
+# # Check for duplicate keys in labdf
+# labdf_dupes <- labdf %>%
+#   dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID) %>%
+#   group_by(Specimen.ID, Repeat.or.New.Specimen.) %>%
+#   summarise(n = n(), .groups = "drop") %>%
+#   filter(n > 1)
+# 
+# print(labdf_dupes)  # Shows which keys have multiples
+# nrow(labdf_dupes)   # Number of duplicated keys (likely 10)
+# 
+# labdf_dupes_with_labid <- labdf %>%
+#   dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID) %>%
+#   inner_join(labdf_dupes, by = c("Specimen.ID", "Repeat.or.New.Specimen.")) %>%
+#   arrange(Specimen.ID, Repeat.or.New.Specimen.)
+# 
+# print(labdf_dupes_with_labid)
+
+# All samples after DADA2, before metadata filtering
+seq_samples <- rownames(seqtab.nochim)      # should be length 79
+
+# All samples with metadata after LabID join and NA removal
+meta_samples <- rownames(samdf)             # before intersect(), should be > 74
 
 # Only keeps rows that appear in both metadata and seq.tab 
 ## AKA only samples that made it through all steps 
 common_ids <- intersect(rownames(samdf), rownames(seqtab.nochim))
 samdf <- samdf[common_ids, ]
 seqtab.nochim <- seqtab.nochim[common_ids, ]
+
+# Samples that disappear after intersect()
+dropped_from_seq <- setdiff(seq_samples, meta_samples)
+dropped_from_meta <- setdiff(meta_samples, seq_samples)
+
+dropped_from_seq # STILL NEED TO RESOLVE 122 ISSUE
+dropped_from_meta
 
 # Checks for duplicates and identical sample rownames in both
 
@@ -110,7 +137,6 @@ samdf <- samdf %>%
     )
   )
 
-
 # Divides seqtab.nochim by lab ID into regions for Assign Taxonomy and Species
 cook.ids   <- samdf$LabID[samdf$sample_DB == "cookinletDB"]
 sbering.ids <- samdf$LabID[samdf$sample_DB == "sberingDB"]
@@ -127,32 +153,38 @@ arctic.seqtab  <- seqtab.nochim[rownames(seqtab.nochim) %in% arctic.ids, ]
 
 # Assigns Taxonomy and Species
 
-cooktaxa <- assignTaxonomy(cook.seqtab , cookinletDB, tryRC = TRUE, minBoot = 95)
+cooktaxa <- assignTaxonomy(cook.seqtab , cookinletDB, tryRC = TRUE, minBoot = 95)%>%
+  as.data.frame()%>%
+  as.matrix()
+
 cooksp <- assignSpecies(cook.seqtab, cookinletDB.sp)%>%
   as.data.frame()%>%
   dplyr::rename(
     Genus.x = Genus, 
     Species.y = Species)%>%
-  mutate(DB = "cookinletDB")%>%
   as.matrix()
 
 
-sberingtaxa <- assignTaxonomy(sbering.seqtab, sberingDB, tryRC = TRUE, minBoot = 95)
+sberingtaxa <- assignTaxonomy(sbering.seqtab, sberingDB, tryRC = TRUE, minBoot = 95)%>%
+  as.data.frame()%>%
+  as.matrix()
+  
 sberingsp <- assignSpecies(sbering.seqtab, sberingDB.sp)%>%
   as.data.frame()%>%
   dplyr::rename(
     Genus.x = Genus, 
     Species.y = Species)%>%
-  mutate(DB = "sberingDB")%>%
   as.matrix()
 
-arctictaxa <- assignTaxonomy(arctic.seqtab, arcticDB, tryRC = TRUE, minBoot = 95)
+arctictaxa <- assignTaxonomy(arctic.seqtab, arcticDB, tryRC = TRUE, minBoot = 95)%>%
+  as.data.frame() %>%
+  as.matrix() 
+  
 arcticsp <- assignSpecies(arctic.seqtab, arcticDB.sp) %>%
   as.data.frame() %>%              
   dplyr::rename(
     Genus.x   = Genus,
     Species.y = Species) %>%
-  mutate(DB = "arcticDB")%>%
   as.matrix()                      
 
 # ------------------------------------------------------------------
@@ -169,7 +201,7 @@ taxa_na_fixed.cook <- as.data.frame(cooktaxa) %>%
     by = "ASV"
   ) %>%
   unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%
-  # ungroup() %>%
+  ungroup() %>%
   mutate(addSpecies = case_when(
     addSpecies == "NA NA" ~ NA_character_,
     TRUE ~ addSpecies
@@ -200,6 +232,8 @@ taxa.cook <- bind_rows(
   fill(Order, Family, Genus, .direction = "updown") %>%
   ungroup() %>%
   select(-.grp) %>%
+  mutate(DB = "cookinletDB") %>%
+  relocate(DB, .before = Kingdom) %>%
   column_to_rownames("ASV") %>%
   as.matrix()
 
@@ -244,6 +278,8 @@ taxa.sbering <- bind_rows(
   fill(Order, Family, Genus, .direction = "updown") %>%
   ungroup() %>%
   select(-.grp) %>%
+  mutate(DB = "sberingDB") %>%
+  relocate(DB, .before = Kingdom) %>%
   column_to_rownames("ASV") %>%
   as.matrix()
 
@@ -288,6 +324,8 @@ taxa.arctic <- bind_rows(
   fill(Order, Family, Genus, .direction = "updown") %>%
   ungroup() %>%
   select(-.grp) %>%
+  mutate(DB = "arcticDB") %>%
+  relocate(DB, .before = Kingdom) %>%
   column_to_rownames("ASV") %>%
   as.matrix()
 

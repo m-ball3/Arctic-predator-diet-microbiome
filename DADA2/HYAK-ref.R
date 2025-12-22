@@ -55,6 +55,9 @@ scp -r "C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/
   scp -r "C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE LAB/Arctic-predator-diet-microbiome/DADA2/Ref-DB/16S_Arctic_predator_reference_database_07_2025.fasta" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/
   scp -r "C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE LAB/Arctic-predator-diet-microbiome/DADA2/Ref-DB/16S-AddSpecies_11-25.fasta" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/
   
+# CO1
+  scp -r "C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE LAB/arctic-predator-diet-microbiome/DADA2/Ref-DB/CO1/MIDORI2_UNIQ_NUC_GB268_CO1_DADA2.fasta" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/
+  
 # ------------------------------------------------------------------
 # Gets output from HYAK
 # ------------------------------------------------------------------

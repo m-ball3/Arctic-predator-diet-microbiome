@@ -62,8 +62,16 @@ ps.12s.replicates.arctic <- subset_samples(ps.12s.arctic, Specimen.ID %in% uniqu
 # Removes any taxa that have zero total reads across all samples
 ps.12s.replicates.arctic <- prune_taxa(taxa_sums(ps.12s.replicates.arctic) > 0, ps.12s.replicates.arctic)
 
+# Transforms read counts to relative abundance of each species 
+## Transforms NaN (0/0) to 0
+ps12s.replicate.rel <- transform_sample_counts(ps.12s.replicates.arctic, function(x) {
+  x_rel <- x / sum(x)
+  x_rel[is.nan(x_rel)] <- 0
+  return(x_rel)
+})
+
 # Create the stacked bar plot
-plot_bar(ps.12s.replicates.arctic, x = "LabID", fill = "Species")
+plot_bar(ps12s.replicate.rel, x = "LabID", fill = "Species")
 
 # Specifies the replicate to remove
 replicate_to_remove <- "WADE-003-124"
@@ -162,10 +170,6 @@ asv.arctic.rows <- as.data.frame(tax_table(ps.12s.arctic.filt))
 asv.cook.rows$rn <- rownames(asv.cook.rows)
 asv.bering.rows$rn <- rownames(asv.bering.rows)
 asv.bering.rows$rn <- rownames(asv.bering.rows)
-
-# ADD CODE HERE TO MERGE DF BY ASV NAMES!
-## NEED TO FIRST FIX DB NA ISSUE
-
 
 # Saves phyloseq obj
 save(ps.12s.cook.filt, ps.12s.sbering.filt, ps.12s.arctic.filt, file = "ps.12s.regions.filt.Rdata")
