@@ -113,7 +113,7 @@ sampbypred <- p1 / p2 / p3 / p4
 sampbypred
 
 # saves
-ggsave("Deliverables/sampbypred.png",
+ggsave("Deliverables/Metadata Exploration/sampbypred.png",
        plot = sampbypred, width = 14, height = 16, units = "in", dpi = 300)
 
 # creates separate multipanel plot 
@@ -150,7 +150,7 @@ p6 <- ggplot(meta, aes(x = Tooth_age, fill = Predator)) +
 sampbypred2 <- p5 / p6
 sampbypred2
 
-ggsave("Deliverables/sampbypred2.png",
+ggsave("Deliverables/Metadata Exploration/sampbypred2.png",
        plot = sampbypred2, width = 14, height = 16, units = "in", dpi = 300)
 
 
