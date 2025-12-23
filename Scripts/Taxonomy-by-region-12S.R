@@ -64,23 +64,24 @@ samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv") %>%
 #  Sets row names to LabID
 rownames(samdf) <- samdf$LabID
 
-# # TRIES TO FIND OUT WHY WE ADD 10 OBS FROM CREATING A CORRESPONDING ADFG SAMPLE ID WITH WADE ID
-# # Check for duplicate keys in labdf
-# labdf_dupes <- labdf %>%
-#   dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID) %>%
-#   group_by(Specimen.ID, Repeat.or.New.Specimen.) %>%
-#   summarise(n = n(), .groups = "drop") %>%
-#   filter(n > 1)
-# 
-# print(labdf_dupes)  # Shows which keys have multiples
-# nrow(labdf_dupes)   # Number of duplicated keys (likely 10)
-# 
-# labdf_dupes_with_labid <- labdf %>%
-#   dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID) %>%
-#   inner_join(labdf_dupes, by = c("Specimen.ID", "Repeat.or.New.Specimen.")) %>%
-#   arrange(Specimen.ID, Repeat.or.New.Specimen.)
-# 
-# print(labdf_dupes_with_labid)
+# INVESTIGATES WHY WE ADD 10 OBS FROM CREATING A CORRESPONDING ADFG SAMPLE ID WITH WADE ID
+
+# Check for duplicate keys in labdf
+labdf_dupes <- labdf %>%
+  dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID) %>%
+  group_by(Specimen.ID, Repeat.or.New.Specimen.) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  filter(n > 1)
+
+print(labdf_dupes)  # Shows which keys have multiples
+nrow(labdf_dupes)   # Number of duplicated keys (likely 10)
+
+labdf_dupes_with_labid <- labdf %>%
+  dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID) %>%
+  inner_join(labdf_dupes, by = c("Specimen.ID", "Repeat.or.New.Specimen.")) %>%
+  arrange(Specimen.ID, Repeat.or.New.Specimen.)
+
+print(labdf_dupes_with_labid)
 
 # All samples after DADA2, before metadata filtering
 seq_samples <- rownames(seqtab.nochim)      # should be length 79
@@ -90,7 +91,7 @@ meta_samples <- rownames(samdf)             # before intersect(), should be > 74
 
 # Only keeps rows that appear in both metadata and seq.tab 
 ## AKA only samples that made it through all steps 
-common_ids <- intersect(rownames(samdf), rownames(seqtab.nochim))
+common_ids <- intersect(rownames(samdf), rownames(seqtab.nochim)) # CURRENTLY 78; resolve sample 122 field ID mismatch
 samdf <- samdf[common_ids, ]
 seqtab.nochim <- seqtab.nochim[common_ids, ]
 
@@ -98,8 +99,8 @@ seqtab.nochim <- seqtab.nochim[common_ids, ]
 dropped_from_seq <- setdiff(seq_samples, meta_samples)
 dropped_from_meta <- setdiff(meta_samples, seq_samples)
 
-dropped_from_seq # STILL NEED TO RESOLVE 122 ISSUE
-dropped_from_meta
+dropped_from_seq # 122
+dropped_from_meta # make sure none of these are removed in error
 
 # Checks for duplicates and identical sample rownames in both
 
@@ -138,6 +139,8 @@ samdf <- samdf %>%
   )
 
 # Divides seqtab.nochim by lab ID into regions for Assign Taxonomy and Species
+rowcount <- rownames(seqtab.nochim) # 78 as of 12/23/25
+
 cook.ids   <- samdf$LabID[samdf$sample_DB == "cookinletDB"]
 sbering.ids <- samdf$LabID[samdf$sample_DB == "sberingDB"]
 arctic.ids <- samdf$LabID[samdf$sample_DB == "arcticDB"]
@@ -146,7 +149,11 @@ cook.seqtab   <- seqtab.nochim[rownames(seqtab.nochim) %in% cook.ids, ]
 sbering.seqtab <- seqtab.nochim[rownames(seqtab.nochim) %in% sbering.ids, ]
 arctic.seqtab  <- seqtab.nochim[rownames(seqtab.nochim) %in% arctic.ids, ]
 
-  
+rowcount.cook <- rownames(cook.seqtab) # 19
+rowcount.sbering <- rownames(sbering.seqtab) # 19
+rowcount.arctic <- rownames(arctic.seqtab) # 40
+# total = 78 as of 12/23/25
+
 # ------------------------------------------------------------------
 # SPECIES ASSIGNMENTS BY REGION
 # ------------------------------------------------------------------

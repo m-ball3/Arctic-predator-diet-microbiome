@@ -36,7 +36,8 @@ scp -r C:/Users/Intern/Desktop/arctic-pred/scripts/ mball3@klone.hyak.uw.edu:/gs
   # MUST BE RUN FROM LOCAL TERMINAL! NOT HYAK SSH SESSION
 
 
-scp -r "Z:/Arctic predator diet sequences/16S/*" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/rawdata/16SP2
+scp -r "Z:/Arctic predator diet sequences/CO1P1/*" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/rawdata/CO1P1
+
 # ------------------------------------------------------------------
 # Uploads reference Db to HYAK
 # ------------------------------------------------------------------
@@ -57,7 +58,7 @@ scp -r "C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/
   
 # CO1
   scp -r "C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE LAB/arctic-predator-diet-microbiome/DADA2/Ref-DB/CO1/MIDORI2_UNIQ_NUC_GB268_CO1_DADA2.fasta" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/
-  
+  scp -r "C:/Users/MBall/Downloads/CO1/CO1-addspecies-DB.fasta" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/
 # ------------------------------------------------------------------
 # Gets output from HYAK
 # ------------------------------------------------------------------

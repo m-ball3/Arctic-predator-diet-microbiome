@@ -62,6 +62,16 @@ ps.12s.replicates.arctic <- subset_samples(ps.12s.arctic, Specimen.ID %in% uniqu
 # Removes any taxa that have zero total reads across all samples
 ps.12s.replicates.arctic <- prune_taxa(taxa_sums(ps.12s.replicates.arctic) > 0, ps.12s.replicates.arctic)
 
+# Creates a vector of read counts
+reads.arctic <- sample_sums(ps.12s.arctic)
+
+# Gets the desired sample's read counts
+reads.WADE.111 <- reads.arctic["WADE-003-111"]
+reads.WADE.124 <- reads.arctic["WADE-003-124"]
+
+reads.WADE.111 # 38402
+reads.WADE.124 # 20768
+
 # Transforms read counts to relative abundance of each species 
 ## Transforms NaN (0/0) to 0
 ps12s.replicate.rel <- transform_sample_counts(ps.12s.replicates.arctic, function(x) {
@@ -125,11 +135,8 @@ nsamples(ps.12s.sbering)
 ps.12s.arctic <- subset_taxa(ps.12s.arctic, Class == "Actinopteri")
 nsamples(ps.12s.arctic)
 
-# Remove samples with total abundance < 100
-ps.12s.cook <- prune_samples(sample_sums(ps.12s.cook) >= 100, ps.12s.cook)
-sample_sums(ps.12s.cook)
-nsamples(ps.12s.cook)
 
+# Remove samples with total abundance < 100
 ps.12s.sbering <- prune_samples(sample_sums(ps.12s.sbering) >= 100, ps.12s.sbering)
 sample_sums(ps.12s.sbering)
 nsamples(ps.12s.sbering)
@@ -138,8 +145,86 @@ ps.12s.arctic <- prune_samples(sample_sums(ps.12s.arctic) >= 100, ps.12s.arctic)
 sample_sums(ps.12s.arctic)
 nsamples(ps.12s.arctic)
 
+# ------------------------------------------------------------------
+# EXPLORES SAMPLES LOST IN FILTERING FOR COOK INLET BELUGAS
+# ------------------------------------------------------------------
+
+# Keeps a copy before filtering
+ps.12s.cook.before <- ps.12s.cook
+
+# Applies filtering and keeeps a copy for after filtering
+ps.12s.cook.after <- prune_samples(
+  sample_sums(ps.12s.cook.before) >= 100,
+  ps.12s.cook.before
+)
+
+# Breakdown of which samples are lost in filtering and their read counts
+
+
+# Calculates the read counts before and after
+cook.before.counts <- sample_sums(ps.12s.cook.before)
+cook.after.counts  <- sample_sums(ps.12s.cook.after)
+
+# Adds the sample names
+cook.samples.before <- names(cook.before.counts)
+cook.samples.after  <- names(cook.after.counts)
+
+# Gets the samples that are lost iiin filtering 
+cook.samples.lost <- setdiff(cook.samples.before, cook.samples.after)
+
+# Creates a df to check what is lost in filtering\
+# displays and gets mean and median
+lost.df <- tibble(
+  Sample = cook.samples.lost,
+  Reads  = as.numeric(cook.before.counts[cook.samples.lost]))
+
+lost.df
+mean(lost.df$Reads)
+median(lost.df$Reads)
+range(lost.df$Reads)
+
+# Plots a histogram of sample read count
+p_lost_hist <- ggplot(lost.df, aes(x = Reads)) +
+  geom_histogram(binwidth = 10, color = "black", fill = "steelblue") +
+  theme_minimal() +
+  labs(
+    title = "Cook – read counts of samples lost (before filter)",
+    x = "Reads per sample",
+    y = "Frequency"
+  )
+p_lost_hist
+
+# Gets relative abundance for each
+ps.12s.cook.before.rel <- transform_sample_counts(
+  ps.12s.cook.before, function(x) x / sum(x))
+
+ps.12s.cook.after.rel <- transform_sample_counts(
+  ps.12s.cook.after, function(x) x / sum(x))
+
+# Plots 
+p_before_rel <- plot_bar(ps.12s.cook.before.rel, fill = "Species") +
+  ggtitle("Cook – relative abundance BEFORE filter") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+p_after_rel <- plot_bar(ps.12s.cook.after.rel, fill = "Species") +
+  ggtitle("Cook – relative abundance AFTER filter (≥100 reads)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+# patchwork plot with one legend
+(p_before_rel / p_after_rel +
+    plot_layout(guides = "collect")) &
+  theme(legend.position = "right")
+# warning message related to removal of taxa with abundance of 0 
+
+
+# ------------------------------------------------------------------
+# CONTINUES WITH CLEANING PHYLOSEQ
+# ------------------------------------------------------------------
+
 ## MERGE TO SPECIES HERE (TAX GLOM)
-ps.12s.cook = tax_glom(ps.12s.cook, "Species", NArm = FALSE) %>% 
+ps.12s.cook = tax_glom(ps.12s.cook.after, "Species", NArm = FALSE) %>% 
   prune_taxa(taxa_sums(.) > 0, .)
 
 ps.12s.sbering = tax_glom(ps.12s.sbering, "Species", NArm = FALSE) %>% 
@@ -151,8 +236,8 @@ ps.12s.arctic = tax_glom(ps.12s.arctic, "Species", NArm = FALSE) %>%
 # Filtering to remove taxa with less than 1% of reads assigned in at least 1 sample.
 f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
 
-lowcount.filt.cook <- genefilter_sample(ps.12s.cook, f1, A=1)
-ps.12s.cook.filt <- prune_taxa(lowcount.filt.cook, ps.12s.cook)
+lowcount.filt.cook <- genefilter_sample(ps.12s.cook.after, f1, A=1)
+ps.12s.cook.filt <- prune_taxa(lowcount.filt.cook, ps.12s.cook.after)
 
 lowcount.filt.sbering <- genefilter_sample(ps.12s.sbering, f1, A=1)
 ps.12s.sbering.filt <- prune_taxa(lowcount.filt.sbering, ps.12s.sbering)
@@ -162,7 +247,7 @@ ps.12s.arctic.filt <- prune_taxa(lowcount.filt.arctic, ps.12s.arctic)
 
 
 # Explores ASV assignments
-asv.cook.rows <- as.data.frame(tax_table(ps.12s.cook.filt)) # LOST THE DB NAMES SOMEWHERE
+asv.cook.rows <- as.data.frame(tax_table(ps.12s.cook.filt))
 asv.bering.rows <- as.data.frame(tax_table(ps.12s.sbering.filt))
 asv.arctic.rows <- as.data.frame(tax_table(ps.12s.arctic.filt))
 
@@ -214,11 +299,13 @@ names(label_map) <- rownames(sample_data(ps12s.sbering.rel))
 label_map <- sample_data(ps12s.arctic.rel)$Specimen.ID
 names(label_map) <- rownames(sample_data(ps12s.arctic.rel))
 
-TEST <- as.data.frame(tax_table(ps12s.cook.rel))
+
 # ------------------------------------------------------------------
 # PLOTS
 # ------------------------------------------------------------------
 # Creates bar plot of relative abundance
+
+## SPECIES-LEVEL PLOTS ----------------------------------------------------
 
 # Plots with WADE IDs
 sp.cook.rel.plot <- plot_bar(ps12s.cook.rel, fill="Species")+
@@ -226,86 +313,261 @@ sp.cook.rel.plot <- plot_bar(ps12s.cook.rel, fill="Species")+
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 sp.cook.rel.plot
 
+# Plots with ADFG IDs
+sp.cook.rel.plot.ADFG.sp<- plot_bar(ps12s.cook.rel, x = "Specimen.ID", fill="Species")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+sp.cook.rel.plot.ADFG.sp
+
 sp.sbering.rel.plot <- plot_bar(ps12s.sbering.rel, fill="Species")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 sp.sbering.rel.plot
+
+# Plots with ADFG IDs
+sp.sbering.rel.plot.ADFG.sp <- plot_bar(ps12s.sbering.rel, x = "Specimen.ID", fill="Species")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+sp.sbering.rel.plot.ADFG.sp
 
 sp.arctic.rel.plot <- plot_bar(ps12s.arctic.rel, fill="Species")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 sp.arctic.rel.plot
 
-# ------------------------------------------------------------------
-# WAITING TO UPDATE THIS REGIONALLY UNTIL WE FIGURE OUT HOW TO MERGE ALL BACK - MEB 12/17
-# ------------------------------------------------------------------
+# Plots with ADFG IDs
+sp.arctic.rel.plot.ADFG.sp<- plot_bar(ps12s.arctic.rel, x = "Specimen.ID", fill="Species")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+sp.arctic.rel.plot.ADFG.sp
 
-# # Plots with ADFG IDs
-# ADFG.sp<- plot_bar(ps12s.rel, x = "Specimen.ID", fill="Species")+
-#   theme_minimal() +
-#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-# ADFG.sp
-# 
-# gen.rel.plot <- plot_bar(ps12s.rel, fill="Genus")+
-#   theme_minimal() +
-#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-# gen.rel.plot
-# 
-# ADFG.gen<- plot_bar(ps12s.rel, x = "Specimen.ID", fill="Genus")+
-#   theme_minimal() +
-#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-# ADFG.gen
-# 
-# fam.rel.plot <- plot_bar(ps12s.rel, fill="Family")+
-#   theme_minimal() +
-#   labs(y= "Proportion")+
-#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-# fam.rel.plot 
-# 
-# ADFG.fam <- plot_bar(ps12s.rel, x = "Specimen.ID", fill="Family")+
-#   theme_minimal() +
-#   labs(y= "Proportion")+
-#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-# ADFG.fam
-# 
-# # Facet wrapped by predator species
-# faucet <- plot_bar(ps12s.rel, x="LabID", fill="Species") +
-#   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
-#   theme_minimal() +
-#   theme(
-#     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-#     strip.background = element_blank(),
-#     strip.placement = "outside",
-#     panel.spacing = unit(0.5, "lines"),
-#     axis.title.x = element_text(margin = margin(t = 10))
-#   ) 
-# 
-# ADFG.faucet <- plot_bar(ps12s.rel, x="Specimen.ID", fill="Species") +
-#   facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
-#   theme_minimal() +
-#   theme(
-#     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-#     strip.background = element_blank(),
-#     strip.placement = "outside",
-#     panel.spacing = unit(0.5, "lines"),
-#     axis.title.x = element_text(margin = margin(t = 10))
-#   ) 
-# 
-# ADFG.faucet
-# 
-# #saves plots
-# ggsave("Deliverables/12S/regions/WADE labels/1S-species.png", plot = sp.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
-# ggsave("Deliverables/12S/regions/ADFG-12S-species.png", plot = ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
-# 
-# ggsave("Deliverables/12S/regions/WADE labels/12S-genus.png", plot = gen.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
-# ggsave("Deliverables/12S/regions/ADFG-12S-genus.png", plot = ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
-# 
-# ggsave("Deliverables/12S/regions/WADE labels/12S-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
-# ggsave("Deliverables/12S/regions/ADFG-12S-family.png", plot = ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
-# 
-# ggsave("Deliverables/12S/regions/WADE labels/12S-species-by-pred.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
-# ggsave("Deliverables/12S/regions/ADFG-12S-species-by-pred.111125.png", plot = ADFG.faucet, width = 16, height = 8, units = "in", dpi = 300)
-# 
+## GENUS-LEVEL PLOTS ----------------------------------------------------
+
+# Cook Inlet
+gen.cook.rel.plot <- plot_bar(ps12s.cook.rel, fill = "Genus") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+gen.cook.rel.plot
+
+gen.cook.rel.plot.ADFG.gen <- plot_bar(ps12s.cook.rel, x = "Specimen.ID", fill = "Genus") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+gen.cook.rel.plot.ADFG.gen
+
+# SE Bering
+gen.sbering.rel.plot <- plot_bar(ps12s.sbering.rel, fill = "Genus") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+gen.sbering.rel.plot
+
+gen.sbering.rel.plot.ADFG.gen <- plot_bar(ps12s.sbering.rel, x = "Specimen.ID", fill = "Genus") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+gen.sbering.rel.plot.ADFG.gen
+
+# Arctic
+gen.arctic.rel.plot <- plot_bar(ps12s.arctic.rel, fill = "Genus") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+gen.arctic.rel.plot
+
+gen.arctic.rel.plot.ADFG.gen <- plot_bar(ps12s.arctic.rel, x = "Specimen.ID", fill = "Genus") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+gen.arctic.rel.plot.ADFG.gen
+
+
+## FAMILY-LEVEL PLOTS ---------------------------------------------------
+
+# Cook Inlet
+fam.cook.rel.plot <- plot_bar(ps12s.cook.rel, fill = "Family") +
+  theme_minimal() +
+  labs(y = "Proportion") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+fam.cook.rel.plot
+
+fam.cook.rel.plot.ADFG.fam <- plot_bar(ps12s.cook.rel, x = "Specimen.ID", fill = "Family") +
+  theme_minimal() +
+  labs(y = "Proportion") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+fam.cook.rel.plot.ADFG.fam
+
+# SE Bering
+fam.sbering.rel.plot <- plot_bar(ps12s.sbering.rel, fill = "Family") +
+  theme_minimal() +
+  labs(y = "Proportion") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+fam.sbering.rel.plot
+
+fam.sbering.rel.plot.ADFG.fam <- plot_bar(ps12s.sbering.rel, x = "Specimen.ID", fill = "Family") +
+  theme_minimal() +
+  labs(y = "Proportion") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+fam.sbering.rel.plot.ADFG.fam
+
+# Arctic
+fam.arctic.rel.plot <- plot_bar(ps12s.arctic.rel, fill = "Family") +
+  theme_minimal() +
+  labs(y = "Proportion") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+fam.arctic.rel.plot
+
+fam.arctic.rel.plot.ADFG.fam <- plot_bar(ps12s.arctic.rel, x = "Specimen.ID", fill = "Family") +
+  theme_minimal() +
+  labs(y = "Proportion") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+fam.arctic.rel.plot.ADFG.fam
+
+
+## FACETED BY PREDATOR (REGIONAL OBJECTS) ------------------------------
+
+# WADE IDs
+faucet.cook   <- plot_bar(ps12s.cook.rel,   x = "LabID",       fill = "Species") +
+  facet_wrap(~ Predator, ncol = 3, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x      = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement  = "outside",
+    panel.spacing    = unit(0.5, "lines"),
+    axis.title.x     = element_text(margin = margin(t = 10))
+  )
+faucet.cook
+
+faucet.sbering <- plot_bar(ps12s.sbering.rel, x = "LabID",     fill = "Species") +
+  facet_wrap(~ Predator, ncol = 3, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x      = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement  = "outside",
+    panel.spacing    = unit(0.5, "lines"),
+    axis.title.x     = element_text(margin = margin(t = 10))
+  )
+faucet.sbering
+
+faucet.arctic  <- plot_bar(ps12s.arctic.rel,  x = "LabID",     fill = "Species") +
+  facet_wrap(~ Predator, ncol = 3, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x      = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement  = "outside",
+    panel.spacing    = unit(0.5, "lines"),
+    axis.title.x     = element_text(margin = margin(t = 10))
+  )
+faucet.arctic 
+
+# ADFG IDs
+faucet.cook.ADFG   <- plot_bar(ps12s.cook.rel,   x = "Specimen.ID", fill = "Species") +
+  facet_wrap(~ Predator, ncol = 3, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x      = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement  = "outside",
+    panel.spacing    = unit(0.5, "lines"),
+    axis.title.x     = element_text(margin = margin(t = 10))
+  )
+faucet.cook.ADFG 
+
+faucet.sbering.ADFG <- plot_bar(ps12s.sbering.rel, x = "Specimen.ID", fill = "Species") +
+  facet_wrap(~ Predator, ncol = 3, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x      = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement  = "outside",
+    panel.spacing    = unit(0.5, "lines"),
+    axis.title.x     = element_text(margin = margin(t = 10))
+  )
+faucet.sbering.ADFG
+
+faucet.arctic.ADFG  <- plot_bar(ps12s.arctic.rel,  x = "Specimen.ID", fill = "Species") +
+  facet_wrap(~ Predator, ncol = 3, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x      = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement  = "outside",
+    panel.spacing    = unit(0.5, "lines"),
+    axis.title.x     = element_text(margin = margin(t = 10))
+  )
+faucet.arctic.ADFG
+
+## SAVE PLOTS -----------------------------------------------------------
+
+## Species-level, WADE IDs
+ggsave("Deliverables/12S/regions/cook/WADE labels/12S-species-cook.png",
+       plot = sp.cook.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/sbering/WADE labels/12S-species-sbering.png",
+       plot = sp.sbering.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/arctic/WADE labels/12S-species-arctic.png",
+       plot = sp.arctic.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+
+## Species-level, ADFG IDs
+ggsave("Deliverables/12S/regions/cook/ADFG-12S-species-cook.png",
+       plot = sp.cook.rel.plot.ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/sbering/ADFG-12S-species-sbering.png",
+       plot = sp.sbering.rel.plot.ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/arctic/ADFG-12S-species-arctic.png",
+       plot = sp.arctic.rel.plot.ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
+
+
+## Genus-level, WADE IDs
+ggsave("Deliverables/12S/regions/cook/WADE labels/12S-genus-cook.png",
+       plot = gen.cook.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/sbering/WADE labels/12S-genus-sbering.png",
+       plot = gen.sbering.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/arctic/WADE labels/12S-genus-arctic.png",
+       plot = gen.arctic.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+
+## Genus-level, ADFG IDs
+ggsave("Deliverables/12S/regions/cook/ADFG-12S-genus-cook.png",
+       plot = gen.cook.rel.plot.ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/sbering/ADFG-12S-genus-sbering.png",
+       plot = gen.sbering.rel.plot.ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/arctic/ADFG-12S-genus-arctic.png",
+       plot = gen.arctic.rel.plot.ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
+
+
+## Family-level, WADE IDs
+ggsave("Deliverables/12S/regions/cook/WADE labels/12S-family-cook.png",
+       plot = fam.cook.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/sbering/WADE labels/12S-family-sbering.png",
+       plot = fam.sbering.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/arctic/WADE labels/12S-family-arctic.png",
+       plot = fam.arctic.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+
+## Family-level, ADFG IDs
+ggsave("Deliverables/12S/regions/cook/ADFG-12S-family-cook.png",
+       plot = fam.cook.rel.plot.ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/sbering/ADFG-12S-family-sbering.png",
+       plot = fam.sbering.rel.plot.ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/12S/regions/arctic/ADFG-12S-family-arctic.png",
+       plot = fam.arctic.rel.plot.ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
+
+
+## Faceted species-by-predator, WADE IDs
+ggsave("Deliverables/12S/regions/cook/WADE labels/12S-species-by-pred-cook.png",
+       plot = faucet.cook, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/12S/regions/sbering/WADE labels/12S-species-by-pred-sbering.png",
+       plot = faucet.sbering, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/12S/regions/arctic/WADE labels/12S-species-by-pred-arctic.png",
+       plot = faucet.arctic, width = 16, height = 8, units = "in", dpi = 300)
+
+## Faceted species-by-predator, ADFG IDs
+ggsave("Deliverables/12S/regions/cook/ADFG-12S-species-by-pred-cook.png",
+       plot = faucet.cook.ADFG, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/12S/regions//sbering/ADFG-12S-species-by-pred-sbering.png",
+       plot = faucet.sbering.ADFG, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/12S/regions/arctic/ADFG-12S-species-by-pred-arctic.png",
+       plot = faucet.arctic.ADFG, width = 16, height = 8, units = "in", dpi = 300)
+
 
 # ------------------------------------------------------------------
 # TABLES
@@ -360,34 +622,57 @@ otu.cook.abs <- otu.cook.abs[, c(ncol(otu.cook.abs), 1:(ncol(otu.cook.abs)-1))]
 otu.sbering.abs <- otu.sbering.abs[, c(ncol(otu.sbering.abs), 1:(ncol(otu.sbering.abs)-1))]
 otu.arctic.abs <- otu.arctic.abs[, c(ncol(otu.arctic.abs), 1:(ncol(otu.arctic.abs)-1))]
 
-# ------------------------------------------------------------------
-# WAITING TO UPDATE THIS REGIONALLY UNTIL WE FIGURE OUT HOW TO MERGE ALL BACK - MEB 12/17
-# ------------------------------------------------------------------
 
-# # CREATES RELATIVE SAMPLES X SPECIES TABLE
-# # Removes column for relative abundance calc
-# otu_counts <- otu.abs[, -1]
-# 
-# # row-wise proportions
-# otu.prop <- otu_counts / rowSums(otu_counts)
-# 
-# # add Specimen.ID back and reorder columns
-# otu.prop$Specimen.ID <- otu.abs$Specimen.ID
-# otu.prop <- otu.prop[, c(ncol(otu.prop), 1:(ncol(otu.prop)-1))]
-# 
-# # replace NaN (rows that were all zero) with 0
-# otu.prop[is.na(otu.prop)] <- 0
-# 
-# # round numeric columns
-# is.num <- sapply(otu.prop, is.numeric)
-# otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
-# 
-# # Writes to CSV and adds Lab ID to otu.abs
-# write.csv(otu.abs %>% 
-#             rownames_to_column("LabID"), "./Deliverables/12S/regions/ADFG_12s_absolute_speciesxsamples.csv", row.names = FALSE)
-# 
-# write.csv(otu.prop%>% 
-#             rownames_to_column("LabID"), "./Deliverables/12S/regions/ADFG_12s_relative_speciesxsamples-trunc130-4.csv", row.names = FALSE)
-# 
-# write.csv(tax_table%>% 
-#             rownames_to_column("ASV"), "./Deliverables/12S/regions/ADFG_12s_tax_table.csv", row.names = FALSE)
+## Cereates a function to convert absolute to relative by row
+make_relative <- function(otu_abs) {
+  otu_counts <- otu_abs[, -1]                     # removes Specimen.ID
+  otu_prop   <- otu_counts / rowSums(otu_counts)  # calculates relative abundance
+  otu_prop$Specimen.ID <- otu_abs$Specimen.ID     # adds Specimen.ID back in
+  otu_prop <- otu_prop[, c(ncol(otu_prop), 1:(ncol(otu_prop)-1))]
+  otu_prop[is.na(otu_prop)] <- 0                  # replaces NaNs with 0
+  is.num <- sapply(otu_prop, is.numeric)
+  otu_prop[is.num] <- lapply(otu_prop[is.num], round, 3)
+  otu_prop
+}
+
+otu.cook.prop    <- make_relative(otu.cook.abs)
+otu.sbering.prop <- make_relative(otu.sbering.abs)
+otu.arctic.prop  <- make_relative(otu.arctic.abs)
+
+
+## WRITE ABSOLUTE + RELATIVE TABLES AND TAX TABLES 
+
+# Cook Inlet
+write.csv(
+  otu.cook.abs %>% rownames_to_column("LabID"),
+  "./Deliverables/12S/regions/cook/ADFG_12s_cook_absolute_speciesxsamples.csv", row.names = FALSE)
+write.csv(
+  otu.cook.prop %>% rownames_to_column("LabID"),
+  "./Deliverables/12S/regions/cook/ADFG_12s_cook_relative_speciesxsamples.csv", row.names = FALSE)
+write.csv(
+  cooktax_table %>% rownames_to_column("ASV"),
+  "./Deliverables/12S/regions/cook/ADFG_12s_cook_tax_table.csv", row.names = FALSE)
+
+
+# SE Bering
+write.csv(
+  otu.sbering.abs %>% rownames_to_column("LabID"),
+  "./Deliverables/12S/regions/sbering/ADFG_12s_sbering_absolute_speciesxsamples.csv", row.names = FALSE)
+write.csv(
+  otu.sbering.prop %>% rownames_to_column("LabID"),
+  "./Deliverables/12S/regions/sbering/ADFG_12s_sbering_relative_speciesxsamples.csv", row.names = FALSE)
+write.csv(
+  sberingtax_table %>% rownames_to_column("ASV"),
+  "./Deliverables/12S/regions/sbering/ADFG_12s_sbering_tax_table.csv", row.names = FALSE)
+
+
+# Arctic
+write.csv(
+  otu.arctic.abs %>% rownames_to_column("LabID"),
+  "./Deliverables/12S/regions/arctic/ADFG_12s_arctic_absolute_speciesxsamples.csv", row.names = FALSE)
+write.csv(
+  otu.arctic.prop %>% rownames_to_column("LabID"),
+  "./Deliverables/12S/regions/arctic/ADFG_12s_arctic_relative_speciesxsamples.csv", row.names = FALSE)
+write.csv(
+  arctictax_table %>% rownames_to_column("ASV"),
+  "./Deliverables/12S/regions/arctic/ADFG_12s_arctic_tax_table.csv", row.names = FALSE)
