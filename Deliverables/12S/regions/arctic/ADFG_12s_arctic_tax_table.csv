@@ -1,25 +1,24 @@
-"ASV","Kingdom","Phylum","Class","Order","Family","Genus","Species"
-"ASV2","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae","Eleginus","Eleginus gracilis"
-"ASV3","Eukaryota","Chordata","Actinopteri","Clupeiformes","Clupeidae","Clupea","Clupea pallasii"
-"ASV9","Eukaryota","Chordata","Actinopteri","Osmeriformes","Osmeridae","Osmerus","Osmerus mordax"
-"ASV10","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Myoxocephalus","Myoxocephalus spp."
-"ASV14","Eukaryota","Chordata","Actinopteri","Uranoscopiformes","Ammodytidae","Ammodytes","Ammodytes hexapterus"
-"ASV16","Eukaryota","Chordata","Actinopteri","Pleuronectiformes","Pleuronectidae",NA,NA
-"ASV20","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Gymnocanthus","Gymnocanthus spp."
-"ASV22","Eukaryota","Chordata","Actinopteri","Perciformes","Liparidae","Liparis","Liparis spp."
-"ASV23","Eukaryota","Chordata","Actinopteri","Perciformes","Stichaeidae",NA,"Leptoclinus maculatus"
-"ASV24","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae",NA,"Gymnocanthus tricuspis"
-"ASV27","Eukaryota","Chordata","Actinopteri","Pleuronectiformes","Pleuronectidae",NA,"Platichthys stellatus"
-"ASV29","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Myoxocephalus",NA
-"ASV31","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae","Gadus","Gadus chalcogrammus"
-"ASV38","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Hemilepidotus","Hemilepidotus spp."
-"ASV42","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae",NA,"Boreogadus saida"
-"ASV45","Eukaryota","Chordata","Actinopteri","Pleuronectiformes","Pleuronectidae",NA,"Lepidopsetta spp."
-"ASV67","Eukaryota","Chordata","Actinopteri","Perciformes","Liparidae","Liparis","Liparis tunicatus"
-"ASV69","Eukaryota","Chordata","Actinopteri","Perciformes","Stichaeidae",NA,"Stichaeus punctatus"
-"ASV70","Eukaryota","Chordata","Actinopteri","Pleuronectiformes","Pleuronectidae",NA,"Pleuronectes quadrituberculatus"
-"ASV87","Eukaryota","Chordata","Actinopteri","Perciformes","Stichaeidae",NA,NA
-"ASV90","Eukaryota","Chordata","Actinopteri","Perciformes","Hemitripteridae","Nautichthys","Nautichthys pribilovius"
-"ASV107","Eukaryota","Chordata","Actinopteri","Perciformes","Stichaeidae",NA,"Acantholumpenus mackayi"
-"ASV117","Eukaryota","Chordata","Actinopteri","Perciformes",NA,NA,NA
-"ASV202","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae",NA,"Gadus spp."
+ASV,Kingdom,Phylum,Class,Order,Family,Genus,Species
+ASV2,Eukaryota,Chordata,Actinopteri,Gadiformes,Gadidae,Eleginus,Eleginus gracilis
+ASV3,Eukaryota,Chordata,Actinopteri,Clupeiformes,Clupeidae,Clupea,Clupea pallasii
+ASV9,Eukaryota,Chordata,Actinopteri,Osmeriformes,Osmeridae,Osmerus,Osmerus mordax
+ASV10,Eukaryota,Chordata,Actinopteri,Perciformes,Cottidae,Myoxocephalus,Myoxocephalus spp.
+ASV14,Eukaryota,Chordata,Actinopteri,Uranoscopiformes,Ammodytidae,Ammodytes,Ammodytes hexapterus
+ASV16,Eukaryota,Chordata,Actinopteri,Pleuronectiformes,Pleuronectidae,NA,NA
+ASV20,Eukaryota,Chordata,Actinopteri,Perciformes,Cottidae,Gymnocanthus,Gymnocanthus spp.
+ASV22,Eukaryota,Chordata,Actinopteri,Perciformes,Liparidae,Liparis,Liparis spp.
+ASV23,Eukaryota,Chordata,Actinopteri,Perciformes,Stichaeidae,Leptoclinus,Leptoclinus maculatus
+ASV24,Eukaryota,Chordata,Actinopteri,Perciformes,Cottidae,Gymnocanthus,Gymnocanthus tricuspis
+ASV27,Eukaryota,Chordata,Actinopteri,Pleuronectiformes,Pleuronectidae,Platichthys,Platichthys stellatus
+ASV31,Eukaryota,Chordata,Actinopteri,Gadiformes,Gadidae,Gadus,Gadus chalcogrammus
+ASV38,Eukaryota,Chordata,Actinopteri,Perciformes,Cottidae,Hemilepidotus,Hemilepidotus spp.
+ASV42,Eukaryota,Chordata,Actinopteri,Gadiformes,Gadidae,Boreogadus,Boreogadus saida
+ASV45,Eukaryota,Chordata,Actinopteri,Pleuronectiformes,Pleuronectidae,Lepidopsetta,Lepidopsetta spp.
+ASV67,Eukaryota,Chordata,Actinopteri,Perciformes,Liparidae,Liparis,Liparis tunicatus
+ASV69,Eukaryota,Chordata,Actinopteri,Perciformes,Stichaeidae,Stichaeus,Stichaeus punctatus
+ASV70,Eukaryota,Chordata,Actinopteri,Pleuronectiformes,Pleuronectidae,Pleuronectes,Pleuronectes quadrituberculatus
+ASV87,Eukaryota,Chordata,Actinopteri,Perciformes,Stichaeidae,NA,NA
+ASV90,Eukaryota,Chordata,Actinopteri,Perciformes,Hemitripteridae,Nautichthys,Nautichthys pribilovius
+ASV107,Eukaryota,Chordata,Actinopteri,Perciformes,Stichaeidae,Acantholumpenus,Acantholumpenus mackayi
+ASV117,Eukaryota,Chordata,Actinopteri,Perciformes,Agonidae,NA,NA
+ASV202,Eukaryota,Chordata,Actinopteri,Gadiformes,Gadidae,Gadus,Gadus spp.
