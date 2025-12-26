@@ -17,6 +17,7 @@ library(ggplot2); packageVersion("ggplot2")
 library(tidyverse)
 library(dplyr)
 library(patchwork)
+library(writexl)
 
 # Loads dada2 output
 load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-COOKINLET.Rdata")
@@ -51,6 +52,7 @@ ps.12s.arctic <- phyloseq(
 # DEALS WITH TECHNICAL REPLICATES
 # ------------------------------------------------------------------
 
+
 # Identifies rows in Specimen.ID that appear more than once (replicates)
 duplicated_ids <- samdf$Specimen.ID[duplicated(samdf$Specimen.ID) | duplicated(samdf$Specimen.ID, fromLast = TRUE)]
 unique_dup_ids <- unique(duplicated_ids) # "EB24PH075-S" = WADE 111 and WADE 124
@@ -68,9 +70,33 @@ reads.arctic <- sample_sums(ps.12s.arctic)
 # Gets the desired sample's read counts
 reads.WADE.111 <- reads.arctic["WADE-003-111"]
 reads.WADE.124 <- reads.arctic["WADE-003-124"]
+reads.WADE.104 <- reads.arctic["WADE-003-104"]
+reads.WADE.122 <- reads.arctic["WADE-003-122"]
 
+# Gets read count before filtering out Mammals and Bacteria
 reads.WADE.111 # 38402
 reads.WADE.124 # 20768
+reads.WADE.104 # 31054
+reads.WADE.122 # 19045
+
+# Filters out Mammals and Bacteria
+ps.12s.replicates.arctic <- subset_taxa(ps.12s.replicates.arctic, Class == "Actinopteri")
+nsamples(ps.12s.replicates.arctic)
+
+# Creates a vector of read counts
+reads.arctic <- sample_sums(ps.12s.replicates.arctic)
+
+# Gets the desired sample's read counts
+reads.WADE.111 <- reads.arctic["WADE-003-111"]
+reads.WADE.124 <- reads.arctic["WADE-003-124"]
+reads.WADE.104 <- reads.arctic["WADE-003-104"]
+reads.WADE.122 <- reads.arctic["WADE-003-122"]
+
+# Gets read count after filtering out Mammals and Bacteria
+reads.WADE.111 # 21067
+reads.WADE.124 # 18083
+reads.WADE.104 # 17347 
+reads.WADE.122 # 21
 
 # Transforms read counts to relative abundance of each species 
 ## Transforms NaN (0/0) to 0
@@ -81,10 +107,11 @@ ps12s.replicate.rel <- transform_sample_counts(ps.12s.replicates.arctic, functio
 })
 
 # Create the stacked bar plot
-plot_bar(ps12s.replicate.rel, x = "LabID", fill = "Species")
+plot_bar(ps12s.replicate.rel, x = "LabID", fill = "Species")+ 
+  facet_wrap(~ Specimen.ID, ncol = 2, scales = "free_x", strip.position = "top")
 
 # Specifies the replicate to remove
-replicate_to_remove <- "WADE-003-124"
+replicate_to_remove <- c("WADE-003-124", "WADE-003-122")
 
 # Recreates REGIONAL phyloseq objects without unwanted replicate
 ps.12s.arctic <- phyloseq(
@@ -236,15 +263,14 @@ ps.12s.arctic = tax_glom(ps.12s.arctic, "Species", NArm = FALSE) %>%
 # Filtering to remove taxa with less than 1% of reads assigned in at least 1 sample.
 f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
 
-lowcount.filt.cook <- genefilter_sample(ps.12s.cook.after, f1, A=1)
-ps.12s.cook.filt <- prune_taxa(lowcount.filt.cook, ps.12s.cook.after)
+lowcount.filt.cook <- genefilter_sample(ps.12s.cook, f1, A=1)
+ps.12s.cook.filt <- prune_taxa(lowcount.filt.cook, ps.12s.cook)
 
 lowcount.filt.sbering <- genefilter_sample(ps.12s.sbering, f1, A=1)
 ps.12s.sbering.filt <- prune_taxa(lowcount.filt.sbering, ps.12s.sbering)
 
 lowcount.filt.arctic <- genefilter_sample(ps.12s.arctic, f1, A=1)
 ps.12s.arctic.filt <- prune_taxa(lowcount.filt.arctic, ps.12s.arctic)
-
 
 # Explores ASV assignments
 asv.cook.rows <- as.data.frame(tax_table(ps.12s.cook.filt))
@@ -643,36 +669,40 @@ otu.arctic.prop  <- make_relative(otu.arctic.abs)
 ## WRITE ABSOLUTE + RELATIVE TABLES AND TAX TABLES 
 
 # Cook Inlet
-write.csv(
-  otu.cook.abs %>% rownames_to_column("LabID"),
-  "./Deliverables/12S/regions/cook/ADFG_12s_cook_absolute_speciesxsamples.csv", row.names = FALSE)
-write.csv(
-  otu.cook.prop %>% rownames_to_column("LabID"),
-  "./Deliverables/12S/regions/cook/ADFG_12s_cook_relative_speciesxsamples.csv", row.names = FALSE)
+write_xlsx(
+  list(
+    absolute_abundance = otu.cook.abs %>% rownames_to_column("LabID"),
+    proportional_abundance = otu.cook.prop %>% rownames_to_column("LabID")
+  ),
+  path = "./Deliverables/12S/regions/cook/ADFG_12s_cook_speciesxsamples.xlsx"
+)
 write.csv(
   cooktax_table %>% rownames_to_column("ASV"),
   "./Deliverables/12S/regions/cook/ADFG_12s_cook_tax_table.csv", row.names = FALSE)
 
 
 # SE Bering
-write.csv(
-  otu.sbering.abs %>% rownames_to_column("LabID"),
-  "./Deliverables/12S/regions/sbering/ADFG_12s_sbering_absolute_speciesxsamples.csv", row.names = FALSE)
-write.csv(
-  otu.sbering.prop %>% rownames_to_column("LabID"),
-  "./Deliverables/12S/regions/sbering/ADFG_12s_sbering_relative_speciesxsamples.csv", row.names = FALSE)
+write_xlsx(
+  list(
+    absolute_abundance = otu.sbering.abs %>% rownames_to_column("LabID"),
+    proportional_abundance = otu.sbering.prop %>% rownames_to_column("LabID")
+  ),
+  path = "./Deliverables/12S/regions/sbering/ADFG_12s_sbering_speciesxsamples.xlsx"
+)
 write.csv(
   sberingtax_table %>% rownames_to_column("ASV"),
   "./Deliverables/12S/regions/sbering/ADFG_12s_sbering_tax_table.csv", row.names = FALSE)
 
 
 # Arctic
-write.csv(
-  otu.arctic.abs %>% rownames_to_column("LabID"),
-  "./Deliverables/12S/regions/arctic/ADFG_12s_arctic_absolute_speciesxsamples.csv", row.names = FALSE)
-write.csv(
-  otu.arctic.prop %>% rownames_to_column("LabID"),
-  "./Deliverables/12S/regions/arctic/ADFG_12s_arctic_relative_speciesxsamples.csv", row.names = FALSE)
+write_xlsx(
+  list(
+    absolute_abundance = otu.arctic.abs %>% rownames_to_column("LabID"),
+    proportional_abundance = otu.arctic.prop %>% rownames_to_column("LabID")
+  ),
+  path = "./Deliverables/12S/regions/arctic/ADFG_12s_arctic_speciesxsamples.xlsx"
+)
 write.csv(
   arctictax_table %>% rownames_to_column("ASV"),
   "./Deliverables/12S/regions/arctic/ADFG_12s_arctic_tax_table.csv", row.names = FALSE)
+

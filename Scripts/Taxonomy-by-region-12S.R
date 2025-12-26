@@ -46,8 +46,11 @@ arcticDB.sp<- "DADA2/Ref-DB/12S/12S_Arctic-addspecies-DB.fasta"
 rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
 
 # Gets sample metadata; filters out NA's (shipment 1)
+## TEMPORARILY RENAMES EB22PH005-S TO EB23PH005-S -----------------------------------------------------------
+
 labdf <- read.csv("metadata/ADFG_dDNA_labwork_metadata.csv")%>%
-  filter(!is.na(LabID))
+  filter(!is.na(LabID))%>%
+  mutate(Specimen.ID = ifelse(Specimen.ID == "EB22PH005-S", "EB23PH005-S", Specimen.ID))
 
 samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv") %>%
   dplyr::rename(Predator = Species) %>%
@@ -199,141 +202,147 @@ arcticsp <- assignSpecies(arctic.seqtab, arcticDB.sp) %>%
 # ------------------------------------------------------------------
 
 # COOK INLET DB
-taxa_na_fixed.cook <- as.data.frame(cooktaxa) %>% 
-  rownames_to_column("ASV") %>%
-  filter(is.na(Species)) %>%
-  left_join(
-    as.data.frame(cooksp) %>%
-      rownames_to_column("ASV"),
-    by = "ASV"
+taxa.cook <- as.data.frame(cooktaxa) %>% 
+  rownames_to_column("ASV") %>%  
+  filter(is.na(Species)) %>%  
+  left_join(as.data.frame(cooksp) %>% 
+              rownames_to_column("ASV"),  by = "ASV") %>%  
+  unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%  
+  ungroup() %>%  
+  mutate(addSpecies = case_when(addSpecies == "NA NA"~NA, TRUE~addSpecies)) %>% 
+  mutate(addSpecies = gsub(" NA", " spp.", addSpecies)) %>%  
+  mutate(
+    Genus_from_sp = case_when(
+      grepl(" ", addSpecies) ~ word(addSpecies, 1),
+      TRUE ~ NA_character_
+    )
   ) %>%
-  unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%
-  ungroup() %>%
-  mutate(addSpecies = case_when(
-    addSpecies == "NA NA" ~ NA_character_,
-    TRUE ~ addSpecies
-  )) %>%
-  mutate(addSpecies = gsub(" NA", " spp.", addSpecies)) %>%
-  mutate(.grp = ifelse(is.na(addSpecies),
-                       paste0("NA_grp_", row_number()),
-                       addSpecies)) %>%
-  group_by(.grp) %>%
-  mutate(Class  = if (length(unique(Class))  > 1) NA else Class) %>%
-  mutate(Order  = if (length(unique(Order))  > 1) NA else Order) %>%
-  mutate(Family = if (length(unique(Family)) > 1) NA else Family) %>%
-  mutate(Genus  = if (length(unique(Genus))       > 1) NA else Genus) %>%
-  ungroup() %>%
-  select(-Species)%>%
-  dplyr::rename(Species = addSpecies)
-
-taxa.cook <- bind_rows(
-  taxa_na_fixed.cook,
-  as.data.frame(cooktaxa) %>%
-    rownames_to_column("ASV") %>%
-    filter(!is.na(Species))
-) %>%
-  mutate(.grp = ifelse(is.na(Species),
-                       paste0("NA_grp_", row_number()),
-                       Species)) %>%
-  group_by(.grp) %>%
-  fill(Order, Family, Genus, .direction = "updown") %>%
-  ungroup() %>%
-  select(-.grp) %>%
+  mutate(Genus = ifelse(is.na(Genus), Genus_from_sp, Genus)) %>%  # Backfill Genus NAs
+  mutate(.grp = ifelse(is.na(addSpecies),  
+                       paste0("NA_grp_", 
+                              row_number()),  
+                       addSpecies)) %>%  
+  group_by(.grp) %>%  
+  mutate(Class = if (length(unique(Class)) > 1) NA else Class) %>% 
+  mutate(Order = if (length(unique(Order)) > 1) NA else Order) %>% 
+  mutate(Family = if (length(unique(Family)) > 1) NA else Family) %>% 
+  mutate(Genus.x = if (length(unique(Genus)) > 1) NA else Genus) %>% 
+  ungroup() %>%  
+  select(-Species, -Genus.x, -Genus_from_sp) %>% 
+  dplyr::rename("Species" = addSpecies) %>%  
+  bind_rows(as.data.frame(cooktaxa) %>% 
+              rownames_to_column("ASV") %>%  
+              filter(!is.na(Species))) %>%  
+  mutate(.grp = ifelse(is.na(Species),  
+                       paste0("NA_grp_", 
+                              row_number()),  
+                       Species)) %>%  
+  group_by(.grp) %>%  
+  fill(Order, Family, Genus, .direction = "updown") %>% 
+  ungroup() %>%  
+  select(-.grp) %>%   
   mutate(DB = "cookinletDB") %>%
   relocate(DB, .before = Kingdom) %>%
-  column_to_rownames("ASV") %>%
+  column_to_rownames("ASV") %>%  
+  mutate(Species = ifelse(is.na(Species) & !is.na(Genus),
+                          paste0(Genus, " spp."),
+                          Species)) %>%
   as.matrix()
 
 # S BERING DB
-taxa_na_fixed.sbering <- as.data.frame(sberingtaxa) %>% 
-  rownames_to_column("ASV") %>%
-  filter(is.na(Species)) %>%
-  left_join(
-    as.data.frame(sberingsp) %>%
-      rownames_to_column("ASV"),
-    by = "ASV"
+taxa.sbering <- as.data.frame(sberingtaxa) %>% 
+  rownames_to_column("ASV") %>%  
+  filter(is.na(Species)) %>%  
+  left_join(as.data.frame(sberingsp) %>% 
+              rownames_to_column("ASV"),  by = "ASV") %>%  
+  unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%  
+  ungroup() %>%  
+  mutate(addSpecies = case_when(addSpecies == "NA NA"~NA, TRUE~addSpecies)) %>% 
+  mutate(addSpecies = gsub(" NA", " spp.", addSpecies)) %>%  
+  mutate(
+    Genus_from_sp = case_when(
+      grepl(" ", addSpecies) ~ word(addSpecies, 1),
+      TRUE ~ NA_character_
+    )
   ) %>%
-  unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%
-  # ungroup() %>%
-  mutate(addSpecies = case_when(
-    addSpecies == "NA NA" ~ NA_character_,
-    TRUE ~ addSpecies
-  )) %>%
-  mutate(addSpecies = gsub(" NA", " spp.", addSpecies)) %>%
-  mutate(.grp = ifelse(is.na(addSpecies),
-                       paste0("NA_grp_", row_number()),
-                       addSpecies)) %>%
-  group_by(.grp) %>%
-  mutate(Class  = if (length(unique(Class))  > 1) NA else Class) %>%
-  mutate(Order  = if (length(unique(Order))  > 1) NA else Order) %>%
-  mutate(Family = if (length(unique(Family)) > 1) NA else Family) %>%
-  mutate(Genus  = if (length(unique(Genus))       > 1) NA else Genus) %>%
-  ungroup() %>%
-  select(-Species)%>%
-  dplyr::rename(Species = addSpecies)
-
-taxa.sbering <- bind_rows(
-  taxa_na_fixed.sbering,
-  as.data.frame(sberingtaxa) %>%
-    rownames_to_column("ASV") %>%
-    filter(!is.na(Species))
-) %>%
-  mutate(.grp = ifelse(is.na(Species),
-                       paste0("NA_grp_", row_number()),
-                       Species)) %>%
-  group_by(.grp) %>%
-  fill(Order, Family, Genus, .direction = "updown") %>%
-  ungroup() %>%
-  select(-.grp) %>%
+  mutate(Genus = ifelse(is.na(Genus), Genus_from_sp, Genus)) %>%  # Backfill Genus NAs
+  mutate(.grp = ifelse(is.na(addSpecies),  
+                       paste0("NA_grp_", 
+                              row_number()),  
+                       addSpecies)) %>%  
+  group_by(.grp) %>%  
+  mutate(Class = if (length(unique(Class)) > 1) NA else Class) %>% 
+  mutate(Order = if (length(unique(Order)) > 1) NA else Order) %>% 
+  mutate(Family = if (length(unique(Family)) > 1) NA else Family) %>% 
+  mutate(Genus.x = if (length(unique(Genus)) > 1) NA else Genus) %>% 
+  ungroup() %>%  
+  select(-Species, -Genus.x, -Genus_from_sp) %>% 
+  dplyr::rename("Species" = addSpecies) %>%  
+  bind_rows(as.data.frame(sberingtaxa) %>% 
+              rownames_to_column("ASV") %>%  
+              filter(!is.na(Species))) %>%  
+  mutate(.grp = ifelse(is.na(Species),  
+                       paste0("NA_grp_", 
+                              row_number()),  
+                       Species)) %>%  
+  group_by(.grp) %>%  
+  fill(Order, Family, Genus, .direction = "updown") %>% 
+  ungroup() %>%  
+  select(-.grp) %>% 
   mutate(DB = "sberingDB") %>%
   relocate(DB, .before = Kingdom) %>%
-  column_to_rownames("ASV") %>%
+  column_to_rownames("ASV") %>%  
+  mutate(Species = ifelse(is.na(Species) & !is.na(Genus),
+                          paste0(Genus, " spp."),
+                          Species)) %>%
   as.matrix()
 
 # ARCTIC DB
-taxa_na_fixed.arctic <- as.data.frame(arctictaxa) %>% 
-  rownames_to_column("ASV") %>%
-  filter(is.na(Species)) %>%
-  left_join(
-    as.data.frame(arcticsp) %>%
-      rownames_to_column("ASV"),
-    by = "ASV"
+taxa.arctic <- as.data.frame(arctictaxa) %>% 
+  rownames_to_column("ASV") %>%  
+  filter(is.na(Species)) %>%  
+  left_join(as.data.frame(arcticsp) %>% 
+              rownames_to_column("ASV"),  by = "ASV") %>%  
+  unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%  
+  ungroup() %>%  
+  mutate(addSpecies = case_when(addSpecies == "NA NA"~NA, TRUE~addSpecies)) %>% 
+  mutate(addSpecies = gsub(" NA", " spp.", addSpecies)) %>%  
+  mutate(
+    Genus_from_sp = case_when(
+      grepl(" ", addSpecies) ~ word(addSpecies, 1),
+      TRUE ~ NA_character_
+    )
   ) %>%
-  unite(col = addSpecies, Genus.x, Species.y, sep = " ") %>%
-  # ungroup() %>%
-  mutate(addSpecies = case_when(
-    addSpecies == "NA NA" ~ NA_character_,
-    TRUE ~ addSpecies
-  )) %>%
-  mutate(addSpecies = gsub(" NA", " spp.", addSpecies)) %>%
-  mutate(.grp = ifelse(is.na(addSpecies),
-                       paste0("NA_grp_", row_number()),
-                       addSpecies)) %>%
-  group_by(.grp) %>%
-  mutate(Class  = if (length(unique(Class))  > 1) NA else Class) %>%
-  mutate(Order  = if (length(unique(Order))  > 1) NA else Order) %>%
-  mutate(Family = if (length(unique(Family)) > 1) NA else Family) %>%
-  mutate(Genus  = if (length(unique(Genus))       > 1) NA else Genus) %>%
-  ungroup() %>%
-  select(-Species)%>%
-  dplyr::rename(Species = addSpecies)
-
-taxa.arctic <- bind_rows(
-  taxa_na_fixed.arctic,
-  as.data.frame(arctictaxa) %>%
-    rownames_to_column("ASV") %>%
-    filter(!is.na(Species))
-) %>%
-  mutate(.grp = ifelse(is.na(Species),
-                       paste0("NA_grp_", row_number()),
-                       Species)) %>%
-  group_by(.grp) %>%
-  fill(Order, Family, Genus, .direction = "updown") %>%
-  ungroup() %>%
-  select(-.grp) %>%
+  mutate(Genus = ifelse(is.na(Genus), Genus_from_sp, Genus)) %>%  # Backfill Genus NAs
+  mutate(.grp = ifelse(is.na(addSpecies),  
+                       paste0("NA_grp_", 
+                              row_number()),  
+                       addSpecies)) %>%  
+  group_by(.grp) %>%  
+  mutate(Class = if (length(unique(Class)) > 1) NA else Class) %>% 
+  mutate(Order = if (length(unique(Order)) > 1) NA else Order) %>% 
+  mutate(Family = if (length(unique(Family)) > 1) NA else Family) %>% 
+  mutate(Genus.x = if (length(unique(Genus)) > 1) NA else Genus) %>% 
+  ungroup() %>%  
+  select(-Species, -Genus.x, -Genus_from_sp) %>% 
+  dplyr::rename("Species" = addSpecies) %>%  
+  bind_rows(as.data.frame(arctictaxa) %>% 
+              rownames_to_column("ASV") %>%  
+              filter(!is.na(Species))) %>%  
+  mutate(.grp = ifelse(is.na(Species),  
+                       paste0("NA_grp_", 
+                              row_number()),  
+                       Species)) %>%  
+  group_by(.grp) %>%  
+  fill(Order, Family, Genus, .direction = "updown") %>% 
+  ungroup() %>%  
+  select(-.grp) %>%  
   mutate(DB = "arcticDB") %>%
   relocate(DB, .before = Kingdom) %>%
-  column_to_rownames("ASV") %>%
+  column_to_rownames("ASV") %>%  
+  mutate(Species = ifelse(is.na(Species) & !is.na(Genus),
+                          paste0(Genus, " spp."),
+                          Species)) %>%
   as.matrix()
 
 # Resaves output
