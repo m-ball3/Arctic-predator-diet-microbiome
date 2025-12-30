@@ -657,7 +657,7 @@ make_relative <- function(otu_abs) {
   otu_prop <- otu_prop[, c(ncol(otu_prop), 1:(ncol(otu_prop)-1))]
   otu_prop[is.na(otu_prop)] <- 0                  # replaces NaNs with 0
   is.num <- sapply(otu_prop, is.numeric)
-  otu_prop[is.num] <- lapply(otu_prop[is.num], round, 3)
+  otu_prop[is.num] <- lapply(otu_prop[is.num], round, 5)
   otu_prop
 }
 
