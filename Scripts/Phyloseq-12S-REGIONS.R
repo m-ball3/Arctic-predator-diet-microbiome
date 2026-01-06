@@ -112,15 +112,19 @@ plot_bar(ps12s.replicate.rel, x = "LabID", fill = "Species")+
 
 # Specifies the replicate to remove
 replicate_to_remove <- c("WADE-003-124", "WADE-003-122")
+samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
 
 # Recreates REGIONAL phyloseq objects without unwanted replicate
 ps.12s.arctic <- phyloseq(
   otu_table(arctic.seqtab, taxa_are_rows=FALSE), 
   sample_data(samdf), 
   tax_table(taxa.arctic)
-)%>% 
-  subset_samples(LabID != replicate_to_remove)
+)%>%
+  subset_samples(!(LabID %in% replicate_to_remove))
 sample_names(ps.12s.arctic)
+
+# Checks that replicates were removed
+sample_names(ps.12s.arctic)[grepl("122|124", sample_names(ps.12s.arctic))]
 
 # ------------------------------------------------------------------
 # CLEANS PHYLOSEQ
