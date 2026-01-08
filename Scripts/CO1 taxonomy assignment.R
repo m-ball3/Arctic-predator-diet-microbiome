@@ -8,12 +8,12 @@ library(dplyr)
 
 
 # loads taxonomy ref files
-taxref <- "/gscratch/coenv/mball3/WADE003-arctic-pred/MIDORI2_UNIQ_NUC_GB268_CO1_DADA2.fasta"
-speciesref <- "/gscratch/coenv/mball3/WADE003-arctic-pred/CO1-addspecies-DB.fasta"
+taxref <- "Z:/Arctic predator diet sequences/CO1/MIDORI2_UNIQ_NUC_GB268_CO1_DADA2.fasta"
+speciesref <- "Z:/Arctic predator diet sequences/CO1/CO1-addspecies-DB.fasta"
 
 # loads output
 # Loads in dada2 output
-load("WADE003-arcticpred_dada2_QAQC_CO1P1_output-notaxa.Rdata")
+load("./DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_CO1P1_output-notaxa.Rdata")
 
 # assigns taxonomy and species
 
