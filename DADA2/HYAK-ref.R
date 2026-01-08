@@ -78,6 +78,10 @@ scp -r "C:\Users\Intern\Desktop\arctic-pred\16S_Arctic_predator_reference_databa
 
 scp -r * mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/SRKW/rawdata/16SP1/
 
+  
+#CO1
+  scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_CO1P1_output-notaxa.Rdata" "C:/Users/MBall/OneDrive/文档/WADE LAB//Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
+
 
 # Read error output
 cat file
@@ -104,3 +108,10 @@ apptainer run --bind /gscratch /gscratch/coenv/containerstidyverse_4.0.1.sif Rsc
 
 # COPY OUTPUT FILE TO MY LOCAL COMPUTER!!
 scp mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_12SP1_output-130trunc-ADFGnotes-50BOOTTRUE-leftrim20.Rdata "C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE lab/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/boot-true"
+
+
+
+apptainer exec \
+--bind /gscratch:/gscratch \
+/gscratch/coenv/mball3/tidyverse_latest.sif \
+Rscript /mmfs1/home/mball3/co1-taxa.R

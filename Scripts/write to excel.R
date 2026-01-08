@@ -37,11 +37,11 @@ write_xlsx(
 
 
 ## OLD CODE
-# ls()
-# class("taxa")
-# 
-# df <- as.data.frame(taxa.arctic)
-# df_with_rownames <- cbind(rownames = rownames(df), df)
-# writexl::write_xlsx(df_with_rownames, "./Deliverables/12S/regions/arctic/WADE003-arcticpred_dada2_QAQC_12SP1_arctic.xlsx")
-# 
+ls()
+class("taxa")
+
+df <- as.data.frame(out)
+df_with_rownames <- cbind(rownames = rownames(df), df)
+writexl::write_xlsx(df_with_rownames, "./Deliverables/12S/regions/arctic/WADE003-arcticpred_dada2_QAQC_CO1-out.xlsx")
+
 
