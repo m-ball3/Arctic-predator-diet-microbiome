@@ -50,19 +50,17 @@ rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
 
 labdf <- read.csv("metadata/ADFG_dDNA_labwork_metadata.csv")%>%
   filter(!is.na(LabID))%>%
-  mutate(Specimen.ID = ifelse(Specimen.ID == "EB22PH005-S", "EB23PH005-S", Specimen.ID))
-
-samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv") %>%
+  mutate(Specimen.ID = ifelse(Specimen.ID == "EB22PH005-S", "EB23PH005-S", Specimen.ID)) %>% 
+  dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID) %>% 
+  mutate(LabID = gsub("-C", "", LabID)) %>% # removes -C tag
+  mutate(LabID = gsub("-UC", "", LabID))
+         
+samdf <- labdf %>% 
+  left_join(read.csv("metadata/ADFG_dDNA_sample_metadata.csv"), by =  c("Specimen.ID", "Repeat.or.New.Specimen.")) %>%
   dplyr::rename(Predator = Species) %>%
   mutate(Predator = tolower(Predator)) %>%
-  left_join( # Creates a column corresponding ADFG sample IDs with WADE sample IDs
-    labdf %>% dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID),
-    by = c("Specimen.ID", "Repeat.or.New.Specimen.")
-  ) %>%
-  filter(!is.na(LabID)) %>% # Removes rows where LabID is NA (because shipment 1 was bad & thus not extracted)
-  mutate(
-    LabID = gsub("-C$", "", LabID)   # Removes "-C" (all 12s samples are cleaned)
-  )
+  filter(!is.na(LabID))  # Removes rows where LabID is NA (because shipment 1 was bad & thus not extracted)
+  
 
 #  Sets row names to LabID
 rownames(samdf) <- samdf$LabID
