@@ -13,7 +13,7 @@ speciesref <- "Z:/Arctic predator diet sequences/CO1/CO1-addspecies-DB.fasta"
 
 # loads output
 # Loads in dada2 output
-load("./DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_CO1P1_output-notaxa.Rdata")
+load("./DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_CO1P1_output-notaxa1.Rdata")
 
 # assigns taxonomy and species
 
@@ -55,4 +55,4 @@ taxa <- as.data.frame(taxam) %>% # saves taxa as a dataframe
   as.matrix() # transforms df back to matrix
 
 ### Save dataco
-save(seqtab.nochim, freq.nochim, track, taxa, taxam, genus.species, out, file = "WADE003-arcticpred_dada2_QAQC_CO1P1_output-withtaxa.Rdata")
+save(seqtab.nochim, freq.nochim, track, taxa, taxam, genus.species, out, file = "WADE003-arcticpred_dada2_QAQC_CO1P1_output-withtaxa1.Rdata")

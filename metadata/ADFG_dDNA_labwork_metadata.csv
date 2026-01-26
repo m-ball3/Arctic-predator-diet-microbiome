@@ -1,182 +1,189 @@
-Specimen ID,Repeat or New Specimen?,Shipment,Location in body,Extraction date,bio_rep?,LabID,tech_rep?,Notes,extract_con_ng_ul,diluted_con,Final_PCR_dilution,Final_PCR1_16S_band,Final_PCR1_16S_date,Number_PCR1_16S,PCR1_16S_9.17.24_band,Clean1_date,Index_plate,Index_date,Final_quant_16S,MiSeq_success_16s,Final_quant_12s,MiSeq_success_12s,Notes
-DL22OME005,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-DL22OME004,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-DL22OME003,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-DL22OME002,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-DL22OME001,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-DL21OTZ007,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-DL20OME003,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-DL20OME002,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-DL20OME001,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2021BDL-0723C,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2021BDL-0723A,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2021BDL-0708Sa,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2022165,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2022161,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2021214,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2021028,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2020230,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-PL12GAM049,New,1,NA,not extracted,,NA,no,sample not found,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-DIO-001-14,New,1,NA,not extracted,,NA,no,sample not found,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2023Beluga0726SA,New,1,NA,not extracted,,NA,no,sample not found,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2018199,New,1,NA,not extracted,,NA,no,sample not found,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2023Beluga0722SD,New,1,NA,not extracted,,NA,no,"vial cracked, all sample lost",NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,
-2023157,Replacement,2,stomach,9/9/2024,,WADE-003-001,no,,0.873,,,yes,2/24/2025,1,no,5/13/2025,16SP2,,1.25,,,,A1 plate 5
-2023279,Replacement,2,stomach,9/9/2024,,WADE-003-002,no,,4.2,,,no,,1,no,5/13/2025,no,NA,NA,NA,,,
-2023281,Replacement,2,stomach,9/9/2024,,WADE-003-003,no,,32.2,,,no,,1,no,5/13/2025,no,NA,NA,NA,,,
-2023295,Replacement,2,stomach,9/9/2024,,WADE-003-004,no,,0.835,,,no,,1,no,5/13/2025,no,NA,NA,NA,,,
-2023296,Replacement,2,stomach,9/9/2024,,WADE-003-005,no,,4.21,,,no,,1,no,5/13/2025,no,NA,NA,NA,,,
-2014122,New,2,stomach,9/9/2024,no,WADE-003-006,no,,100,,,faint,9/17/2024,1,yes,9/23/2024,16SP1,,1.9,yes,,,yes
-2017198,New,2,stomach,9/9/2024,no,WADE-003-007,no,,15.6,,,no,,1,no,no,no,NA,NA,NA,,,
-2017206,New,2,stomach,9/9/2024,no,WADE-003-008,no,,2.99,,,yes,2/14/2024,1,no,no,16SP2,NA,12.2,NA,,,G1 plate 4
-2017215,New,2,stomach,9/9/2024,no,WADE-003-009,no,,0.697,,,no,,1,no,no,no,NA,NA,NA,,,
-2017217,New,2,stomach,9/9/2024,no,WADE-003-010,no,,100,,,smear,2/14/2025,1,yes,9/23/2024,16SP2,,1.83,no,,,A2 plate 4
-2017221,New,2,stomach,9/9/2024,no,WADE-003-011,no,,100,,,faint,9/17/2024,1,faint,9/23/2024,16SP1,,0.09,yes,,,yes
-2017222,New,2,stomach,9/9/2024,no,WADE-003-012,no,,5.68,,,no,,1,no,no,no,NA,NA,NA,,,
-2017228,New,2,stomach,9/9/2024,no,WADE-003-013,no,,0.995,,,no,,1,no,no,no,NA,NA,NA,,,
-2017230,New,2,stomach,9/9/2024,no,WADE-003-014,no,,18.9,,,smear,2/14/2025,1,no,no,16SP2,,2.08,,,,C2 plate 5
-2018278,New,2,stomach,9/9/2024,no,WADE-003-015,no,,1.99,,,no,,1,no,no,no,NA,NA,NA,,,
-2020230,Replacement,2,stomach,9/9/2024,yes,WADE-003-016,no,,4.6,,,no,,1,no,no,no,NA,NA,NA,,,
-2021028,Replacement,2,stomach,9/9/2024,yes,WADE-003-017,no,,100,,,smear,2/14/2025,1,yes,9/23/2024,16SP2,,1.03,no,,,G2 plate 4
-2021214,Replacement,2,stomach,9/9/2024,yes,WADE-003-018,no,,10.9,,,no,,1,no,no,no,NA,NA,NA,,,
-2021BDL-0708Sa,Replacement,2,stomach,9/9/2024,yes,WADE-003-019,no,,1.8,,,yes,2/14/2025,1,no,no,16SP2,,1.34,no,,,A3 plate 4
-2021BDL-0723A,Replacement,2,stomach,9/9/2024,yes,WADE-003-020,no,,26.4,,,faint,9/17/2024,1,faint,9/23/2024,16SP1,,0.709,no,,,yes
-2021BDL-0723C,Replacement,2,stomach,9/9/2024,yes,WADE-003-021,no,,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,3.25,no,,,
-2022161,Replacement,2,stomach,9/9/2024,yes,WADE-003-022,no,,1.66,,,no,,1,no,no,no,NA,NA,NA,,,
-2022165,Replacement,2,stomach,9/9/2024,yes,WADE-003-023,no,,1.18,,,no,,1,no,no,no,NA,NA,NA,,,
-2022Beluga-0713-SD,Replacement,2,stomach,9/10/2024,yes,WADE-003-024,no,,27.1,,,smear,2/24/2025,1,no,no,16SP2,,1.5,,,,B3 plate 5
-DL17HB001,New,2,stomach,9/10/2024,no,WADE-003-025,no,,2,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,3.54,yes,,,
-DL17OME001,New,2,stomach,9/10/2024,no,WADE-003-026,no,,9.01,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,3.55,yes,,,
-DL18OME001,New,2,stomach,9/10/2024,no,WADE-003-027,no,,51,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,5.16,yes,,,
-DL18OME002,New,2,stomach,9/10/2024,no,WADE-003-028,no,,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,5.18,yes,,,
-DL18OME003,New,2,stomach,9/10/2024,no,WADE-003-029,no,,40.6,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,4.49,yes,,,
-DL18OME004,New,2,stomach,9/10/2024,no,WADE-003-030,no,,100,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,3.12,yes,,,
-DL20OME001,Replacement,2,stomach,9/10/2024,yes,WADE-003-031,no,,100,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,4.52,yes,,,
-DL20OME002,Replacement,2,stomach,9/10/2024,yes,WADE-003-032,no,,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,0.893,yes,,,
-DL20OME003,Replacement,2,stomach,9/10/2024,yes,WADE-003-033,no,,41.9,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,2.04,yes,,,
-DL21OTZ007,Replacement,2,stomach,9/10/2024,yes,WADE-003-034,no,,100,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,1.39,yes,,,
-DL22OME001,Replacement,2,stomach,9/10/2024,yes,WADE-003-035,no,,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,0.854,yes,,,
-DL22OME002,Replacement,2,stomach,9/10/2024,yes,WADE-003-036,no,,100,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,0.88,no,,,E3 plate 4
-DL22OME003,Replacement,2,stomach,9/10/2024,yes,WADE-003-037,no,,59,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,1.61,no,,,F3 plate 4
-DL22OME004,Replacement,2,stomach,9/10/2024,yes,WADE-003-038,no,,15.3,,,yes,2/14/2025,1,faint,9/23/2024,16SP2,,1.41,no,,,G3 plate 4
-DL22OME005,Replacement,2,stomach,9/10/2024,yes,WADE-003-039,no,,100,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,1.44,no,,,H3 plate 4
-DL22OTZ004,Replacement,2,stomach,9/10/2024,yes,WADE-003-040,no,,100,,,smear,2/24/2025,1,yes,9/23/2024,16SP2,,0.85,no,,,C3 plate 5
-DL22SCM001,Replacement,2,stomach,9/10/2024,yes,WADE-003-041,no,,0.941,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,1.78,no,,,B4 plate 4
-DL23OME001,Replacement,2,stomach,9/10/2024,??,WADE-003-042,no,says it is a replacement but only one sample listed,100,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,1.68,no,,,C4 plate 4
-DL23OME002,Replacement,2,stomach,9/10/2024,??,WADE-003-043,no,says it is a replacement but only one sample listed,47.7,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,1.1,no,,,D4 plate 4
-DL23OME002,Replacement,2,stomach,9/10/2024,??,WADE-003-043-2,no,says it is a replacement but only one sample listed,47.7,,,yes,2/24/2025,1,yes,9/23/2024,16SP2,,0.572,,,,E7 plate 5
-DL23OME003,Replacement,2,stomach,9/10/2024,??,WADE-003-044,no,says it is a replacement but only one sample listed,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,0.23,yes,,,
-DL23SCM001,Replacement,2,stomach,9/10/2024,??,WADE-003-045,no,says it is a replacement but only one sample listed,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,1.74,yes,,,
-SHH-004-14,New,1,stomach,9/10/2024,no,WADE-003-046,no,,0.243,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-PL14GAM064,New,1,stomach,9/11/2024,no,WADE-003-047,no,sample found in shipment 1 but not in metadata,1.33,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-PH15GAM051,New,1,stomach,9/11/2024,no,WADE-003-048,no,,0.871,,,yes,,1,yes,9/23/2024,16SP1,,1.62,no,,,
-PH14GAM029,New,1,stomach,9/11/2024,no,WADE-003-049,no,,15.3,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-PH14GAM027,New,1,stomach,9/11/2024,no,WADE-003-050,no,,1.23,,,yes,,1,yes,9/23/2024,16SP1,,1.94,no,,,
-PH14GAM026,New,1,stomach,9/11/2024,no,WADE-003-051,no,,4.77,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-PH14GAM020,New,1,stomach,9/11/2024,no,WADE-003-052,no,,3.22,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-N24-2013,New,1,stomach,9/11/2024,no,WADE-003-053,no,,1.89,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-LDL-UNK-A-17,New,1,stomach,9/11/2024,no,WADE-003-054,no,,2.36,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-LDL-32-17,New,1,stomach,9/11/2024,no,WADE-003-055,no,,0.956,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-LDL-24-17,New,1,stomach,9/11/2024,no,WADE-003-056,no,,0.913,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-LDL-23-17,New,1,stomach,9/11/2024,no,WADE-003-057,no,,3.89,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-LDL-21-17,New,1,stomach,9/11/2024,no,WADE-003-058,no,,13.8,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-LDL-16-17,New,1,stomach,9/11/2024,no,WADE-003-059,no,,0.817,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-EB14GAM025,New,1,stomach,9/11/2024,no,WADE-003-060,no,,0.406,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-EB13GAM020,New,1,stomach,9/11/2024,no,WADE-003-061,no,sample found in shipment 1 but not in metadata,4.99,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-DL18OME005,New,1,stomach,9/11/2024,no,WADE-003-062,no,,6.14,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,2.94,yes,,,
-DL16OME004,New,1,stomach,9/11/2024,no,WADE-003-063,no,,2.47,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-DL16HB001,New,1,stomach,9/11/2024,no,WADE-003-064,no,,5.63,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-EB15SH020,New,1,stomach,9/11/2024,no,WADE-003-065,no,,4.48,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-DIO-001-11,New,1,stomach,9/11/2024,no,WADE-003-066,no,,2.43,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2023Beluga0728SB,New,1,stomach,9/11/2024,no,WADE-003-067,no,,0.099,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2023Beluga0728SA,New,1,stomach,9/11/2024,no,WADE-003-068,no,,3.05,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2023Beluga0726SB,New,1,stomach,9/11/2024,no,WADE-003-069,no,,0.429,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-unk_beluga,unk,1,stomach,9/12/2024,no,WADE-003-070,no,"vial lid cracked, no label on vial",1.39,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2023Beluga0722SF,New,1,stomach,9/12/2024,no,WADE-003-071,no,,0.531,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2023Beluga0722SE,New,1,stomach,9/12/2024,no,WADE-003-072,no,,0.35,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2023296,New,1,stomach,9/12/2024,yes,WADE-003-073,no,,1.06,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2023Beluga0722SB,New,1,stomach,9/12/2024,no,WADE-003-074,no,,0.799,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2023Beluga0722SA,New,1,stomach,9/12/2024,no,WADE-003-075,no,,29.9,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2023Beluga0721SB,New,1,stomach,9/12/2024,no,WADE-003-076,no,,0.605,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2023Beluga0721SA,New,1,stomach,9/12/2024,no,WADE-003-077,no,,1.33,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2022Beluga-0713-SB,New,1,stomach,9/12/2024,no,WADE-003-078,no,,2,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2022Beluga-0713-SA,New,1,stomach,9/12/2024,no,WADE-003-079,no,,1.18,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2021BDL-0723B,New,1,stomach,9/12/2024,no,WADE-003-080,no,"vial cracked, still had some sample",3.8,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2014BS18,New,1,stomach,9/12/2024,no,WADE-003-081,no,,1.31,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2014-02-RS,New,1,stomach,9/12/2024,no,WADE-003-082,no,,2.83,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2013RS31,New,1,stomach,9/12/2024,no,WADE-003-083,no,,0.349,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2010RSW-05,New,1,stomach,9/12/2024,no,WADE-003-084,no,,2.12,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-09WWBS10,New,1,stomach,9/12/2024,no,WADE-003-085,no,,2.16,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-08BS7,New,1,stomach,9/12/2024,no,WADE-003-086,no,,0.575,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-08BS09,New,1,stomach,9/12/2024,no,WADE-003-087,no,,4.12,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2022Beluga-07130SD,New,1,stomach,9/12/2024,yes,WADE-003-088,no,,0.173,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2015066,New,1,intestine,9/12/2024,no,WADE-003-089,no,,3.15,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2012180,New,1,stomach,9/12/2024,no,WADE-003-090,no,,1.07,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-DL22SCM001,New,1,stomach,9/12/2024,yes,WADE-003-091,no,,0.578,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-DL22OTZ004,New,1,stomach,9/12/2024,yes,WADE-003-092,no,,3.91,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-2021BDL-0723B,Replacement,1,stomach,10/7/2024,,WADE-003-093,yes,re-extraction test of 9/12 samples with low DNA quants,0.821,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,
-08BS7,Replacement,1,stomach,10/7/2024,,WADE-003-094,yes,re-extraction test of 9/12 samples with low DNA quants,0.387,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,
-2014-02-RS,Replacement,1,stomach,10/7/2024,,WADE-003-095,yes,re-extraction test of 9/12 samples with low DNA quants,15.2,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,
-09WWBS10,Replacement,1,stomach,10/7/2024,,WADE-003-096,yes,re-extraction test of 9/12 samples with low DNA quants,0.656,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,
-2023Beluga0722SA,Replacement,1,stomach,10/7/2024,,WADE-003-097,yes,re-extraction test of 9/12 samples with low DNA quants; only 0.5 ml from sample,7.67,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,
-2023Beluga0722SF,Replacement,1,stomach,10/7/2024,,WADE-003-098,yes,re-extraction test of 9/12 samples with low DNA quants,2.29,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,
-2023Beluga0721SA,Replacement,1,stomach,10/7/2024,,WADE-003-099,yes,re-extraction test of 9/12 samples with low DNA quants,4.06,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,
-2010RSW-05,Replacement,1,stomach,10/7/2024,,WADE-003-100,yes,re-extraction test of 9/12 samples with low DNA quants,2.9,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,
-2014BS18,Replacement,1,stomach,10/7/2024,,WADE-003-101,yes,re-extraction test of 9/12 samples with low DNA quants,1.85,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,
-EB21GAM031-S,New,3,stomach,11/27/2024,no,WADE-003-102,no,,100,,,smear,2/24/2025,,,,16SP2,,0.631,no,,,D3 plate 5
-EB22GAM019-S,New,3,stomach,11/27/2024,no,WADE-003-103,no,,100,,,smear,2/24/2025,,,,16SP2,,0.921,,,,E3 plate 5
-EB23PH005-S,New,3,stomach,11/27/2024,no,WADE-003-104,no,,100,,,yes,,,,,16SP2,,3.25,,,,B1 plate 3
-EB23PH028-S,New,3,stomach,11/27/2024,no,WADE-003-105,no,,100,,,smear,2/24/2025,,,,16SP2,,1.02,,,,F3 plate 5
-EB23SH008-S,New,3,stomach,11/27/2024,no,WADE-003-106,no,,46.9,,,yes,2/14/2025,,,,16SP2,,11.6,no,,,F4 plate 4
-EB23SH009-S,New,3,stomach,11/27/2024,no,WADE-003-107,no,,27.6,,,yes,2/14/2025,,,,16SP2,,1.13,,,,G4 plate 4
-EB24GAM020-S,New,3,stomach,11/27/2024,no,WADE-003-108,no,,100,,,smear,2/24/2025,,,,16SP2,,1.36,,,,H3 plate 5
-EB24GAM027-S,New,3,stomach,11/27/2024,no,WADE-003-109,no,,54,,,no,,,,,,,,,,,no
-EB24PH055-S,New,3,stomach,11/27/2024,no,WADE-003-110,no,,100,,,yes,2/2/2025,,,,16SP2,,3.87,,,,E1 plate 3
-EB24PH075-S,New,3,stomach,11/27/2024,no,WADE-003-111,no,,100,,,yes,2/2/2025,,,,16SP2,,3.36,,,,F1 plate 3
-PH22SH004-S,New,3,stomach,11/27/2024,no,WADE-003-112,no,,100,,,yes,1/24/2025,,,,,,,,,,C2 plate 2
-PH22SH005-S,New,3,stomach,11/27/2024,no,WADE-003-113,no,,100,,,smear,12/9/2024,,,,,,,,,,D2 plate 1
-PH22SH015-S,New,3,stomach,11/27/2024,no,WADE-003-114,no,,10.5,,,faint,1/24/2025,,,,,,,,,,E2 plate 2
-PH22SH036-S,New,3,stomach,11/27/2024,no,WADE-003-115,no,,5.77,,,yes,1/24/2025,,,,,,,,,,F2 plate 2
-PH22SH043-S,New,3,stomach,11/27/2024,no,WADE-003-116-C,no,,100,,,smear,2/24/2025,,,,16SP2,,3.7,no,,,"DO BOTH: C4 plate 5 (cleaned DNA; quant 3.7), H1 plate 3 (uncleaned DNA; quant 1.12)"
-PH22SH043-S,New,3,stomach,11/27/2024,no,WADE-003-116-UC,no,,100,,,smear,2/12/2025,,,,16SP2,,1.12,no,,,"DO BOTH: C4 plate 5 (cleaned DNA; quant 3.7), H1 plate 3 (uncleaned DNA; quant 1.12)"
-PH23GAM007-S,New,3,stomach,11/27/2024,no,WADE-003-117-C,no,,100,,,smear,2/24/2025,,,,16SP2,,1.6,,,,"DO BOTH: D4 plate 5 (cleaned DNA; quant 1.6), A2 plate 3 (uncleaned DNA)"
-PH23GAM007-S,New,3,stomach,11/27/2024,no,WADE-003-117-UC,no,,100,,,smear,2/12/2025,,,,16SP2,,1.47,,,,"DO BOTH: D4 plate 5 (cleaned DNA; quant 1.6), A2 plate 3 (uncleaned DNA)"
-PH23SH005-S,New,3,stomach,11/27/2024,no,WADE-003-118-C,no,,100,,,smear,2/24/2025,,,,16SP2,,0.783,,,,"DO BOTH: E4 plate 5 (cleaned DNA; quant 0.783), B2 plate 3 (uncleaned DNA)"
-PH23SH005-S,New,3,stomach,11/27/2024,no,WADE-003-118-UC,no,,100,,,smear,2/12/2025,,,,16SP2,,3.33,,,,"DO BOTH: E4 plate 5 (cleaned DNA; quant 0.783), B2 plate 3 (uncleaned DNA)"
-PH23SH013-S,New,3,stomach,11/27/2024,no,WADE-003-119,no,,100,,,smear,2/24/2025,,,,16SP2,,0.825,,,,F4 plate 5
-PH23SH032-S,New,3,stomach,11/27/2024,no,WADE-003-120,no,,3.34,,,faint,1/24/2025,,,,,,,,,,C3 plate 2
-PH24GAM014-S,New,3,stomach,11/27/2024,no,WADE-003-121,no,,100,,,smear,2/24/2025,,,,16SP2,,4.24,no,,,G4 plate 5
-EB22PH005-S,New,3,stomach,11/27/2024,no,WADE-003-122,yes,,0,,,smear,2/14/2025,,,,16SP2,,0.389,,,,A5 plate 4
-PH22SH036-S,New,3,stomach,11/27/2024,no,WADE-003-123,yes,,27.5,,,faint,1/24/2025,,,,16SP2,,3.67,,,,F3 plate 2
-EB24PH075-S,New,3,stomach,11/27/2024,no,WADE-003-124,yes,,13.8,,,faint,1/24/2025,,,,16SP2,,0.952,,,,G3 plate 2
-EB21GAM031-F,New,3,feces,12/2/2024,no,WADE-003-125,no,,0.773,,,no,,,,,,,,,,,no
-EB22GAM019-F,New,3,feces,12/2/2024,no,WADE-003-126,no,,8.22,,,smear,12/9/2025,,,,,,,,,,B4 plate 1
-EB23PH005-F,New,3,feces,12/2/2024,no,WADE-003-127-C,no,,8.64,,,smear,2/24/2025,,,,16SP2,,3.39,no,,,"DO BOTH: C5 plate 5 (cleaned DNA; quant 3.39), C4 plate 2 (uncleaned DNA)"
-EB23PH005-F,New,3,feces,12/2/2024,no,WADE-003-127-UC,no,,8.64,,,smear,1/21/2025,,,,16SP2,,1.34,,,,"DO BOTH: C5 plate 5 (cleaned DNA; quant 3.39), C4 plate 2 (uncleaned DNA)"
-EB23PH028-F,New,3,feces,12/2/2024,no,WADE-003-128,no,,1.02,,,no,2/24/2025,,,,,,,,,,no
-EB23SH008-F,New,3,feces,12/2/2024,no,WADE-003-129,no,,10.6,,,no,2/24/2025,,,,,,,,,,no
-EB23SH009-F,New,3,feces,12/2/2024,no,WADE-003-130,no,,1.65,,,no,2/24/2025,,,,,,,,,,no
-EB24GAM020-F,New,3,feces,12/2/2024,no,WADE-003-131,no,,12.4,,,no,2/24/2025,,,,,,,,,,no
-EB24GAM027-F,New,3,feces,12/2/2024,no,WADE-003-132,no,,12.4,,,no,2/24/2025,,,,,,,,,,no
-EB24PH055-F,New,3,feces,12/2/2024,no,WADE-003-133,no,,8.94,,,no,2/24/2025,,,,,,,,,,no
-EB24PH075-F,New,3,feces,12/2/2024,no,WADE-003-134,no,,3.34,,,no,,,,,,,,,,,no
-PH22SH004-F,New,3,feces,12/2/2024,no,WADE-003-135,no,,26.3,,,no,,,,,,,,,,,no
-PH22SH005-F,New,3,feces,12/2/2024,no,WADE-003-136,no,,18,,,no,,,,,,,,,,,no
-PH22SH015-F,New,3,feces,12/2/2024,no,WADE-003-137,no,,23.4,,,no,,,,,,,,,,,no
-PH22SH036-F,New,3,feces,12/2/2024,no,WADE-003-138,no,,100,,,smear,2/24/2025,,,,16SP2,,3.87,no,,,F6 plate 5
-PH22SH043-F,New,3,feces,12/2/2024,no,WADE-003-139,no,,4.45,,,no,,,,,,,,,,,no
-PH23GAM007-F,New,3,feces,12/2/2024,no,WADE-003-140,no,,3.72,,,no,,,,,,,,,,,no
-PH23SH005-F,New,3,feces,12/2/2024,no,WADE-003-141,no,,1.71,,,no,,,,,,,,,,,no
-PH23SH013-F,New,3,feces,12/2/2024,no,WADE-003-142,no,,2.61,,,no,,,,,,,,,,,no
-PH23SH032-F,New,3,feces,12/2/2024,no,WADE-003-143,no,,100,,,faint,,,,,,,,,,,E7 plate 5
-PH24GAM014-F,New,3,feces,12/2/2024,no,WADE-003-144,no,,2.05,,,smear,,,,,,,,,,,no
-EB23PH028-F,New,3,feces,12/2/2024,no,WADE-003-145,yes,,12,,,no,,,,,,,,,,,no
-PH22SH015-F,New,3,feces,12/2/2024,no,WADE-003-146,yes,,100,,,smear,2/24/2025,,,,16SP2,,3.84,no,,,G7 plate 5
-PH23SH032-F,New,3,feces,12/2/2024,no,WADE-003-147,yes,,7.33,,,no,,,,,,,,,,,no
-neg1,NA,NA,,9/9/2024,NA,WADE-003-148,no,,0.091,,,NA,9/17/2024,1,NA,no,no,NA,NA,NA,,,
-neg2,NA,NA,,9/10/2024,NA,WADE-003-149,no,,0,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-neg3,NA,NA,NA,9/11/2024,NA,WADE-003-150,no,,0,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-neg4,NA,NA,NA,9/12/2024,NA,WADE-003-151,no,,0,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,
-neg5,NA,NA,NA,10/7/2024,,WADE-003-152,yes,re-extraction test of 9/12 samples with low DNA quants,0,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,
-neg6,NA,NA,NA,11/27/2024,no,WADE-003-153,no,,0.27,,,NA,,,,,,,,,,,NA
-neg7,NA,NA,NA,12/2/2024,no,WADE-003-154,no,,0,,,NA,,,,,,,,,,,NA
+Specimen ID,Repeat or New Specimen?,Shipment,Location in body,Extraction date,bio_rep?,LabID,tech_rep?,Notes,extract_con_ng_ul,diluted_con,Final_PCR_dilution,Final_PCR1_16S_band,Final_PCR1_16S_date,Number_PCR1_16S,PCR1_16S_9.17.24_band,Clean1_date,Index_plate,Index_date,Final_quant_16S,MiSeq_success_16s,Final_quant_12s,MiSeq_success_12s,Notes,Final_PCR1_MB_band,Old-labels
+DL22OME005,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+DL22OME004,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+DL22OME003,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+DL22OME002,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+DL22OME001,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+DL21OTZ007,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+DL20OME003,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+DL20OME002,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+DL20OME001,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2021BDL-0723C,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2021BDL-0723A,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2021BDL-0708Sa,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2022165,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2022161,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2021214,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2021028,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2020230,New,1,,,yes,NA,no,,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+PL12GAM049,New,1,NA,not extracted,,NA,no,sample not found,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+DIO-001-14,New,1,NA,not extracted,,NA,no,sample not found,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2023Beluga0726SA,New,1,NA,not extracted,,NA,no,sample not found,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2018199,New,1,NA,not extracted,,NA,no,sample not found,NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2023Beluga0722SD,New,1,NA,not extracted,,NA,no,"vial cracked, all sample lost",NA,,,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,
+2023157,Replacement,2,stomach,9/9/2024,,WADE-003-001,no,,0.873,,,yes,2/24/2025,1,no,5/13/2025,16SP2,,1.25,,,,A1 plate 5,yes,
+2023279,Replacement,2,stomach,9/9/2024,,WADE-003-002,no,,4.2,,,no,,1,no,5/13/2025,no,NA,NA,NA,,,,yes,
+2023281,Replacement,2,stomach,9/9/2024,,WADE-003-003,no,,32.2,,,no,,1,no,5/13/2025,no,NA,NA,NA,,,,yes,
+2023295,Replacement,2,stomach,9/9/2024,,WADE-003-004,no,,0.835,,,no,,1,no,5/13/2025,no,NA,NA,NA,,,,yes,
+2023296,Replacement,2,stomach,9/9/2024,,WADE-003-005,no,,4.21,,,no,,1,no,5/13/2025,no,NA,NA,NA,,,,yes,
+2014122,New,2,stomach,9/9/2024,no,WADE-003-006,no,,100,,,faint,9/17/2024,1,yes,9/23/2024,16SP1,,1.9,yes,,,yes,yes,
+2017198,New,2,stomach,9/9/2024,no,WADE-003-007,no,,15.6,,,no,,1,no,no,no,NA,NA,NA,,,,yes,
+2017206,New,2,stomach,9/9/2024,no,WADE-003-008,no,,2.99,,,yes,2/14/2024,1,no,no,16SP2,NA,12.2,NA,,,G1 plate 4,yes,
+2017215,New,2,stomach,9/9/2024,no,WADE-003-009,no,,0.697,,,no,,1,no,no,no,NA,NA,NA,,,,yes,
+2017217,New,2,stomach,9/9/2024,no,WADE-003-010,no,,100,,,smear,2/14/2025,1,yes,9/23/2024,16SP2,,1.83,no,,,A2 plate 4,yes,
+2017221,New,2,stomach,9/9/2024,no,WADE-003-011,no,,100,,,faint,9/17/2024,1,faint,9/23/2024,16SP1,,0.09,yes,,,yes,yes,
+2017222,New,2,stomach,9/9/2024,no,WADE-003-012,no,,5.68,,,no,,1,no,no,no,NA,NA,NA,,,,yes,
+2017228,New,2,stomach,9/9/2024,no,WADE-003-013,no,,0.995,,,no,,1,no,no,no,NA,NA,NA,,,,yes,
+2017230,New,2,stomach,9/9/2024,no,WADE-003-014,no,,18.9,,,smear,2/14/2025,1,no,no,16SP2,,2.08,,,,C2 plate 5,yes,
+2018278,New,2,stomach,9/9/2024,no,WADE-003-015,no,,1.99,,,no,,1,no,no,no,NA,NA,NA,,,,yes,
+2020230,Replacement,2,stomach,9/9/2024,yes,WADE-003-016,no,,4.6,,,no,,1,no,no,no,NA,NA,NA,,,,yes,
+2021028,Replacement,2,stomach,9/9/2024,yes,WADE-003-017,no,,100,,,smear,2/14/2025,1,yes,9/23/2024,16SP2,,1.03,no,,,G2 plate 4,smear,
+2021214,Replacement,2,stomach,9/9/2024,yes,WADE-003-018,no,,10.9,,,no,,1,no,no,no,NA,NA,NA,,,,yes,
+2021BDL-0708Sa,Replacement,2,stomach,9/9/2024,yes,WADE-003-019,no,,1.8,,,yes,2/14/2025,1,no,no,16SP2,,1.34,no,,,A3 plate 4,yes,
+2021BDL-0723A,Replacement,2,stomach,9/9/2024,yes,WADE-003-020,no,,26.4,,,faint,9/17/2024,1,faint,9/23/2024,16SP1,,0.709,no,,,yes,yes,
+2021BDL-0723C,Replacement,2,stomach,9/9/2024,yes,WADE-003-021,no,,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,3.25,no,,,,smear,
+2022161,Replacement,2,stomach,9/9/2024,yes,WADE-003-022,no,,1.66,,,no,,1,no,no,no,NA,NA,NA,,,,yes,
+2022165,Replacement,2,stomach,9/9/2024,yes,WADE-003-023,no,,1.18,,,no,,1,no,no,no,NA,NA,NA,,,,yes,
+2022Beluga-0713-SD,Replacement,2,stomach,9/10/2024,yes,WADE-003-024,no,,27.1,,,smear,2/24/2025,1,no,no,16SP2,,1.5,,,,B3 plate 5,yes,
+DL17HB001,New,2,stomach,9/10/2024,no,WADE-003-025,no,,2,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,3.54,yes,,,,yes,
+DL17OME001,New,2,stomach,9/10/2024,no,WADE-003-026,no,,9.01,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,3.55,yes,,,,yes,
+DL18OME001,New,2,stomach,9/10/2024,no,WADE-003-027,no,,51,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,5.16,yes,,,,yes,
+DL18OME002,New,2,stomach,9/10/2024,no,WADE-003-028,no,,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,5.18,yes,,,,yes,
+DL18OME003,New,2,stomach,9/10/2024,no,WADE-003-029,no,,40.6,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,4.49,yes,,,,yes,
+DL18OME004,New,2,stomach,9/10/2024,no,WADE-003-030,no,,100,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,3.12,yes,,,,yes,
+DL20OME001,Replacement,2,stomach,9/10/2024,yes,WADE-003-031,no,,100,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,4.52,yes,,,,yes,
+DL20OME002,Replacement,2,stomach,9/10/2024,yes,WADE-003-032,no,,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,0.893,yes,,,,smear,
+DL20OME003,Replacement,2,stomach,9/10/2024,yes,WADE-003-033,no,,41.9,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,2.04,yes,,,,yes,
+DL21OTZ007,Replacement,2,stomach,9/10/2024,yes,WADE-003-034,no,,100,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,1.39,yes,,,,yes,
+DL22OME001,Replacement,2,stomach,9/10/2024,yes,WADE-003-035,no,,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,0.854,yes,,,,yes,
+DL22OME002,Replacement,2,stomach,9/10/2024,yes,WADE-003-036,no,,100,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,0.88,no,,,E3 plate 4,yes,
+DL22OME003,Replacement,2,stomach,9/10/2024,yes,WADE-003-037,no,,59,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,1.61,no,,,F3 plate 4,yes,
+DL22OME004,Replacement,2,stomach,9/10/2024,yes,WADE-003-038,no,,15.3,,,yes,2/14/2025,1,faint,9/23/2024,16SP2,,1.41,no,,,G3 plate 4,yes,
+DL22OME005,Replacement,2,stomach,9/10/2024,yes,WADE-003-039,no,,100,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,1.44,no,,,H3 plate 4,yes,
+DL22OTZ004,Replacement,2,stomach,9/10/2024,yes,WADE-003-040,no,,100,,,smear,2/24/2025,1,yes,9/23/2024,16SP2,,0.85,no,,,C3 plate 5,smear,
+DL22SCM001,Replacement,2,stomach,9/10/2024,yes,WADE-003-041,no,,0.941,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,1.78,no,,,B4 plate 4,yes,
+DL23OME001,Replacement,2,stomach,9/10/2024,??,WADE-003-042,no,says it is a replacement but only one sample listed,100,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,1.68,no,,,C4 plate 4,yes,
+DL23OME002,Replacement,2,stomach,9/10/2024,??,WADE-003-043,no,says it is a replacement but only one sample listed,47.7,,,yes,2/14/2025,1,yes,9/23/2024,16SP2,,1.1,no,,,D4 plate 4,,
+DL23OME002,Replacement,2,stomach,9/10/2024,??,WADE-003-043-2,no,says it is a replacement but only one sample listed,47.7,,,yes,2/24/2025,1,yes,9/23/2024,16SP2,,0.572,,,,E7 plate 5,,
+DL23OME003,Replacement,2,stomach,9/10/2024,??,WADE-003-044,no,says it is a replacement but only one sample listed,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,0.23,yes,,,,yes smear,
+DL23SCM001,Replacement,2,stomach,9/10/2024,??,WADE-003-045,no,says it is a replacement but only one sample listed,100,,,smear,9/17/2024,1,yes,9/23/2024,16SP1,,1.74,yes,,,,,
+SHH-004-14,New,1,stomach,9/10/2024,no,WADE-003-046,no,,0.243,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,no,
+PL14GAM064,New,1,stomach,9/11/2024,no,WADE-003-047,no,sample found in shipment 1 but not in metadata,1.33,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+PH15GAM051,New,1,stomach,9/11/2024,no,WADE-003-048,no,,0.871,,,yes,,1,yes,9/23/2024,16SP1,,1.62,no,,,,,
+PH14GAM029,New,1,stomach,9/11/2024,no,WADE-003-049,no,,15.3,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+PH14GAM027,New,1,stomach,9/11/2024,no,WADE-003-050,no,,1.23,,,yes,,1,yes,9/23/2024,16SP1,,1.94,no,,,,,
+PH14GAM026,New,1,stomach,9/11/2024,no,WADE-003-051,no,,4.77,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+PH14GAM020,New,1,stomach,9/11/2024,no,WADE-003-052,no,,3.22,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+N24-2013,New,1,stomach,9/11/2024,no,WADE-003-053,no,,1.89,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+LDL-UNK-A-17,New,1,stomach,9/11/2024,no,WADE-003-054,no,,2.36,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+LDL-32-17,New,1,stomach,9/11/2024,no,WADE-003-055,no,,0.956,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+LDL-24-17,New,1,stomach,9/11/2024,no,WADE-003-056,no,,0.913,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+LDL-23-17,New,1,stomach,9/11/2024,no,WADE-003-057,no,,3.89,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+LDL-21-17,New,1,stomach,9/11/2024,no,WADE-003-058,no,,13.8,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+LDL-16-17,New,1,stomach,9/11/2024,no,WADE-003-059,no,,0.817,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+EB14GAM025,New,1,stomach,9/11/2024,no,WADE-003-060,no,,0.406,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+EB13GAM020,New,1,stomach,9/11/2024,no,WADE-003-061,no,sample found in shipment 1 but not in metadata,4.99,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+DL18OME005,New,1,stomach,9/11/2024,no,WADE-003-062,no,,6.14,,,yes,9/17/2024,1,yes,9/23/2024,16SP1,,2.94,yes,,,,,
+DL16OME004,New,1,stomach,9/11/2024,no,WADE-003-063,no,,2.47,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+DL16HB001,New,1,stomach,9/11/2024,no,WADE-003-064,no,,5.63,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+EB15SH020,New,1,stomach,9/11/2024,no,WADE-003-065,no,,4.48,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+DIO-001-11,New,1,stomach,9/11/2024,no,WADE-003-066,no,,2.43,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2023Beluga0728SB,New,1,stomach,9/11/2024,no,WADE-003-067,no,,0.099,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2023Beluga0728SA,New,1,stomach,9/11/2024,no,WADE-003-068,no,,3.05,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2023Beluga0726SB,New,1,stomach,9/11/2024,no,WADE-003-069,no,,0.429,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+unk_beluga,unk,1,stomach,9/12/2024,no,WADE-003-070,no,"vial lid cracked, no label on vial",1.39,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2023Beluga0722SF,New,1,stomach,9/12/2024,no,WADE-003-071,no,,0.531,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2023Beluga0722SE,New,1,stomach,9/12/2024,no,WADE-003-072,no,,0.35,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2023296,New,1,stomach,9/12/2024,yes,WADE-003-073,no,,1.06,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2023Beluga0722SB,New,1,stomach,9/12/2024,no,WADE-003-074,no,,0.799,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2023Beluga0722SA,New,1,stomach,9/12/2024,no,WADE-003-075,no,,29.9,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2023Beluga0721SB,New,1,stomach,9/12/2024,no,WADE-003-076,no,,0.605,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2023Beluga0721SA,New,1,stomach,9/12/2024,no,WADE-003-077,no,,1.33,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2022Beluga-0713-SB,New,1,stomach,9/12/2024,no,WADE-003-078,no,,2,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2022Beluga-0713-SA,New,1,stomach,9/12/2024,no,WADE-003-079,no,,1.18,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2021BDL-0723B,New,1,stomach,9/12/2024,no,WADE-003-080,no,"vial cracked, still had some sample",3.8,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2014BS18,New,1,stomach,9/12/2024,no,WADE-003-081,no,,1.31,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2014-02-RS,New,1,stomach,9/12/2024,no,WADE-003-082,no,,2.83,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2013RS31,New,1,stomach,9/12/2024,no,WADE-003-083,no,,0.349,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2010RSW-05,New,1,stomach,9/12/2024,no,WADE-003-084,no,,2.12,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+09WWBS10,New,1,stomach,9/12/2024,no,WADE-003-085,no,,2.16,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+08BS7,New,1,stomach,9/12/2024,no,WADE-003-086,no,,0.575,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+08BS09,New,1,stomach,9/12/2024,no,WADE-003-087,no,,4.12,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2022Beluga-07130SD,New,1,stomach,9/12/2024,yes,WADE-003-088,no,,0.173,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2015066,New,1,intestine,9/12/2024,no,WADE-003-089,no,,3.15,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2012180,New,1,stomach,9/12/2024,no,WADE-003-090,no,,1.07,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+DL22SCM001,New,1,stomach,9/12/2024,yes,WADE-003-091,no,,0.578,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+DL22OTZ004,New,1,stomach,9/12/2024,yes,WADE-003-092,no,,3.91,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,
+2021BDL-0723B,Replacement,1,stomach,10/7/2024,,WADE-003-093,yes,re-extraction test of 9/12 samples with low DNA quants,0.821,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+08BS7,Replacement,1,stomach,10/7/2024,,WADE-003-094,yes,re-extraction test of 9/12 samples with low DNA quants,0.387,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+2014-02-RS,Replacement,1,stomach,10/7/2024,,WADE-003-095,yes,re-extraction test of 9/12 samples with low DNA quants,15.2,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+09WWBS10,Replacement,1,stomach,10/7/2024,,WADE-003-096,yes,re-extraction test of 9/12 samples with low DNA quants,0.656,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+2023Beluga0722SA,Replacement,1,stomach,10/7/2024,,WADE-003-097,yes,re-extraction test of 9/12 samples with low DNA quants; only 0.5 ml from sample,7.67,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+2023Beluga0722SF,Replacement,1,stomach,10/7/2024,,WADE-003-098,yes,re-extraction test of 9/12 samples with low DNA quants,2.29,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+2023Beluga0721SA,Replacement,1,stomach,10/7/2024,,WADE-003-099,yes,re-extraction test of 9/12 samples with low DNA quants,4.06,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+2010RSW-05,Replacement,1,stomach,10/7/2024,,WADE-003-100-C,yes,re-extraction test of 9/12 samples with low DNA quants,2.9,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+2010RSW-05,Replacement,1,stomach,10/7/2024,,WADE-003-100-UC,yes,re-extraction test of 9/12 samples with low DNA quants,2.9,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+2014BS18,Replacement,1,stomach,10/7/2024,,WADE-003-101-C,yes,re-extraction test of 9/12 samples with low DNA quants,1.85,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+2014BS18,Replacement,1,stomach,10/7/2024,,WADE-003-101-UC,yes,re-extraction test of 9/12 samples with low DNA quants,1.85,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,
+EB21GAM031-S,New,3,stomach,11/27/2024,no,WADE-003-102,no,,100,,,smear,2/24/2025,,,,16SP2,,0.631,no,,,D3 plate 5,yes,
+EB22GAM019-S,New,3,stomach,11/27/2024,no,WADE-003-103,no,,100,,,smear,2/24/2025,,,,16SP2,,0.921,,,,E3 plate 5,yes,
+EB23PH005-S,New,3,stomach,11/27/2024,no,WADE-003-104,no,,100,,,yes,,,,,16SP2,,3.25,,,,B1 plate 3,yes,
+EB23PH028-S,New,3,stomach,11/27/2024,no,WADE-003-105,no,,100,,,smear,2/24/2025,,,,16SP2,,1.02,,,,F3 plate 5,yes,
+EB23SH008-S,New,3,stomach,11/27/2024,no,WADE-003-106,no,,46.9,,,yes,2/14/2025,,,,16SP2,,11.6,no,,,F4 plate 4,yes,
+EB23SH009-S,New,3,stomach,11/27/2024,no,WADE-003-107,no,,27.6,,,yes,2/14/2025,,,,16SP2,,1.13,,,,G4 plate 4,no,
+EB24GAM020-S,New,3,stomach,11/27/2024,no,WADE-003-108,no,,100,,,smear,2/24/2025,,,,16SP2,,1.36,,,,H3 plate 5,yes,
+EB24GAM027-S,New,3,stomach,11/27/2024,no,WADE-003-109,no,,54,,,no,,,,,,,,,,,no,yes,
+EB24PH055-S,New,3,stomach,11/27/2024,no,WADE-003-110,no,,100,,,yes,2/2/2025,,,,16SP2,,3.87,,,,E1 plate 3,yes,
+EB24PH075-S,New,3,stomach,11/27/2024,no,WADE-003-111,no,,100,,,yes,2/2/2025,,,,16SP2,,3.36,,,,F1 plate 3,yes,
+PH22SH004-S,New,3,stomach,11/27/2024,no,WADE-003-112,no,,100,,,yes,1/24/2025,,,,,,,,,,C2 plate 2,no,
+PH22SH005-S,New,3,stomach,11/27/2024,no,WADE-003-113,no,,100,,,smear,12/9/2024,,,,,,,,,,D2 plate 1,yes,
+PH22SH015-S,New,3,stomach,11/27/2024,no,WADE-003-114,no,,10.5,,,faint,1/24/2025,,,,,,,,,,E2 plate 2,yes,
+PH22SH036-S,New,3,stomach,11/27/2024,no,WADE-003-115,no,,5.77,,,yes,1/24/2025,,,,,,,,,,F2 plate 2,,
+PH22SH043-S,New,3,stomach,11/27/2024,no,WADE-003-116-C,no,,100,,,smear,2/24/2025,,,,16SP2,,3.7,no,,,"DO BOTH: C4 plate 5 (cleaned DNA; quant 3.7), H1 plate 3 (uncleaned DNA; quant 1.12)",smear,
+PH22SH043-S,New,3,stomach,11/27/2024,no,WADE-003-116-UC,no,,100,,,smear,2/12/2025,,,,16SP2,,1.12,no,,,"DO BOTH: C4 plate 5 (cleaned DNA; quant 3.7), H1 plate 3 (uncleaned DNA; quant 1.12)",,
+PH23GAM007-S,New,3,stomach,11/27/2024,no,WADE-003-117-C,no,,100,,,smear,2/24/2025,,,,16SP2,,1.6,,,,"DO BOTH: D4 plate 5 (cleaned DNA; quant 1.6), A2 plate 3 (uncleaned DNA)",no,
+PH23GAM007-S,New,3,stomach,11/27/2024,no,WADE-003-117-UC,no,,100,,,smear,2/12/2025,,,,16SP2,,1.47,,,,"DO BOTH: D4 plate 5 (cleaned DNA; quant 1.6), A2 plate 3 (uncleaned DNA)",,
+PH23SH005-S,New,3,stomach,11/27/2024,no,WADE-003-118-C,no,,100,,,smear,2/24/2025,,,,16SP2,,0.783,,,,"DO BOTH: E4 plate 5 (cleaned DNA; quant 0.783), B2 plate 3 (uncleaned DNA)",yes,
+PH23SH005-S,New,3,stomach,11/27/2024,no,WADE-003-118-UC,no,,100,,,smear,2/12/2025,,,,16SP2,,3.33,,,,"DO BOTH: E4 plate 5 (cleaned DNA; quant 0.783), B2 plate 3 (uncleaned DNA)",,
+PH23SH013-S,New,3,stomach,11/27/2024,no,WADE-003-119,no,,100,,,smear,2/24/2025,,,,16SP2,,0.825,,,,F4 plate 5,yes,
+PH23SH032-S,New,3,stomach,11/27/2024,no,WADE-003-120,no,,3.34,,,faint,1/24/2025,,,,,,,,,,C3 plate 2,yes,
+PH24GAM014-S,New,3,stomach,11/27/2024,no,WADE-003-121,no,,100,,,smear,2/24/2025,,,,16SP2,,4.24,no,,,G4 plate 5,smear,
+EB22PH005-S,New,3,stomach,11/27/2024,no,WADE-003-122,yes,,0,,,smear,2/14/2025,,,,16SP2,,0.389,,,,A5 plate 4,yes,
+PH22SH036-S,New,3,stomach,11/27/2024,no,WADE-003-123,yes,,27.5,,,faint,1/24/2025,,,,16SP2,,3.67,,,,F3 plate 2,yes,
+EB24PH075-S,New,3,stomach,11/27/2024,no,WADE-003-124,yes,,13.8,,,faint,1/24/2025,,,,16SP2,,0.952,,,,G3 plate 2,yes,
+EB21GAM031-F,New,3,feces,12/2/2024,no,WADE-003-125,no,,0.773,,,no,,,,,,,,,,,no,yes,
+EB22GAM019-F,New,3,feces,12/2/2024,no,WADE-003-126,no,,8.22,,,smear,12/9/2025,,,,,,,,,,B4 plate 1,yes,
+EB23PH005-F,New,3,feces,12/2/2024,no,WADE-003-127-C,no,,8.64,,,smear,2/24/2025,,,,16SP2,,3.39,no,,,"DO BOTH: C5 plate 5 (cleaned DNA; quant 3.39), C4 plate 2 (uncleaned DNA)",no,
+EB23PH005-F,New,3,feces,12/2/2024,no,WADE-003-127-UC,no,,8.64,,,smear,1/21/2025,,,,16SP2,,1.34,,,,"DO BOTH: C5 plate 5 (cleaned DNA; quant 3.39), C4 plate 2 (uncleaned DNA)",,
+EB23PH028-F,New,3,feces,12/2/2024,no,WADE-003-128,no,,1.02,,,no,2/24/2025,,,,,,,,,,no,yes,
+EB23SH008-F,New,3,feces,12/2/2024,no,WADE-003-129,no,,10.6,,,no,2/24/2025,,,,,,,,,,no,yes,
+EB23SH009-F,New,3,feces,12/2/2024,no,WADE-003-130,no,,1.65,,,no,2/24/2025,,,,,,,,,,no,yes,
+EB24GAM020-F,New,3,feces,12/2/2024,no,WADE-003-131,no,,12.4,,,no,2/24/2025,,,,,,,,,,no,no,
+EB24GAM027-F,New,3,feces,12/2/2024,no,WADE-003-132,no,,12.4,,,no,2/24/2025,,,,,,,,,,no,no,
+EB24PH055-F,New,3,feces,12/2/2024,no,WADE-003-133,no,,8.94,,,no,2/24/2025,,,,,,,,,,no,yes,
+EB24PH075-F,New,3,feces,12/2/2024,no,WADE-003-134,no,,3.34,,,no,,,,,,,,,,,no,yes,
+PH22SH004-F,New,3,feces,12/2/2024,no,WADE-003-135,no,,26.3,,,no,,,,,,,,,,,no,yes,
+PH22SH005-F,New,3,feces,12/2/2024,no,WADE-003-136,no,,18,,,no,,,,,,,,,,,no,yes,
+PH22SH015-F,New,3,feces,12/2/2024,no,WADE-003-137,no,,23.4,,,no,,,,,,,,,,,no,yes,
+PH22SH036-F,New,3,feces,12/2/2024,no,WADE-003-138,no,,100,,,smear,2/24/2025,,,,16SP2,,3.87,no,,,F6 plate 5,yes,
+PH22SH043-F,New,3,feces,12/2/2024,no,WADE-003-139,no,,4.45,,,no,,,,,,,,,,,no,yes,
+PH23GAM007-F,New,3,feces,12/2/2024,no,WADE-003-140,no,,3.72,,,no,,,,,,,,,,,no,yes,
+PH23SH005-F,New,3,feces,12/2/2024,no,WADE-003-141,no,,1.71,,,no,,,,,,,,,,,no,yes,
+PH23SH013-F,New,3,feces,12/2/2024,no,WADE-003-142,no,,2.61,,,no,,,,,,,,,,,no,yes,
+PH23SH032-F,New,3,feces,12/2/2024,no,WADE-003-143,no,,100,,,faint,,,,,,,,,,,E7 plate 5,yes,
+PH24GAM014-F,New,3,feces,12/2/2024,no,WADE-003-144,no,,2.05,,,smear,,,,,,,,,,,no,no,
+EB23PH028-F,New,3,feces,12/2/2024,no,WADE-003-145,yes,,12,,,no,,,,,,,,,,,no,yes,
+PH22SH015-F,New,3,feces,12/2/2024,no,WADE-003-146,yes,,100,,,smear,2/24/2025,,,,16SP2,,3.84,no,,,G7 plate 5,yes,
+PH23SH032-F,New,3,feces,12/2/2024,no,WADE-003-147,yes,,7.33,,,no,,,,,,,,,,,no,yes,
+neg1,NA,NA,,9/9/2024,NA,neg1,no,,0.091,,,NA,9/17/2024,1,NA,no,no,NA,NA,NA,,,,yes,WADE-003-148
+neg2,NA,NA,,9/10/2024,NA,neg2,no,,0,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,WADE-003-149
+neg3,NA,NA,NA,9/11/2024,NA,neg3,no,,0,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,WADE-003-150
+neg4,NA,NA,NA,9/12/2024,NA,neg4,no,,0,,,no,9/17/2024,1,no,no,no,NA,NA,NA,,,,,WADE-003-151
+neg5,NA,NA,NA,10/7/2024,,neg5,yes,re-extraction test of 9/12 samples with low DNA quants,0,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,WADE-003-152
+neg6,NA,NA,NA,11/27/2024,no,neg6,no,,0.27,,,NA,,,,,,,,,,,NA,,WADE-003-153
+neg7,NA,NA,NA,12/2/2024,no,neg7,no,,0,,,NA,,,,,,,,,,,NA,,WADE-003-154
+new_beluga1,,,,,,WADE-003-148,,,,,,,,,,,,,,,,,,,
+new_beluga2,,,,,,WADE-003-149,,,,,,,,,,,,,,,,,,,
+fin_whale-foregut1,,,,,,WADE-003-150-A,,,,,,,,,,,,,,,,,,,
+fin_whale-foregut2,,,,,,WADE-003-150-B,,,,,,,,,,,,,,,,,,,
+fin_whale-hindgut,,,,,,WADE-003-151,,,,,,,,,,,,,,,,,,,

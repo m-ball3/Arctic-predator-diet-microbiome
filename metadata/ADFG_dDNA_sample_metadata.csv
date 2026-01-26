@@ -1,7 +1,10 @@
 Specimen ID,Repeat or New Specimen?,Shipment,Species,Location,Month,Year,Sex,Stomach Goo,Intestinal Goo,,Fish,Cephalopod,Shrimp,Polychaete,Other,Tooth_age
 08BS09,New,1,bearded seal,Barrow,JUL,2008,U,Yes,Yes,No,NA,NA,NA,NA,NA,unk
+08BS7,Replacement,1,bearded seal,Barrow,JUL,2008,U,Yes,Yes,No,NA,NA,NA,NA,NA,4
 08BS7,New,1,bearded seal,Barrow,JUL,2008,U,Yes,Yes,No,NA,NA,NA,NA,NA,4
+09WWBS10,Replacement,1,bearded seal,Wainwright,JUL,2009,F,Yes,Yes,No,NA,NA,NA,NA,NA,9
 09WWBS10,New,1,bearded seal,Wainwright,JUL,2009,F,Yes,Yes,No,NA,NA,NA,NA,NA,9
+2014BS18,Replacement,1,bearded seal,Barrow,JUL,2014,M,Yes,Yes,No,NA,NA,NA,NA,NA,10
 2014BS18,New,1,bearded seal,Barrow,JUL,2014,M,Yes,Yes,No,NA,NA,NA,NA,NA,10
 DIO-001-11,New,1,bearded seal,Diomede Island,,2011,M,Yes,Yes,No,NA,NA,NA,NA,NA,0
 EB13GAM020,New,1,bearded seal,Gambell,,2013,U,Yes,Yes,No,NA,NA,NA,NA,NA,1
@@ -17,17 +20,21 @@ SHH-004-14,New,1,bearded seal,Shishmaref,Fall,2014,M,Yes,Yes,No,NA,NA,NA,NA,NA,1
 2022165,New,1,beluga whale,Cook Inlet,AUG,2022,M,yes,no,yes,unk,unk,unk,unk,unk,NA
 2021BDL-0708Sa,New,1,beluga whale,Barrow,JUL,2021,F,yes,no,no,yes,no,no,yes,isopods,NA
 2021BDL-0723A,New,1,beluga whale,Barrow,JUL,2021,F,yes,no,no,yes,yes,yes,yes,NA,NA
+2021BDL-0723B,Replacement,1,beluga whale,Barrow,JUL,2021,F,yes,no,no,yes,yes,no,yes,NA,NA
 2021BDL-0723B,New,1,beluga whale,Barrow,JUL,2021,F,yes,no,no,yes,yes,no,yes,NA,NA
 2021BDL-0723C,New,1,beluga whale,Barrow,JUL,2021,M,yes,no,yes,unk,unk,unk,unk,unk,NA
 2022Beluga-0713-SA,New,1,beluga whale,Barrow,JUL,2022,M,yes,no,no,yes,yes,yes,yes,gastropod,NA
 2022Beluga-0713-SB,New,1,beluga whale,Barrow,JUL,2022,F,yes,no,no,yes,yes,,yes,NA,NA
 2022Beluga-0713-SD,New,1,beluga whale,Barrow,JUL,2022,M,yes,no,no,yes,yes,yes,yes,echiurid,NA
+2023Beluga0721SA,Replacement,1,beluga whale,Barrow,JUL,2023,M,yes,no,no,no,yes,no,yes,NA,NA
 2023Beluga0721SA,New,1,beluga whale,Barrow,JUL,2023,M,yes,no,no,no,yes,no,yes,NA,NA
 2023Beluga0721SB,New,1,beluga whale,Barrow,JUL,2023,M,yes,no,yes,unk,unk,unk,unk,unk,NA
+2023Beluga0722SA,Replacement,1,beluga whale,Barrow,JUL,2023,M,yes,no,no,no,yes,no,yes,crab,NA
 2023Beluga0722SA,New,1,beluga whale,Barrow,JUL,2023,M,yes,no,no,no,yes,no,yes,crab,NA
 2023Beluga0722SB,New,1,beluga whale,Barrow,JUL,2023,F,yes,no,no,no,yes,no,no,NA,NA
 2023Beluga0722SD,New,1,beluga whale,Barrow,JUL,2023,M,yes,no,no,no,yes,no,yes,NA,NA
 2023Beluga0722SE,New,1,beluga whale,Barrow,JUL,2023,M,yes,no,no,yes,yes,yes,no,NA,NA
+2023Beluga0722SF,Replacement,1,beluga whale,Barrow,JUL,2023,M,yes,no,no,yes,yes,no,yes,NA,NA
 2023Beluga0722SF,New,1,beluga whale,Barrow,JUL,2023,M,yes,no,no,yes,yes,no,yes,NA,NA
 2023Beluga0726SA,New,1,beluga whale,Barrow,JUL,2023,M,yes,no,no,no,yes,no,yes,NA,NA
 2023Beluga0726SB,New,1,beluga whale,Barrow,JUL,2023,M,yes,no,yes,unk,unk,unk,unk,unk,NA
@@ -53,8 +60,10 @@ LDL-23-17,New,1,beluga whale,Point Lay,JUN,2017,M,yes,no,yes,unk,unk,unk,unk,unk
 LDL-24-17,New,1,beluga whale,Point Lay,JUN,2017,F,yes,no,no,no,yes,no,no,"bivalve, gastropod, crustacean",NA
 LDL-32-17,New,1,beluga whale,Point Lay,JUN,2017,M,yes,no,no,no,no,no,yes,"tunicate, crab",NA
 LDL-UNK-A-17,New,1,beluga whale,Point Lay,JUN,2017,U,yes,no,yes,unk,unk,unk,unk,unk,NA
+2010RSW-05,Replacement,1,ringed seal,Barrow,FEB,2010,M,Yes,Yes,No,NA,NA,NA,NA,NA,unk
 2010RSW-05,New,1,ringed seal,Barrow,FEB,2010,M,Yes,Yes,No,NA,NA,NA,NA,NA,unk
 2013RS31,New,1,ringed seal,Barrow,DEC,2013,M,Yes,Yes,No,NA,NA,NA,NA,NA,unk
+2014-02-RS,Replacement,1,ringed seal,Barrow,APR,2014,F,Yes,Yes,No,NA,NA,NA,NA,NA,10
 2014-02-RS,New,1,ringed seal,Barrow,APR,2014,F,Yes,Yes,No,NA,NA,NA,NA,NA,10
 N24-2013,New,1,ringed seal,Nome,,2012,U,Yes,Yes,No,NA,NA,NA,NA,NA,18
 PH14GAM020,New,1,ringed seal,Gambell,MAY,2014,U,Yes,Yes,No,NA,NA,NA,NA,NA,unk
@@ -84,6 +93,7 @@ PL12GAM049,New,1,spotted seal,Gambell,,2012,U,Yes,Yes,No,NA,NA,NA,NA,NA,unk
 2023281,Replacement,2,Beluga whale,Cook Inlet,OCT,2023,F,Yes,no,Yes,no,no,no,no,NA,NA
 2023295,Replacement,2,Beluga whale,Cook Inlet,OCT,2023,F,Yes,no,No,no,no,no,Yes,NA,NA
 2023296,Replacement,2,Beluga whale,Cook Inlet,OCT,2023,M,Yes,no,Yes,no,no,no,no,NA,NA
+2023296,New,2,Beluga whale,Cook Inlet,OCT,2023,M,Yes,no,Yes,no,no,no,no,NA,NA
 2021BDL-0708Sa,Replacement,2,Beluga whale,Utqia?vik,JUL,2021,F,Yes,no,No,Yes,no,no,Yes,Isopods,NA
 2021BDL-0723A,Replacement,2,Beluga whale,Utqia?vik,JUL,2021,F,Yes,no,No,Yes,Yes,Yes,Yes,NA,NA
 2021BDL-0723C,Replacement,2,Beluga whale,Utqia?vik,JUL,2021,M,Yes,no,Yes,no,no,no,no,NA,NA
@@ -149,3 +159,8 @@ PH23SH005-F,New,3,ringed seal,Shishmaref,OCT,2023,M,No,Yes,NA,NA,NA,NA,NA,NA,4
 PH23SH013-F,New,3,ringed seal,Shishmaref,OCT,2023,M,No,Yes,NA,NA,NA,NA,NA,NA,0
 PH23SH032-F,New,3,ringed seal,Shishmaref,OCT,2023,M,No,Yes,NA,NA,NA,NA,NA,NA,2
 PH24GAM014-F,New,3,ringed seal,Gambell,JUN,2024,F,No,Yes,NA,NA,NA,NA,NA,NA,NA
+new_beluga1,,,,,,,,,,,,,,,,
+new_beluga2,,,,,,,,,,,,,,,,
+fin_whale-foregut1,,,,,,,,,,,,,,,,
+fin_whale-foregut2,,,,,,,,,,,,,,,,
+fin_whale-hindgut,,,,,,,,,,,,,,,,

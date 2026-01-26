@@ -14,6 +14,7 @@ library(patchwork)
 library(RColorBrewer)
 library(readr)
 library(tidygeocoder)
+library(readxl)
 
 # Loads in data
 meta <- read_csv("metadata/ADFG_dDNA_sample_metadata.csv") %>%
@@ -31,14 +32,17 @@ meta <- read_csv("metadata/ADFG_dDNA_sample_metadata.csv") %>%
 
 # Assign season based on month
 meta <- meta %>%
-  mutate(Season = case_when(
+  mutate(
+    Season = case_when(
+      Month %in% c("Spring", "Summer", "Fall", "Winter") ~ Month,
       Month %in% c("DEC", "JAN", "FEB") ~ "Winter",
-      Month %in% c('MAR', "APR", 'MAY') ~ "Spring",
-      Month %in% c('JUN', 'JUL', 'AUG') ~ "Summer",
-      Month %in% c('SEP', 'OCT', 'NOV') ~ "Fall",
+      Month %in% c("MAR", "APR", "MAY") ~ "Spring",
+      Month %in% c("JUN", "JUL", "AUG") ~ "Summer",
+      Month %in% c("SEP", "OCT", "NOV") ~ "Fall",
       TRUE ~ NA_character_
     )
   )
+
 
 # Fixes Tooth_age unk and NA
 # Adds in another column for age
@@ -49,8 +53,8 @@ meta <- meta %>%
     Tooth_age = as.numeric(as.character(Tooth_age)),  # Convert to numeric, coercing invalid to NA
     age_group = case_when(
       is.na(Tooth_age) ~ NA_character_,
-      Tooth_age < 1 ~ "young",
-      TRUE ~ "old"
+      Tooth_age < 1 ~ "nursing",
+      TRUE ~ "post weaning"
     ),
     Tooth_age = factor(Tooth_age)  # Factor after all mutations
   )
@@ -65,6 +69,20 @@ meta <- meta %>%
       TRUE ~ "arcticDB"
     )
   )
+
+# adds in list of successful microbiome PCR1's
+mbLIST <- read_excel("metadata/mbLIST.xlsx")
+
+# 3. Filter samdf to only the specimens in mbLIST
+samdf_microbiome_successes <- meta %>%
+  semi_join(mbLIST, by = "Specimen ID")
+
+pred_counts <- samdf_microbiome_successes %>%
+  count(Predator, name = "n_samples") %>%
+  arrange(desc(n_samples))
+
+pred_counts
+
 
 # ------------------------------------------------------------------
 # Exploration - Bar Plots
@@ -89,6 +107,7 @@ p1 <- ggplot(meta, aes(x = Predator, fill = Predator)) +
     legend.position = "none"
   ) +
   scale_fill_brewer(palette = "Paired")
+p1
 
 # plots sample count by Database used, colored by predator
 p2 <- ggplot(meta, aes(x = sample_DB, fill = Predator)) +
@@ -106,6 +125,7 @@ p2 <- ggplot(meta, aes(x = sample_DB, fill = Predator)) +
     legend.position = "none"
   ) +
   scale_fill_brewer(palette = "Paired")
+p2
 
 # plots sample count by season, colored by predator
 p3 <- ggplot(meta, aes(x = Season, fill = Predator)) +
@@ -118,8 +138,9 @@ p3 <- ggplot(meta, aes(x = Season, fill = Predator)) +
   labs(x = "", y = "") +
   scale_y_continuous(expand = y_expand) +
   theme_test(base_size = base_size) +
-  theme(legend.position = "none") +
+  theme(legend.position = "bottom") +
   scale_fill_brewer(palette = "Paired")
+p3
 
 # plots sample count by year, colored by predator
 p4 <- ggplot(meta, aes(x = Year, fill = Predator)) +
@@ -135,14 +156,36 @@ p4 <- ggplot(meta, aes(x = Year, fill = Predator)) +
   theme_test(base_size = base_size) +
   theme(legend.position = "bottom") +
   scale_fill_brewer(palette = "Paired")
+p4
+
+# plots sample count by location, colored by predator
+p5 <- ggplot(meta, aes(x = Location, fill = Predator)) +
+  geom_bar(position = position_dodge(width = 0.8)) +
+  geom_text(stat = "count",
+            position = position_dodge(width = 0.8),
+            aes(label = ..count..),
+            vjust = -0.3,
+            size = 4) +
+  labs(x = "", y = "") +
+  scale_y_continuous(expand = y_expand) +
+  theme_test(base_size = base_size) +
+  theme(legend.position = "bottom") +
+  scale_fill_brewer(palette = "Paired")
+p5
 
 # patchwork
-sampbypred <- p1 / p2 / p3 / p4
+sampbypred <- p1 / p3
 sampbypred
+
+sampbypred2 <- p5 / p2
+sampbypred2
 
 # saves
 ggsave("Deliverables/Metadata Exploration/sampbypred.png",
        plot = sampbypred, width = 14, height = 16, units = "in", dpi = 300)
+
+ggsave("Deliverables/Metadata Exploration/sampbypred-loc.png",
+       plot = sampbypred2, width = 20, height = 16, units = "in", dpi = 300)
 
 # creates separate multipanel plot 
 
@@ -175,7 +218,7 @@ p6 <- ggplot(meta, aes(x = age_group, fill = Predator)) +
   scale_fill_brewer(palette = "Paired")
 
 
-sampbypred2 <- p5 / p6
+sampbypred2 <- p6
 sampbypred2
 
 ggsave("Deliverables/Metadata Exploration/sampbypred2.png",
