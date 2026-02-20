@@ -1,0 +1,361 @@
+# ------------------------------------------------------------------
+# FROM DADA2 TO PHYLOSEQ
+# ------------------------------------------------------------------
+
+# ------------------------------------------------------------------
+# Sets up the Environment and Loads in data
+# ------------------------------------------------------------------
+
+# if(!requireNamespace("BiocManager")){
+#   install.packages("BiocManager")
+# }
+# BiocManager::install("phyloseq")
+
+library(phyloseq); packageVersion("phyloseq")
+library(Biostrings); packageVersion("Biostrings")
+library(ggplot2); packageVersion("ggplot2")
+library(tidyverse)
+library(dplyr)
+library(tibble)
+
+
+# Loads dada2 output
+#load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_CO1P1_output-withtaxa-trunc180.Rdata")
+
+
+# ------------------------------------------------------------------
+# SAVES OUT (reads in and reads out)
+# ------------------------------------------------------------------
+# Removes file extensions from OTU table names
+rownames(out) <- sub("^((WADE-003-\\d+|WADE-003-\\d+-C|WADE-003-\\d+-UC))_.*", "\\1", rownames(seqtab.nochim))
+
+# Converts out to df
+out2 <- as.data.frame(out)
+
+# Save output as csv
+write.csv(out2%>%  
+            rownames_to_column("LabID"), 
+          "./Deliverables/CO1/reads.in-out.csv", row.names = FALSE)
+
+# ------------------------------------------------------------------
+# FORMATS METADATASHEET FOR PHYLOSEQ OBJ
+# ------------------------------------------------------------------
+# Removes file extensions from OTU table names
+rownames(seqtab.nochim) <- sub("^((WADE-003-\\d+|WADE-003-\\d+-C|WADE-003-\\d+-UC))_.*", "\\1", rownames(seqtab.nochim))
+rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
+
+# Gets sample metadata
+labdf <- read.csv("metadata/ADFG_dDNA_labwork_metadata.csv")
+
+samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv") %>%
+  dplyr::rename(Predator = Species) %>% # renames species column to predator
+  mutate(Predator = tolower(Predator))  # changes capitalization to all lowercase (fixes Beluga and beluga)
+
+# Creates a column corresponding ADFG sample IDs with WADE sample IDs
+samdf <- samdf %>%
+  left_join(
+    labdf %>% 
+      dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID),
+    by = c("Specimen.ID", "Repeat.or.New.Specimen.")
+  )
+
+# Removes rows where LabID is NA (because shipment 1 was bad & thus not extracted)
+samdf <- samdf[!is.na(samdf$LabID), ]
+
+# Sets row names to LabID
+rownames(samdf) <- samdf$LabID
+
+# Only keeps rows that appear in both metadata and seq.tab 
+## AKA only samples that made it through all steps 
+common_ids <- intersect(rownames(samdf), rownames(seqtab.nochim))
+samdf <- samdf[common_ids, ]
+seqtab.nochim <- seqtab.nochim[common_ids, ]
+
+# Checks for identical sample rownames in both
+any(duplicated(rownames(samdf)))
+any(duplicated(rownames(seqtab.nochim)))
+
+all(rownames(samdf) %in% rownames(seqtab.nochim))
+all(rownames(seqtab.nochim) %in% rownames(samdf))
+
+# Samples in metadata but not in OTU table
+setdiff(rownames(samdf), rownames(seqtab.nochim))
+
+# Samples in OTU table but not in metadata
+setdiff(rownames(seqtab.nochim), rownames(samdf))
+
+# ------------------------------------------------------------------
+# CREATES PHYLOSEQ
+# ------------------------------------------------------------------
+
+# Creates master phyloseq object
+ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
+                   sample_data(samdf), 
+                   tax_table(merged.taxa))
+
+# ------------------------------------------------------------------
+# DEALS WITH TECHNICAL REPLICATES
+# ------------------------------------------------------------------
+
+# Identifies rows in Specimen.ID that appear more than once (replicates)
+duplicated_ids <- samdf$Specimen.ID[duplicated(samdf$Specimen.ID) | duplicated(samdf$Specimen.ID, fromLast = TRUE)]
+unique_dup_ids <- unique(duplicated_ids) # "PH22SH036-S" = WADE 115 and WADE 123 AND "PH23SH005-S" = WADE 118-C and WADE 118-UC
+
+# Subset phyloseq object to keep only samples with duplicated Specimen.IDs
+ps.16s.replicates <- subset_samples(ps.16s, Specimen.ID %in% unique_dup_ids)
+
+# Removes species assignments less than 100 reads for readability
+ps.16s.replicates <- prune_taxa(taxa_sums(ps.16s.replicates) > 0, ps.16s.replicates)
+
+# Creates a vector of read counts
+reads <- sample_sums(ps.16s)
+
+# Gets the desired sample's read counts
+reads.WADE.115 <- reads["WADE-003-115"]
+reads.WADE.123 <- reads["WADE-003-123"]
+reads.WADE.118C <- reads["WADE-003-118-C"]
+reads.WADE.118UC <- reads["WADE-003-118-UC"]
+
+# Gets read count before filtering out Mammals and Bacteria
+reads.WADE.115 # 158
+reads.WADE.123 # 4480  
+reads.WADE.118C # 1
+reads.WADE.118UC # 1980
+
+# Filters out Mammals and Bacteria
+ps.16s.replicates <- subset_taxa(ps.16s.replicates, Class == "Actinopteri")
+nsamples(ps.16s.replicates)
+
+# Creates a vector of read counts
+reads <- sample_sums(ps.16s.replicates)
+
+# Gets the desired sample's read counts
+reads.WADE.115 <- reads["WADE-003-115"]
+reads.WADE.123 <- reads["WADE-003-123"]
+reads.WADE.118C <- reads["WADE-003-118-C"]
+reads.WADE.118UC <- reads["WADE-003-118-UC"]
+
+# Gets read count before filtering out Mammals and Bacteria
+reads.WADE.115 # 158
+reads.WADE.123 # 4480  
+reads.WADE.118C # 1
+reads.WADE.118UC # 1951
+
+# Create the stacked bar plot (absolute)
+plot_bar(ps.16s.replicates, x = "LabID", fill = "Species.y") +
+  facet_wrap(~ Specimen.ID, ncol = 2, scales = "free_x", strip.position = "top")
+
+# Transforms read counts to relative abundance of each species 
+## Transforms NaN (0/0) to 0
+ps16s.replicate.rel <- transform_sample_counts(ps.16s.replicates, function(x) {
+  x_rel <- x / sum(x)
+  x_rel[is.nan(x_rel)] <- 0
+  return(x_rel)
+})
+
+# Create the stacked bar plot (relative)
+plot_bar(ps16s.replicate.rel, x = "LabID", fill = "Species.y")+
+  facet_wrap(~ Specimen.ID, ncol = 2, scales = "free_x", strip.position = "top")
+
+# Ensures samples removed in filtering are removed from samdf
+replicate_to_remove <- c("WADE-003-115", "WADE-003-118-C")
+samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
+
+# Recreates REGIONAL phyloseq objects without unwanted replicate
+ps.16s <- phyloseq(
+  otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
+  sample_data(samdf), 
+  tax_table(merged.taxa)
+)%>% 
+  subset_samples(LabID != replicate_to_remove)
+sample_names(ps.16s)
+
+# ------------------------------------------------------------------
+# CLEANS PHYLOSEQ
+# ------------------------------------------------------------------
+
+### shorten ASV seq names, store sequences as reference
+dna <- Biostrings::DNAStringSet(taxa_names(ps.16s))
+names(dna) <- taxa_names(ps.16s)
+ps.raw <- merge_phyloseq(ps.16s, dna)
+taxa_names(ps.16s) <- paste0("ASV", seq(ntaxa(ps.16s)))
+
+nsamples(ps.16s)
+
+# Saves phyloseq obj
+saveRDS(ps.16s, "ps.16s.raw")
+
+# Filters out anything not in Actinopteri
+ps.16s <- subset_taxa(ps.16s, Class == "Actinopteri")
+nsamples(ps.16s)
+
+# Remove samples with total abundance < 100
+ps.16s <- prune_samples(sample_sums(ps.16s) >= 100, ps.16s)
+nsamples(ps.16s)
+
+# Filtering to remove taxa with less than 1% of reads assigned in at least 1 sample.
+f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
+lowcount.filt <- genefilter_sample(ps.16s, f1, A=1)
+ps.16s <- prune_taxa(lowcount.filt, ps.16s) # WONDREING IF I SHOULD NOW RENAME PS.12S !!
+
+# Ensures samples removed in filtering are removed from samdf
+row_to_remove <- "WADE-003-146"
+samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
+
+# Saves phyloseq obj
+saveRDS(ps.16s, "ps.16s")
+
+## Merges same species
+ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)%>% 
+  prune_taxa(taxa_sums(.) > 0, .)
+
+# Plots stacked bar plot of absolute abundance
+plot_bar(ps.16s, x="Specimen.ID", fill="Species.y")
+
+# Calculates relative abundance of each species 
+## Transforms NaN (0/0) to 0
+ps16s.rel <- transform_sample_counts(ps.16s, function(x) {
+  x_rel <- x / sum(x)
+  x_rel[is.nan(x_rel)] <- 0
+  return(x_rel)
+})
+
+#Checks for NaN's 
+which(is.nan(as.matrix(otu_table(ps16s.rel))), arr.ind = TRUE)
+
+# ------------------------------------------------------------------
+# PLOTS
+# ------------------------------------------------------------------
+# Creates bar plot of relative abundance
+
+# Plots with WADE IDs
+sp.rel.plot <- plot_bar(ps16s.rel, fill="Species.y")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+sp.rel.plot
+
+# Plots with ADFG IDs
+ADFG.sp<- plot_bar(ps16s.rel, x = "Specimen.ID", fill="Species.y")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+ADFG.sp
+
+gen.rel.plot <- plot_bar(ps16s.rel, fill="Genus.y")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+gen.rel.plot
+
+ADFG.gen <- plot_bar(ps16s.rel, x = 'Specimen.ID', fill="Genus.y")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+ADFG.gen
+
+fam.rel.plot <- plot_bar(ps16s.rel, fill="Family")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+fam.rel.plot
+
+ADFG.fam <- plot_bar(ps16s.rel, "Specimen.ID", fill="Family")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+ADFG.fam
+
+# Facet wrapped by predator species
+faucet <- plot_bar(ps16s.rel, fill = "Species.y") +
+  facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) 
+
+ADFG.faucet <- plot_bar(ps16s.rel, x ="Specimen.ID", fill = "Species.y") +
+  facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) 
+
+
+ADFG.faucet
+
+#saves plots 
+ggsave("Deliverables/16S/WADE labels/16S-species.png", plot = sp.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/ADFG-16S-species.png", plot = ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/16S/WADE labels/16S-genus.png", plot = gen.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/ADFG-16S-genus.png", plot = ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/16S/WADE labels/16S-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/ADFG-16S-family.png", plot = ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/16S/WADE labels/16S-species-by-pred.111125.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.faucet, width = 16, height = 8, units = "in", dpi = 300)
+
+# ------------------------------------------------------------------
+# TABLES
+# ------------------------------------------------------------------
+
+# CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
+otu.abs <- as.data.frame(otu_table(ps.16s))
+
+# Changes NA.1 to it's corresponding ASV
+taxa.names <- as.data.frame(tax_table(ps.16s)) %>% 
+  rownames_to_column("ASV") %>% 
+  mutate(Species.y = case_when(is.na(Species.y)~ASV,
+                               TRUE~Species.y)) %>% 
+  pull(Species.y)
+
+colnames(otu.abs) <- taxa.names
+
+tax_table <- as.data.frame(tax_table(ps.16s))
+
+## Adds ADFG Sample ID as a column
+otu.abs$Specimen.ID <- samdf[rownames(otu.abs), "Specimen.ID"]
+
+## Moves ADFG_SampleID to the first column
+otu.abs <- otu.abs[, c(ncol(otu.abs), 1:(ncol(otu.abs)-1))]
+
+# CREATES RELATIVE SAMPLES X SPECIES TABLE
+# Removes column for relative abundance calc
+otu_counts <- otu.abs[, -1]
+
+# row-wise proportions
+otu.prop <- otu_counts / rowSums(otu_counts)
+
+# add Specimen.ID back and reorder columns
+otu.prop$Specimen.ID <- otu.abs$Specimen.ID
+otu.prop <- otu.prop[, c(ncol(otu.prop), 1:(ncol(otu.prop)-1))]
+
+# replace NaN (rows that were all zero) with 0
+otu.prop[is.na(otu.prop)] <- 0
+
+# round numeric columns
+is.num <- sapply(otu.prop, is.numeric)
+otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
+
+# Add Lab ID to otu.abs
+write.csv(otu.abs %>% 
+            rownames_to_column("LabID"), 
+          "./Deliverables/16S/ADFG_16s_absolute_speciesxsamples.csv", 
+          row.names = FALSE)
+
+# Add Lab ID to otu.abs
+write.csv(otu.prop %>% 
+            rownames_to_column("LabID"), 
+          "./Deliverables/16S/ADFG_16s_relative_speciesxsamples.csv", 
+          row.names = FALSE)
+
+write.csv(tax_table%>% 
+            rownames_to_column("ASV"), 
+          "./Deliverables/16S/ADFG_16s_tax_table.csv", row.names = FALSE)
+
+
