@@ -13,7 +13,7 @@ samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
 samdf_success <- successful %>% 
   left_join(
     read.csv("metadata/ADFG_dDNA_sample_metadata.csv") %>% 
-      select(Specimen.ID, Species, Stomach.Goo, Intestinal.Goo),
+      select(Specimen.ID, Species, Sample_type),
     by = "Specimen.ID",
     relationship = "many-to-many"
   ) %>%
@@ -22,7 +22,7 @@ samdf_success <- successful %>%
   distinct(Specimen.ID, .keep_all = TRUE)
 
 samdf_success %>% 
-  count(Predator, name = "n", sort = TRUE, .drop = FALSE)
+  count(c(Sample_type, Predator), name = "n", sort = TRUE, .drop = FALSE)
 
 
 first <- c(

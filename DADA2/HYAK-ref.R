@@ -81,7 +81,7 @@ scp -r * mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/SRKW/rawdata/16SP1/
   
 #CO1
   scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_CO1P1_output-notaxa.Rdata" "C:/Users/MBall/OneDrive/文档/WADE LAB//Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
-scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_CO1P1_output-withtaxa-trunc180.Rdata" "C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
+
 
 # Read error output
 cat file
@@ -115,3 +115,13 @@ apptainer exec \
 --bind /gscratch:/gscratch \
 /gscratch/coenv/mball3/tidyverse_latest.sif \
 Rscript /mmfs1/home/mball3/co1-taxa.R
+
+apptainer exec \
+--bind /gscratch:/gscratch \
+/mmfs1/home/software/containers/rocker_tidyverse.sif \
+Rscript /mmfs1/home/mball3/dada2CO1.R
+
+apptainer exec \
+--bind /gscratch:/gscratch \
+/gscratch/coenv/mball3/tidyverse_latest.sif \
+Rscript /mmfs1/home/mball3/dada2CO1.R
