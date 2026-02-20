@@ -74,10 +74,13 @@ setdiff(rownames(seqtab.nochim), rownames(samdf))
 # CREATES PHYLOSEQ
 # ------------------------------------------------------------------
 
+# Renames columns to standard
+colnames(compiled_taxa) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+
 # Creates master phyloseq object
 ps.CO1 <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
                    sample_data(samdf), 
-                   tax_table(taxa))
+                   tax_table(compiled_taxa))
 
 nsamples(ps.CO1)
 
@@ -116,8 +119,8 @@ unique_dup_ids <- as.data.frame(unique_dup_ids)
 # PH22SH036-S = WADE 115 and 123
 # PH23SH032-F = WADE 143 and 147
 
-# Removes species assignments less than 100 reads for readability
-ps.CO1.replicates <- prune_taxa(taxa_sums(ps.CO1.replicates) > 0, ps.CO1.replicates)
+# Removes species assignments less than 100 reads
+#ps.CO1.replicates <- prune_taxa(taxa_sums(ps.CO1.replicates) > 0, ps.CO1.replicates)
 
 # Creates a vector of read counts
 reads <- sample_sums(ps.CO1)
@@ -181,17 +184,18 @@ reads.WADE.123 <- reads["WADE-003-123"] # 1685
 reads.WADE.143 <- reads["WADE-003-143"] # 23930
 reads.WADE.147 <- reads["WADE-003-147"] # 7124
 
-# Drop Mammalia, keep all other classes (including NA)
-ps.CO1.replicates <- subset_taxa(
-  ps.CO1.replicates,
-  Class != "Mammalia" | is.na(Class)
-)
+
+# FILTERS OUT MAMMALIA -----------------------------------------------------
+# # Drop Mammalia, keep all other classes (including NA)
+# ps.CO1.replicates <- subset_taxa(
+#   ps.CO1.replicates,
+#   Class != "Mammalia" | is.na(Class)
+# )
 
 nsamples(ps.CO1.replicates)
 
 # Creates a vector of read counts
 reads <- sample_sums(ps.CO1.replicates)
-
 
 # Create the stacked bar plot (absolute)
 plot_bar(ps.CO1.replicates, x = "LabID", fill = "Genus") +
@@ -231,11 +235,12 @@ samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
 
 # Recreates phyloseq object without unwanted replicate
 ps.CO1 <- phyloseq(
-  otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
+  otu_table(seqtab.nochim, taxa_are_rows = FALSE), 
   sample_data(samdf), 
   tax_table(compiled_taxa)
-)%>% 
-  subset_samples(LabID != replicate_to_remove)
+) %>%
+  subset_samples(!LabID %in% replicate_to_remove)
+
 sample_names(ps.CO1)
 nsamples(ps.CO1)
 
@@ -257,140 +262,405 @@ removal_log <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# Step 2: Remove samples with total abundance < 100
-samples_before <- sample_names(ps.CO1)
-reads_before <- sample_sums(ps.CO1)
-ps.CO1 <- prune_samples(sample_sums(ps.CO1) >= 100, ps.CO1)
-low_abund_samples <- setdiff(samples_before, sample_names(ps.CO1))
+# FILTERS FOR THE SAMPLES THAT HAVE >50 NON-PREDATOR READS-----------------------------------------------------
+### i should move this to a new area or a new code (save raw phyloseq obj after pruning tech reps; do mammal filtering later)
 
-# Log low abundance removals
-if(length(low_abund_samples) > 0) {
-  removal_log <- rbind(removal_log, 
-                       data.frame(
-                         SampleID = low_abund_samples,
-                         Step = "Low abundance (<100 reads)",
-                         ReadCount = reads_before[low_abund_samples]
-                       )
-  )
-}
+# Gets the taxonomy table from the ps object 
+tax <- as.data.frame(as.matrix(tax_table(ps.CO1)))
 
-# Step 3: Prevalence filtering (taxa only, no samples removed)
-f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
-ps.CO1 <- prune_taxa(genefilter_sample(ps.CO1, f1, A=1), ps.CO1)
+# Gets the non-predator taxa
+nonpred_taxa <- rownames(tax)[is.na(tax$Class) | tax$Class != "Mammalia"]
 
-# Show removal summary
-print("=== FILTERING REMOVAL SUMMARY ===")
-print(removal_log)
-print(paste("Total samples removed:", nrow(removal_log)))
-print(paste("Samples remaining:", nsamples(ps.CO1)))
+# Gets the OTU table from the ps object
+otu <- as(otu_table(ps.CO1), "matrix")  
+nonpred_taxa <- intersect(nonpred_taxa, colnames(otu)) # keeps only the samples we want
 
-# # Save removal log
-# write.csv(removal_log, "filtering_removal_log.csv", row.names = FALSE)
+# Flips so we sum
+otu_asv_rows <- t(otu)  # rows = taxa, columns = samples
 
-# Sync samdf
-row_to_remove <- removal_log$SampleID
-samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
+# Sums non-predator reads per sample
+nonpred_reads <- colSums(otu_asv_rows[nonpred_taxa, , drop = FALSE])
 
-# Filter out Mammalia (samples unaffected)
-ps.CO1 <- subset_taxa(ps.CO1, class != "Mammalia" | is.na(class))
-nsamples(ps.CO1)
+# Filters for just the samples whose nonpred read sums are >50
+keep_samples <- names(nonpred_reads[nonpred_reads > 50])
+ps.CO1.nonpred50 <- prune_samples(keep_samples, ps.CO1)
 
+# sanity
+length(keep_samples)
+sample_sums(ps.CO1.nonpred50)[1:10]
+
+# saves ps without mammalia taxa
+ps.CO1.nonpred50 <- subset_taxa(ps.CO1.nonpred50, 
+                                is.na(Class) | Class != "Mammalia")
+tax2 <- as.data.frame(as.matrix(tax_table(ps.CO1.nonpred50)))
+
+# GETS METADATA FOR JUST THE SAMPLES WITH >50 NONPRED READS  -----------------------------------------------------
+meta_nonpred50 <- samdf[keep_samples, , drop = FALSE]
+
+# orders
+meta_nonpred50 <- meta_nonpred50[sample_names(ps.CO1.nonpred50), , drop = FALSE]
+
+write.csv(
+  meta_nonpred50,
+  file = "metadata/ADFG_dDNA_co1sample_metadata_nonpred50.csv",
+  row.names = TRUE
+)
+
+# 
+# # Step 2: Remove samples with total abundance < 100
+# samples_before <- sample_names(ps.CO1)
+# reads_before <- sample_sums(ps.CO1)
+# ps.CO1 <- prune_samples(sample_sums(ps.CO1) >= 100, ps.CO1)
+# low_abund_samples <- setdiff(samples_before, sample_names(ps.CO1))
+# 
+# # Log low abundance removals
+# if(length(low_abund_samples) > 0) {
+#   removal_log <- rbind(removal_log, 
+#                        data.frame(
+#                          SampleID = low_abund_samples,
+#                          Step = "Low abundance (<100 reads)",
+#                          ReadCount = reads_before[low_abund_samples]
+#                        )
+#   )
+# }
+# 
+# # Step 3: Prevalence filtering (taxa only, no samples removed)
+# f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
+# ps.CO1 <- prune_taxa(genefilter_sample(ps.CO1, f1, A=1), ps.CO1)
+# 
+# # Show removal summary
+# print("=== FILTERING REMOVAL SUMMARY ===")
+# print(removal_log)
+# print(paste("Total samples removed:", nrow(removal_log)))
+# print(paste("Samples remaining:", nsamples(ps.CO1)))
+# 
+# # # Save removal log
+# # write.csv(removal_log, "filtering_removal_log.csv", row.names = FALSE)
+# 
+# # Sync samdf
+# row_to_remove <- removal_log$SampleID
+# samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
+# 
+# # Filter out Mammalia (samples unaffected)
+# nsamples(ps.CO1)
+# ps.CO1 <- subset_taxa(ps.CO1, class != "Mammalia" | is.na(class))
+# 
+# 
 # # Saves phyloseq obj
-# saveRDS(ps.CO1, "ps.CO1")
+# saveRDS(ps.CO1, "ps.CO1.filt")
 
 ## Merges same species
-ps.CO1 = tax_glom(ps.CO1, "genus", NArm = FALSE)%>% 
+ps.CO1 = tax_glom(ps.CO1, "Species", NArm = FALSE)%>% 
   prune_taxa(taxa_sums(.) > 0, .)
 
 # Plots stacked bar plot of absolute abundance
-plot_bar(ps.CO1, x="Specimen.ID", fill="genus")
+plot_bar(ps.CO1, x="Specimen.ID", fill="Species")
 
 # Calculates relative abundance of each species 
 ## Transforms NaN (0/0) to 0
-ps16s.rel <- transform_sample_counts(ps.CO1, function(x) {
+psCO1.rel <- transform_sample_counts(ps.CO1, function(x) {
   x_rel <- x / sum(x)
   x_rel[is.nan(x_rel)] <- 0
   return(x_rel)
 })
 
 #Checks for NaN's 
-which(is.nan(as.matrix(otu_table(ps16s.rel))), arr.ind = TRUE)
+which(is.nan(as.matrix(otu_table(psCO1.rel))), arr.ind = TRUE)
 
 # ------------------------------------------------------------------
-# PLOTS
+# PLOTS BEFORE MAMMALIA FILTERING
 # ------------------------------------------------------------------
 # Creates bar plot of relative abundance
-
-# Plots with WADE IDs
-sp.rel.plot <- plot_bar(ps16s.rel, fill="Species.y")+
+# Plots with WADE IDs - Species
+sp.rel.plot <- plot_bar(psCO1.rel, fill="Species") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
 sp.rel.plot
 
-# Plots with ADFG IDs
-ADFG.sp<- plot_bar(ps16s.rel, x = "Specimen.ID", fill="Species.y")+
+# Plots with ADFG IDs - Species
+ADFG.sp <- plot_bar(psCO1.rel, x = "Specimen.ID", fill="Species") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
 ADFG.sp
 
-gen.rel.plot <- plot_bar(ps16s.rel, fill="Genus.y")+
+# Plots with WADE IDs - Genus
+gen.rel.plot <- plot_bar(psCO1.rel, fill="Genus") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
 gen.rel.plot
 
-ADFG.gen <- plot_bar(ps16s.rel, x = 'Specimen.ID', fill="Genus.y")+
+# Plots with ADFG IDs - Genus
+ADFG.gen <- plot_bar(psCO1.rel, x = "Specimen.ID", fill="Genus") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
 ADFG.gen
 
-fam.rel.plot <- plot_bar(ps16s.rel, fill="Family")+
+# Plots with WADE IDs - Family
+fam.rel.plot <- plot_bar(psCO1.rel, fill="Family") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
 fam.rel.plot
 
-ADFG.fam <- plot_bar(ps16s.rel, "Specimen.ID", fill="Family")+
+# Plots with ADFG IDs - Family
+ADFG.fam <- plot_bar(psCO1.rel, x = "Specimen.ID", fill="Family") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
 ADFG.fam
 
-# Facet wrapped by predator species
-faucet <- plot_bar(ps16s.rel, fill = "Species.y") +
-  facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
+# Facet wrapped by Sample_type - Species (WADE IDs)
+faucet.samtype <- plot_bar(psCO1.rel, fill = "Species") +
+  facet_wrap(~ Sample_type, ncol = 2, scales = "free_x", strip.position = "right") +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom",
     strip.background = element_blank(),
     strip.placement = "outside",
     panel.spacing = unit(0.5, "lines"),
     axis.title.x = element_text(margin = margin(t = 10))
   ) 
+faucet.samtype
 
-ADFG.faucet <- plot_bar(ps16s.rel, x ="Specimen.ID", fill = "Species.y") +
-  facet_wrap(~ Predator, ncol = 1, scales = "free_x", strip.position = "right") +
+# Facet wrapped by Sample_type - Species (ADFG IDs)
+ADFG.faucet.samtype <- plot_bar(psCO1.rel, x = "Specimen.ID", fill = "Species") +
+  facet_wrap(~ Sample_type, ncol = 2, scales = "free_x", strip.position = "right") +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom",
     strip.background = element_blank(),
     strip.placement = "outside",
     panel.spacing = unit(0.5, "lines"),
     axis.title.x = element_text(margin = margin(t = 10))
   ) 
+ADFG.faucet.samtype
 
+# Facet wrapped by pred
+faucet.pred <- plot_bar(psCO1.rel, fill = "Species") +
+  facet_wrap(~ Predator, ncol = 2, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) 
+faucet.pred
 
-ADFG.faucet
+# Facet wrapped by Sample_type - Species (ADFG IDs)
+ADFG.faucet.pred <- plot_bar(psCO1.rel, x = "Specimen.ID", fill = "Species") +
+  facet_wrap(~ Predator, ncol = 2, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) 
+ADFG.faucet.pred
 
 #saves plots 
-ggsave("Deliverables/16S/WADE labels/16S-species.png", plot = sp.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
-ggsave("Deliverables/16S/ADFG-16S-species.png", plot = ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/WADE labels/CO1-species.png", plot = sp.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/ADFG-CO1-species.png", plot = ADFG.sp, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/16S/WADE labels/16S-genus.png", plot = gen.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
-ggsave("Deliverables/16S/ADFG-16S-genus.png", plot = ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/WADE labels/CO1-genus.png", plot = gen.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/ADFG-CO1-genus.png", plot = ADFG.gen, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/16S/WADE labels/16S-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
-ggsave("Deliverables/16S/ADFG-16S-family.png", plot = ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/WADE labels/CO1-family.png", plot = fam.rel.plot, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/ADFG-CO1-family.png", plot = ADFG.fam, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/16S/WADE labels/16S-species-by-pred.111125.png", plot = faucet, width = 16, height = 8, units = "in", dpi = 300)
-ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.faucet, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/WADE labels/CO1-species-by-samtype.png", plot = faucet.samtype, width = 30, height = 16, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/ADFG-CO1-species-by-samtype.png", plot = ADFG.faucet.samtype, width = 30, height = 16, units = "in", dpi = 300)
+
+ggsave("Deliverables/CO1/WADE labels/CO1-species-by-pred.png", plot = faucet.pred, width = 30, height = 16, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/ADFG-CO1-species-by-pred.png", plot = ADFG.faucet.pred, width = 30, height = 16, units = "in", dpi = 300)
+
+
+
+
+# ------------------------------------------------------------------
+# PLOTS AFTER  MAMMALIA FILTERING
+# ------------------------------------------------------------------
+
+
+# Filter out Mammalia (samples unaffected)
+nsamples(ps.CO1)
+ps.CO1.nomam <- subset_taxa(ps.CO1, Class != "Mammalia" | is.na(Class))
+
+
+## Merges same species
+ps.CO1.nomam = tax_glom(ps.CO1.nomam, "Species", NArm = FALSE)%>% 
+  prune_taxa(taxa_sums(.) > 0, .)
+
+# Plots stacked bar plot of absolute abundance
+plot_bar(ps.CO1.nomam, x="Specimen.ID", fill="Species")
+
+# Calculates relative abundance of each species 
+## Transforms NaN (0/0) to 0
+psCO1.rel.nomams <- transform_sample_counts(ps.CO1.nomam, function(x) {
+  x_rel <- x / sum(x)
+  x_rel[is.nan(x_rel)] <- 0
+  return(x_rel)
+})
+
+#Checks for NaN's 
+which(is.nan(as.matrix(otu_table(psCO1.rel.nomams))), arr.ind = TRUE)
+
+# Filters out samples with 0 total rel abundance after filtering
+keep_samples_rel <- sample_names(psCO1.rel.nomams)[sample_sums(psCO1.rel.nomams) > 0]
+psCO1.rel.nomams <- prune_samples(keep_samples_rel, psCO1.rel.nomams)
+
+# Creates bar plot of relative abundance - No Mams
+
+
+# Plots with WADE IDs - Species
+sp.rel.plot.nomams <- plot_bar(psCO1.rel.nomams, fill="Species") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
+sp.rel.plot.nomams
+
+# Plots with ADFG IDs - Species
+ADFG.sp.nomams <- plot_bar(psCO1.rel.nomams, x = "Specimen.ID", fill="Species") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
+ADFG.sp.nomams
+
+# Plots with WADE IDs - Genus
+gen.rel.plot.nomams <- plot_bar(psCO1.rel.nomams, fill="Genus") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
+gen.rel.plot.nomams
+
+# Plots with ADFG IDs - Genus
+ADFG.gen.nomams <- plot_bar(psCO1.rel.nomams, x = "Specimen.ID", fill="Genus") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
+ADFG.gen.nomams
+
+# Plots with WADE IDs - Family
+fam.rel.plot.nomams <- plot_bar(psCO1.rel.nomams, fill="Family") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
+fam.rel.plot.nomams
+
+# Plots with ADFG IDs - Family
+ADFG.fam.nomams <- plot_bar(psCO1.rel.nomams, x = "Specimen.ID", fill="Family") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom"
+  )
+ADFG.fam.nomams
+
+# Facet wrapped by Sample_type - Species (WADE IDs)
+faucet.samtype.nomams <- plot_bar(psCO1.rel.nomams, fill = "Species") +
+  facet_wrap(~ Sample_type, ncol = 2, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) 
+faucet.samtype.nomams
+
+# Facet wrapped by Sample_type - Species (ADFG IDs)
+ADFG.faucet.samtype.nomams <- plot_bar(psCO1.rel.nomams, x = "Specimen.ID", fill = "Species") +
+  facet_wrap(~ Sample_type, ncol = 2, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) 
+ADFG.faucet.samtype.nomams
+
+# Facet wrapped by pred - Species (WADE IDs)
+faucet.pred.nomams <- plot_bar(psCO1.rel.nomams, fill = "Species") +
+  facet_wrap(~ Predator, ncol = 2, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) 
+faucet.pred.nomams
+
+# Facet wrapped by pred - Species (ADFG IDs)
+ADFG.faucet.pred.nomams <- plot_bar(psCO1.rel.nomams, x = "Specimen.ID", fill = "Species") +
+  facet_wrap(~ Predator, ncol = 2, scales = "free_x", strip.position = "right") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "bottom",
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    panel.spacing = unit(0.5, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10))
+  ) 
+ADFG.faucet.pred.nomams
+
+# Save plots with .nomams suffix
+ggsave("Deliverables/CO1/nomams/WADE labels/CO1-species.nomams.png", plot = sp.rel.plot.nomams, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/nomams/ADFG-CO1-species.nomams.png", plot = ADFG.sp.nomams, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/CO1/nomams/WADE labelsCO1-genus.nomams.png", plot = gen.rel.plot.nomams, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/nomams/ADFG-CO1-genus.nomams.png", plot = ADFG.gen.nomams, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/CO1/nomams/WADE labels/CO1-family.nomams.png", plot = fam.rel.plot.nomams, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/nomams/ADFG-CO1-family.nomams.png", plot = ADFG.fam.nomams, width = 16, height = 8, units = "in", dpi = 300)
+
+ggsave("Deliverables/CO1/nomams/WADE labels/CO1-species-by-samtype.nomams.png", plot = faucet.samtype.nomams, width = 30, height = 16, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/nomams/ADFG-CO1-species-by-samtype.nomams.png", plot = ADFG.faucet.samtype.nomams, width = 30, height = 16, units = "in", dpi = 300)
+
+ggsave("Deliverables/CO1/nomams/WADE labels/CO1-species-by-pred.nomams.png", plot = faucet.pred.nomams, width = 30, height = 16, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/nomams/ADFG-CO1-species-by-pred.nomams.png", plot = ADFG.faucet.pred.nomams, width = 30, height = 16, units = "in", dpi = 300)
+
 
 # ------------------------------------------------------------------
 # TABLES
