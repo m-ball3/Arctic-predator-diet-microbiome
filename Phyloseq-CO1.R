@@ -302,7 +302,7 @@ meta_nonpred50 <- meta_nonpred50[sample_names(ps.CO1.nonpred50), , drop = FALSE]
 
 write.csv(
   meta_nonpred50,
-  file = "metadata/ADFG_dDNA_co1sample_metadata_nonpred50.csv",
+  file = "Deliverables/CO1/ADFG_dDNA_co1sample_metadata_nonpred50.csv",
   row.names = TRUE
 )
 
@@ -649,7 +649,7 @@ ADFG.faucet.pred.nomams
 ggsave("Deliverables/CO1/nomams/WADE labels/CO1-species.nomams.png", plot = sp.rel.plot.nomams, width = 16, height = 8, units = "in", dpi = 300)
 ggsave("Deliverables/CO1/nomams/ADFG-CO1-species.nomams.png", plot = ADFG.sp.nomams, width = 16, height = 8, units = "in", dpi = 300)
 
-ggsave("Deliverables/CO1/nomams/WADE labelsCO1-genus.nomams.png", plot = gen.rel.plot.nomams, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("Deliverables/CO1/nomams/WADE labels/CO1-genus.nomams.png", plot = gen.rel.plot.nomams, width = 16, height = 8, units = "in", dpi = 300)
 ggsave("Deliverables/CO1/nomams/ADFG-CO1-genus.nomams.png", plot = ADFG.gen.nomams, width = 16, height = 8, units = "in", dpi = 300)
 
 ggsave("Deliverables/CO1/nomams/WADE labels/CO1-family.nomams.png", plot = fam.rel.plot.nomams, width = 16, height = 8, units = "in", dpi = 300)
