@@ -21,14 +21,13 @@ library(tibble)
 
 # Loads dada2 output
 #load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_CO1P1_output-notaxa.Rdata")
+load("DADA2/DADA2 Outputs/testDADA2_CO1_allseqs_012826.Rdata")
 
 # ------------------------------------------------------------------
 # FORMATS METADATASHEET FOR PHYLOSEQ OBJ
 # ------------------------------------------------------------------
 # Removes file extensions from OTU table names
-rownames(seqtab.nochim) <- sub("^((WADE-003-\\d+(?:-[A-Z]+)?|WADE-003-\\d+-C|WADE-003-\\d+-UC))_.*", "\\1", rownames(seqtab.nochim))
-
+rownames(seqtab.nochim) <- sub("^((WADE-003-\\d+|WADE-003-\\d+-C|WADE-003-\\d+-UC))_.*", "\\1", rownames(seqtab.nochim))
 rownames(seqtab.nochim) <- gsub("-16S_S\\d+", "", rownames(seqtab.nochim))
 
 # Gets sample metadata
@@ -76,132 +75,239 @@ setdiff(rownames(seqtab.nochim), rownames(samdf))
 # ------------------------------------------------------------------
 
 # Creates master phyloseq object
-ps.16s <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
+ps.CO1 <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
                    sample_data(samdf), 
-                   tax_table(merged.taxa))
+                   tax_table(taxa))
+
+nsamples(ps.CO1)
+
+# Saves phyloseq obj
+saveRDS(ps.CO1, "ps.CO1.raw")
 
 # ------------------------------------------------------------------
-# DEALS WITH TECHNICAL REPLICATES
+# DEALS WITH TECHNICAL REPLICATES (NEW AND REPLACEMENTS)
 # ------------------------------------------------------------------
 
 # Identifies rows in Specimen.ID that appear more than once (replicates)
 duplicated_ids <- samdf$Specimen.ID[duplicated(samdf$Specimen.ID) | duplicated(samdf$Specimen.ID, fromLast = TRUE)]
-unique_dup_ids <- unique(duplicated_ids) # "PH22SH036-S" = WADE 115 and WADE 123 AND "PH23SH005-S" = WADE 118-C and WADE 118-UC
+unique_dup_ids <- unique(duplicated_ids) 
 
 # Subset phyloseq object to keep only samples with duplicated Specimen.IDs
-ps.16s.replicates <- subset_samples(ps.16s, Specimen.ID %in% unique_dup_ids)
+ps.CO1.replicates <- subset_samples(ps.CO1, Specimen.ID %in% unique_dup_ids)
+unique_dup_ids <- as.data.frame(unique_dup_ids)
+
+
+## NEW AND REPLACEMENTS
+
+# 08BS7 = WADE 094 and 086
+# 09WWBS10 = WADE 096 and 085
+# 2014BS18 = WADE 101-UC and 081
+# 2021BDL-0723B = WADE 093 and 080
+# 2023Beluga0721SA = WADE 099 and 077
+# 2023Beluga0722SA = WADE 097 and 075
+# 2023Beluga0722SF = 098 and 071
+# DL22OTZ004 = WADE 092 and 040
+# DL22SCM001 = WADE 091 and 041
+# 2010RSW-05 = WADE 100-C, 100-UC, and 084
+# 2014-02-RS = WADE 095 and 082
+
+## Tech Rep
+
+# PH22SH036-S = WADE 115 and 123
+# PH23SH032-F = WADE 143 and 147
 
 # Removes species assignments less than 100 reads for readability
-ps.16s.replicates <- prune_taxa(taxa_sums(ps.16s.replicates) > 0, ps.16s.replicates)
+ps.CO1.replicates <- prune_taxa(taxa_sums(ps.CO1.replicates) > 0, ps.CO1.replicates)
 
 # Creates a vector of read counts
-reads <- sample_sums(ps.16s)
+reads <- sample_sums(ps.CO1)
 
 # Gets the desired sample's read counts
-reads.WADE.115 <- reads["WADE-003-115"]
-reads.WADE.123 <- reads["WADE-003-123"]
-reads.WADE.118C <- reads["WADE-003-118-C"]
-reads.WADE.118UC <- reads["WADE-003-118-UC"]
+# NEW AND REPLACEMENTS -----------------------------------------
 
-# Gets read count before filtering out Mammals and Bacteria
-reads.WADE.115 # 158
-reads.WADE.123 # 4480  
-reads.WADE.118C # 1
-reads.WADE.118UC # 1980
+# 08BS7 = WADE 094 and 086
+reads.WADE.094 <- reads["WADE-003-094"] # 4592
+reads.WADE.086 <- reads["WADE-003-086"] # 180
 
-# Filters out Mammals and Bacteria
-ps.16s.replicates <- subset_taxa(ps.16s.replicates, Class == "Actinopteri")
-nsamples(ps.16s.replicates)
+# 09WWBS10 = WADE 096 and 085
+reads.WADE.096 <- reads["WADE-003-096"] # 31866
+reads.WADE.085 <- reads["WADE-003-085"] # 11007
+
+# 2014BS18 = WADE 101-UC and 081
+reads.WADE.101UC <- reads["WADE-003-101-UC"] # 1312
+reads.WADE.081   <- reads["WADE-003-081"]    # 7017
+
+# 2021BDL-0723B = WADE 093 and 080
+reads.WADE.093 <- reads["WADE-003-093"] # 10
+reads.WADE.080 <- reads["WADE-003-080"] # 2955
+
+# 2023Beluga0721SA = WADE 099 and 077
+reads.WADE.099 <- reads["WADE-003-099"] # 9354
+reads.WADE.077 <- reads["WADE-003-077"] # 1414
+
+# 2023Beluga0722SA = WADE 097 and 075
+reads.WADE.097 <- reads["WADE-003-097"] # 8907
+reads.WADE.075 <- reads["WADE-003-075"] # 3247
+
+# 2023Beluga0722SF = 098 and 071
+reads.WADE.098 <- reads["WADE-003-098"] # 9882
+reads.WADE.071 <- reads["WADE-003-071"] # 3779
+
+# DL22OTZ004 = WADE 092 and 040
+reads.WADE.092 <- reads["WADE-003-092"] # 13086
+reads.WADE.040 <- reads["WADE-003-040"] # 147
+
+# DL22SCM001 = WADE 091 and 041
+reads.WADE.091 <- reads["WADE-003-091"] # 17625
+reads.WADE.041 <- reads["WADE-003-041"] # 996
+
+# 2010RSW-05 = WADE 100-C, 100-UC, and 084
+reads.WADE.100C  <- reads["WADE-003-100-C"] # 3461
+reads.WADE.100UC <- reads["WADE-003-100-UC"]# 30313
+reads.WADE.084   <- reads["WADE-003-084"]   # 127
+
+# 2014-02-RS = WADE 095 and 082
+reads.WADE.095 <- reads["WADE-003-095"] # 21626
+reads.WADE.082 <- reads["WADE-003-082"] # 28363
+
+
+# TECH REP ------------------------------------------------------
+
+# PH22SH036-S = WADE 115 and 123
+reads.WADE.115 <- reads["WADE-003-115"] # 5096
+reads.WADE.123 <- reads["WADE-003-123"] # 1685
+
+# PH23SH032-F = WADE 143 and 147
+reads.WADE.143 <- reads["WADE-003-143"] # 23930
+reads.WADE.147 <- reads["WADE-003-147"] # 7124
+
+# Drop Mammalia, keep all other classes (including NA)
+ps.CO1.replicates <- subset_taxa(
+  ps.CO1.replicates,
+  Class != "Mammalia" | is.na(Class)
+)
+
+nsamples(ps.CO1.replicates)
 
 # Creates a vector of read counts
-reads <- sample_sums(ps.16s.replicates)
+reads <- sample_sums(ps.CO1.replicates)
 
-# Gets the desired sample's read counts
-reads.WADE.115 <- reads["WADE-003-115"]
-reads.WADE.123 <- reads["WADE-003-123"]
-reads.WADE.118C <- reads["WADE-003-118-C"]
-reads.WADE.118UC <- reads["WADE-003-118-UC"]
-
-# Gets read count before filtering out Mammals and Bacteria
-reads.WADE.115 # 158
-reads.WADE.123 # 4480  
-reads.WADE.118C # 1
-reads.WADE.118UC # 1951
 
 # Create the stacked bar plot (absolute)
-plot_bar(ps.16s.replicates, x = "LabID", fill = "Species.y") +
-  facet_wrap(~ Specimen.ID, ncol = 2, scales = "free_x", strip.position = "top")
+plot_bar(ps.CO1.replicates, x = "LabID", fill = "Genus") +
+  facet_wrap(~ Specimen.ID, ncol = 13, scales = "free_x", strip.position = "top")
 
 # Transforms read counts to relative abundance of each species 
 ## Transforms NaN (0/0) to 0
-ps16s.replicate.rel <- transform_sample_counts(ps.16s.replicates, function(x) {
+psCO1.replicate.rel <- transform_sample_counts(ps.CO1.replicates, function(x) {
   x_rel <- x / sum(x)
   x_rel[is.nan(x_rel)] <- 0
   return(x_rel)
 })
 
 # Create the stacked bar plot (relative)
-plot_bar(ps16s.replicate.rel, x = "LabID", fill = "Species.y")+
-  facet_wrap(~ Specimen.ID, ncol = 2, scales = "free_x", strip.position = "top")
+plot_bar(psCO1.replicate.rel, x = "LabID", fill = "Genus")+
+  facet_wrap(~ Specimen.ID, ncol = 13, scales = "free_x", strip.position = "top")
 
 # Ensures samples removed in filtering are removed from samdf
-replicate_to_remove <- c("WADE-003-115", "WADE-003-118-C")
+replicate_to_remove <- c(
+  "WADE-003-086",
+  "WADE-003-085",
+  "WADE-003-101-UC",
+  "WADE-003-093",
+  "WADE-003-077",
+  "WADE-003-075",
+  "WADE-003-071",
+  "WADE-003-040",
+  "WADE-003-041",
+  "WADE-003-100-C",
+  "WADE-003-084",
+  "WADE-003-095",
+  "WADE-003-123",
+  "WADE-003-147"
+)
+
 samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
 
-# Recreates REGIONAL phyloseq objects without unwanted replicate
-ps.16s <- phyloseq(
+# Recreates phyloseq object without unwanted replicate
+ps.CO1 <- phyloseq(
   otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
   sample_data(samdf), 
-  tax_table(merged.taxa)
+  tax_table(compiled_taxa)
 )%>% 
   subset_samples(LabID != replicate_to_remove)
-sample_names(ps.16s)
+sample_names(ps.CO1)
+nsamples(ps.CO1)
 
 # ------------------------------------------------------------------
-# CLEANS PHYLOSEQ
+# CLEANS PHYLOSEQ WITH REMOVAL TRACKING
 # ------------------------------------------------------------------
 
 ### shorten ASV seq names, store sequences as reference
-dna <- Biostrings::DNAStringSet(taxa_names(ps.16s))
-names(dna) <- taxa_names(ps.16s)
-ps.raw <- merge_phyloseq(ps.16s, dna)
-taxa_names(ps.16s) <- paste0("ASV", seq(ntaxa(ps.16s)))
+dna <- Biostrings::DNAStringSet(taxa_names(ps.CO1))
+names(dna) <- taxa_names(ps.CO1)
+ps.raw <- merge_phyloseq(ps.CO1, dna)
+taxa_names(ps.CO1) <- paste0("ASV", seq(ntaxa(ps.CO1)))
 
-nsamples(ps.16s)
+# Initialize removal tracking dataframe
+removal_log <- data.frame(
+  SampleID = character(),
+  Step = character(),
+  ReadCount = numeric(),
+  stringsAsFactors = FALSE
+)
 
-# Saves phyloseq obj
-saveRDS(ps.16s, "ps.16s.raw")
+# Step 2: Remove samples with total abundance < 100
+samples_before <- sample_names(ps.CO1)
+reads_before <- sample_sums(ps.CO1)
+ps.CO1 <- prune_samples(sample_sums(ps.CO1) >= 100, ps.CO1)
+low_abund_samples <- setdiff(samples_before, sample_names(ps.CO1))
 
-# Filters out anything not in Actinopteri
-ps.16s <- subset_taxa(ps.16s, Class == "Actinopteri")
-nsamples(ps.16s)
+# Log low abundance removals
+if(length(low_abund_samples) > 0) {
+  removal_log <- rbind(removal_log, 
+                       data.frame(
+                         SampleID = low_abund_samples,
+                         Step = "Low abundance (<100 reads)",
+                         ReadCount = reads_before[low_abund_samples]
+                       )
+  )
+}
 
-# Remove samples with total abundance < 100
-ps.16s <- prune_samples(sample_sums(ps.16s) >= 100, ps.16s)
-nsamples(ps.16s)
-
-# Filtering to remove taxa with less than 1% of reads assigned in at least 1 sample.
+# Step 3: Prevalence filtering (taxa only, no samples removed)
 f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
-lowcount.filt <- genefilter_sample(ps.16s, f1, A=1)
-ps.16s <- prune_taxa(lowcount.filt, ps.16s) # WONDREING IF I SHOULD NOW RENAME PS.12S !!
+ps.CO1 <- prune_taxa(genefilter_sample(ps.CO1, f1, A=1), ps.CO1)
 
-# Ensures samples removed in filtering are removed from samdf
-row_to_remove <- "WADE-003-146"
+# Show removal summary
+print("=== FILTERING REMOVAL SUMMARY ===")
+print(removal_log)
+print(paste("Total samples removed:", nrow(removal_log)))
+print(paste("Samples remaining:", nsamples(ps.CO1)))
+
+# # Save removal log
+# write.csv(removal_log, "filtering_removal_log.csv", row.names = FALSE)
+
+# Sync samdf
+row_to_remove <- removal_log$SampleID
 samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
 
-# Saves phyloseq obj
-saveRDS(ps.16s, "ps.16s")
+# Filter out Mammalia (samples unaffected)
+ps.CO1 <- subset_taxa(ps.CO1, class != "Mammalia" | is.na(class))
+nsamples(ps.CO1)
+
+# # Saves phyloseq obj
+# saveRDS(ps.CO1, "ps.CO1")
 
 ## Merges same species
-ps.16s = tax_glom(ps.16s, "Species.y", NArm = FALSE)%>% 
+ps.CO1 = tax_glom(ps.CO1, "genus", NArm = FALSE)%>% 
   prune_taxa(taxa_sums(.) > 0, .)
 
 # Plots stacked bar plot of absolute abundance
-plot_bar(ps.16s, x="Specimen.ID", fill="Species.y")
+plot_bar(ps.CO1, x="Specimen.ID", fill="genus")
 
 # Calculates relative abundance of each species 
 ## Transforms NaN (0/0) to 0
-ps16s.rel <- transform_sample_counts(ps.16s, function(x) {
+ps16s.rel <- transform_sample_counts(ps.CO1, function(x) {
   x_rel <- x / sum(x)
   x_rel[is.nan(x_rel)] <- 0
   return(x_rel)
@@ -291,10 +397,10 @@ ggsave("Deliverables/16S/ADFG-16S-species-by-pred.111125.png", plot = ADFG.fauce
 # ------------------------------------------------------------------
 
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
-otu.abs <- as.data.frame(otu_table(ps.16s))
+otu.abs <- as.data.frame(otu_table(ps.CO1))
 
 # Changes NA.1 to it's corresponding ASV
-taxa.names <- as.data.frame(tax_table(ps.16s)) %>% 
+taxa.names <- as.data.frame(tax_table(ps.CO1)) %>% 
   rownames_to_column("ASV") %>% 
   mutate(Species.y = case_when(is.na(Species.y)~ASV,
                                TRUE~Species.y)) %>% 
@@ -302,7 +408,7 @@ taxa.names <- as.data.frame(tax_table(ps.16s)) %>%
 
 colnames(otu.abs) <- taxa.names
 
-tax_table <- as.data.frame(tax_table(ps.16s))
+tax_table <- as.data.frame(tax_table(ps.CO1))
 
 ## Adds ADFG Sample ID as a column
 otu.abs$Specimen.ID <- samdf[rownames(otu.abs), "Specimen.ID"]
