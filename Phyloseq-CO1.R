@@ -20,7 +20,6 @@ library(tibble)
 
 
 # Loads dada2 output
-#load("C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_16SP2_output.Rdata")
 load("DADA2/DADA2 Outputs/testDADA2_CO1_allseqs_012826.Rdata")
 
 # ------------------------------------------------------------------
@@ -85,10 +84,10 @@ ps.CO1 <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE),
 nsamples(ps.CO1)
 
 # Saves phyloseq obj
-saveRDS(ps.CO1, "ps.CO1.raw")
+save(ps.CO1, file = "ps.CO1.raw.Rdata")
 
 # ------------------------------------------------------------------
-# DEALS WITH TECHNICAL REPLICATES (NEW AND REPLACEMENTS)
+# DEALS WITH TECHNICAL REPLICATES & NEW/REPLACEMENTS
 # ------------------------------------------------------------------
 
 # Identifies rows in Specimen.ID that appear more than once (replicates)
@@ -186,7 +185,6 @@ reads.WADE.147 <- reads["WADE-003-147"] # 7124
 
 
 # FILTERS OUT MAMMALIA -----------------------------------------------------
-# # Drop Mammalia, keep all other classes (including NA)
 # ps.CO1.replicates <- subset_taxa(
 #   ps.CO1.replicates,
 #   Class != "Mammalia" | is.na(Class)
@@ -233,7 +231,7 @@ replicate_to_remove <- c(
 
 samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
 
-# Recreates phyloseq object without unwanted replicate
+# Recreates phyloseq object without unwanted replicates
 ps.CO1 <- phyloseq(
   otu_table(seqtab.nochim, taxa_are_rows = FALSE), 
   sample_data(samdf), 
@@ -245,7 +243,7 @@ sample_names(ps.CO1)
 nsamples(ps.CO1)
 
 # ------------------------------------------------------------------
-# CLEANS PHYLOSEQ WITH REMOVAL TRACKING
+# CLEANS PHYLOSEQ
 # ------------------------------------------------------------------
 
 ### shorten ASV seq names, store sequences as reference
@@ -254,16 +252,15 @@ names(dna) <- taxa_names(ps.CO1)
 ps.raw <- merge_phyloseq(ps.CO1, dna)
 taxa_names(ps.CO1) <- paste0("ASV", seq(ntaxa(ps.CO1)))
 
-# Initialize removal tracking dataframe
-removal_log <- data.frame(
-  SampleID = character(),
-  Step = character(),
-  ReadCount = numeric(),
-  stringsAsFactors = FALSE
-)
+# # Sets up df to track what samps are removed
+# removal_log <- data.frame(
+#   SampleID = character(),
+#   Step = character(),
+#   ReadCount = numeric(),
+#   stringsAsFactors = FALSE
+# )
 
 # FILTERS FOR THE SAMPLES THAT HAVE >50 NON-PREDATOR READS-----------------------------------------------------
-### i should move this to a new area or a new code (save raw phyloseq obj after pruning tech reps; do mammal filtering later)
 
 # Gets the taxonomy table from the ps object 
 tax <- as.data.frame(as.matrix(tax_table(ps.CO1)))
@@ -275,7 +272,7 @@ nonpred_taxa <- rownames(tax)[is.na(tax$Class) | tax$Class != "Mammalia"]
 otu <- as(otu_table(ps.CO1), "matrix")  
 nonpred_taxa <- intersect(nonpred_taxa, colnames(otu)) # keeps only the samples we want
 
-# Flips so we sum
+# Flips so we can sum
 otu_asv_rows <- t(otu)  # rows = taxa, columns = samples
 
 # Sums non-predator reads per sample
@@ -294,10 +291,12 @@ ps.CO1.nonpred50 <- subset_taxa(ps.CO1.nonpred50,
                                 is.na(Class) | Class != "Mammalia")
 tax2 <- as.data.frame(as.matrix(tax_table(ps.CO1.nonpred50)))
 
+save(ps.CO1.nonpred50, file = "ps.CO1.nonpred50.Rdata")
+
 # GETS METADATA FOR JUST THE SAMPLES WITH >50 NONPRED READS  -----------------------------------------------------
 meta_nonpred50 <- samdf[keep_samples, , drop = FALSE]
 
-# orders
+# reorders
 meta_nonpred50 <- meta_nonpred50[sample_names(ps.CO1.nonpred50), , drop = FALSE]
 
 write.csv(
@@ -307,13 +306,13 @@ write.csv(
 )
 
 # 
-# # Step 2: Remove samples with total abundance < 100
+# # Removes samples with total abundance < 100
 # samples_before <- sample_names(ps.CO1)
 # reads_before <- sample_sums(ps.CO1)
 # ps.CO1 <- prune_samples(sample_sums(ps.CO1) >= 100, ps.CO1)
 # low_abund_samples <- setdiff(samples_before, sample_names(ps.CO1))
 # 
-# # Log low abundance removals
+# # Logs low abundance removals
 # if(length(low_abund_samples) > 0) {
 #   removal_log <- rbind(removal_log, 
 #                        data.frame(
@@ -324,24 +323,24 @@ write.csv(
 #   )
 # }
 # 
-# # Step 3: Prevalence filtering (taxa only, no samples removed)
+# # filters out rare taxa
 # f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
 # ps.CO1 <- prune_taxa(genefilter_sample(ps.CO1, f1, A=1), ps.CO1)
 # 
-# # Show removal summary
+# # Shows removal summary
 # print("=== FILTERING REMOVAL SUMMARY ===")
 # print(removal_log)
 # print(paste("Total samples removed:", nrow(removal_log)))
 # print(paste("Samples remaining:", nsamples(ps.CO1)))
 # 
-# # # Save removal log
+# # # saves which samples were removed
 # # write.csv(removal_log, "filtering_removal_log.csv", row.names = FALSE)
 # 
-# # Sync samdf
+# # Syncs samdf
 # row_to_remove <- removal_log$SampleID
 # samdf <- samdf[!rownames(samdf) %in% row_to_remove, ]
 # 
-# # Filter out Mammalia (samples unaffected)
+# # Filter out Mammalia
 # nsamples(ps.CO1)
 # ps.CO1 <- subset_taxa(ps.CO1, class != "Mammalia" | is.na(class))
 # 
