@@ -20,7 +20,7 @@ library(tibble)
 
 
 # Loads dada2 output
-load("DADA2/DADA2 Outputs/testDADA2_CO1_allseqs_012826.Rdata")
+load("DADA2/DADA2 Outputs/testDADA2_CO1_allseqs_022426.Rdata")
 
 # ------------------------------------------------------------------
 # FORMATS METADATASHEET FOR PHYLOSEQ OBJ
@@ -666,18 +666,18 @@ ggsave("Deliverables/CO1/nomams/ADFG-CO1-species-by-pred.nomams.png", plot = ADF
 # ------------------------------------------------------------------
 
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
-otu.abs <- as.data.frame(otu_table(ps.CO1))
+otu.abs <- as.data.frame(otu_table(psCO1.rel.nomams))
 
 # Changes NA.1 to it's corresponding ASV
-taxa.names <- as.data.frame(tax_table(ps.CO1)) %>% 
+taxa.names <- as.data.frame(tax_table(psCO1.rel.nomams)) %>% 
   rownames_to_column("ASV") %>% 
-  mutate(Species.y = case_when(is.na(Species.y)~ASV,
-                               TRUE~Species.y)) %>% 
-  pull(Species.y)
+  mutate(Species = case_when(is.na(Species)~ASV,
+                               TRUE~Species)) %>% 
+  pull(Species)
 
 colnames(otu.abs) <- taxa.names
 
-tax_table <- as.data.frame(tax_table(ps.CO1))
+tax_table <- as.data.frame(tax_table(psCO1.rel.nomams))
 
 ## Adds ADFG Sample ID as a column
 otu.abs$Specimen.ID <- samdf[rownames(otu.abs), "Specimen.ID"]
@@ -706,17 +706,17 @@ otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
 # Add Lab ID to otu.abs
 write.csv(otu.abs %>% 
             rownames_to_column("LabID"), 
-          "./Deliverables/16S/ADFG_16s_absolute_speciesxsamples.csv", 
+          "./Deliverables/CO1/nomams/ADFG_CO1_absolute_speciesxsamples-nomams.csv", 
           row.names = FALSE)
 
 # Add Lab ID to otu.abs
 write.csv(otu.prop %>% 
             rownames_to_column("LabID"), 
-          "./Deliverables/16S/ADFG_16s_relative_speciesxsamples.csv", 
+          "./Deliverables/CO1/nomams/ADFG_16s_relative_speciesxsamples-nomams.csv", 
           row.names = FALSE)
 
 write.csv(tax_table%>% 
             rownames_to_column("ASV"), 
-          "./Deliverables/16S/ADFG_16s_tax_table.csv", row.names = FALSE)
+          "./Deliverables/CO1/nomams/ADFG_16s_tax_table-nomams.csv", row.names = FALSE)
 
 

@@ -80,7 +80,7 @@ scp -r * mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/SRKW/rawdata/16SP1/
 
   
 #CO1
-  scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_CO1P1_output-notaxa.Rdata" "C:/Users/MBall/OneDrive/文档/WADE LAB//Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
+  scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/testDADA2_CO1_allseqs_012826.Rdata" "C:/Users/MBall/OneDrive - UW/Documents/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
 
 
 # Read error output

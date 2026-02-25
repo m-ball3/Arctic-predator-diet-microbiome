@@ -40,8 +40,8 @@ write_xlsx(
 ls()
 class("taxa")
 
-df <- as.data.frame(out)
+df <- as.data.frame(seqtab.nochim)
 df_with_rownames <- cbind(rownames = rownames(df), df)
-writexl::write_xlsx(df_with_rownames, "./Deliverables/12S/regions/arctic/WADE003-arcticpred_dada2_QAQC_CO1-out.xlsx")
+writexl::write_xlsx(df_with_rownames, "./Deliverables/CO1/seqtab.xlsx")
 
 
