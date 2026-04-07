@@ -712,11 +712,11 @@ write.csv(otu.abs %>%
 # Add Lab ID to otu.abs
 write.csv(otu.prop %>% 
             rownames_to_column("LabID"), 
-          "./Deliverables/CO1/nomams/ADFG_16s_relative_speciesxsamples-nomams.csv", 
+          "./Deliverables/CO1/nomams/ADFG_CO1_relative_speciesxsamples-nomams.csv", 
           row.names = FALSE)
 
 write.csv(tax_table%>% 
             rownames_to_column("ASV"), 
-          "./Deliverables/CO1/nomams/ADFG_16s_tax_table-nomams.csv", row.names = FALSE)
+          "./Deliverables/CO1/nomams/ADFG_CO1_tax_table-nomams.csv", row.names = FALSE)
 
 

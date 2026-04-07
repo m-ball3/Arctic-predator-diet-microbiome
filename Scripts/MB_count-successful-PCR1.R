@@ -10,16 +10,28 @@ successful <- read.csv("metadata/MB-successes.csv")
 
 samdf <- read.csv("metadata/ADFG_dDNA_sample_metadata.csv")
 
+# samdf_success <- successful %>% 
+#   left_join(
+#     read.csv("metadata/ADFG_dDNA_sample_metadata.csv") %>% 
+#       select(Specimen.ID, Species, Sample_type),
+#     by = "Specimen.ID",
+#     relationship = "many-to-many"
+#   ) %>%
+#   rename(Predator = Species) %>%
+#   mutate(Predator = tolower(Predator)) %>%
+#   distinct(Specimen.ID, .keep_all = TRUE)
+
 samdf_success <- successful %>% 
   left_join(
-    read.csv("metadata/ADFG_dDNA_sample_metadata.csv") %>% 
-      select(Specimen.ID, Species, Sample_type),
+    read.csv("metadata/ADFG_dDNA_sample_metadata.csv"),
     by = "Specimen.ID",
     relationship = "many-to-many"
   ) %>%
   rename(Predator = Species) %>%
   mutate(Predator = tolower(Predator)) %>%
   distinct(Specimen.ID, .keep_all = TRUE)
+
+write.csv(samdf_success, file = "metadata/MB_success_allcols.csv")
 
 samdf_success %>% 
   count(c(Sample_type, Predator), name = "n", sort = TRUE, .drop = FALSE)
