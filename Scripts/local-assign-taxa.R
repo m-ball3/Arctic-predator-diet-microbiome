@@ -35,7 +35,7 @@ taxa <- assignTaxonomy(seqtab.nochim, taxref, tryRC = TRUE, minBoot = 95)
 # Assign Species
 genus.species <- assignSpecies(seqtab.nochim, speciesref)
 
-# Ensures all taxonomic levels agree for allk rows within an species assignment
+# Ensures all taxonomic levels agree for all rows within an species assignment
 tax_table <- as.data.frame(taxa) %>% # saves taxa as a dataframe
   rownames_to_column("ASV") %>%  # makes ASV rownames to a column
   filter(is.na(Species)) %>% # keeps only those in Species column that are NA

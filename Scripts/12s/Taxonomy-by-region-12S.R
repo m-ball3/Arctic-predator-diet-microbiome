@@ -25,7 +25,7 @@ library(dplyr)
 library(dada2)
 
 # Loads in dada2 output
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12S_output.Rdata")
 
 # loads in regional DBs
 cookinletDB <- "DADA2/Ref-DB/12S/12S_Cook-Inlet-DB.fasta"

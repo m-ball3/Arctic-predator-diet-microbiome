@@ -1,166 +1,265 @@
-Specimen ID,Repeat or New Specimen?,Shipment,Species,Location,Month,Year,Sex,Sample_type,Stomach Goo,Intestinal Goo,,Fish,Cephalopod,Shrimp,Polychaete,Other,Tooth_age
-08BS09,New,1,bearded seal,Barrow,JUL,2008,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk
-08BS7,Replacement,1,bearded seal,Barrow,JUL,2008,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,4
-08BS7,New,1,bearded seal,Barrow,JUL,2008,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,4
-09WWBS10,Replacement,1,bearded seal,Wainwright,JUL,2009,F,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,9
-09WWBS10,New,1,bearded seal,Wainwright,JUL,2009,F,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,9
-2014BS18,Replacement,1,bearded seal,Barrow,JUL,2014,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,10
-2014BS18,New,1,bearded seal,Barrow,JUL,2014,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,10
-DIO-001-11,New,1,bearded seal,Diomede Island,,2011,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,0
-EB13GAM020,New,1,bearded seal,Gambell,,2013,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,1
-EB14GAM025,New,1,bearded seal,Gambell,Spring,2014,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,0
-SHH-004-14,New,1,bearded seal,Shishmaref,Fall,2014,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,1
-2012180,New,1,beluga whale,Cook Inlet,OCT,2012,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-2015066,New,1,beluga whale,Cook Inlet,JUN,2015,M,unk,no,yes,yes,unk,unk,unk,unk,unk,NA
-2018199,New,1,beluga whale,Pilot Station,AUG,2018,M,stomach,yes,no,no,yes,no,no,no,NA,NA
-2020230,New,1,beluga whale,Cook Inlet,SEP,2020,M,stomach,yes,no,no,lamprey,no,no,no,unknown,NA
-2021028,New,1,beluga whale,Cook Inlet,MAY,2021,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-2021214,New,1,beluga whale,Cook Inlet,SEP,2021,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-2022161,New,1,beluga whale,Cook Inlet,AUG,2022,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-2022165,New,1,beluga whale,Cook Inlet,AUG,2022,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-2021BDL-0708Sa,New,1,beluga whale,Barrow,JUL,2021,F,stomach,yes,no,no,yes,no,no,yes,isopods,NA
-2021BDL-0723A,New,1,beluga whale,Barrow,JUL,2021,F,stomach,yes,no,no,yes,yes,yes,yes,NA,NA
-2021BDL-0723B,Replacement,1,beluga whale,Barrow,JUL,2021,F,stomach,yes,no,no,yes,yes,no,yes,NA,NA
-2021BDL-0723B,New,1,beluga whale,Barrow,JUL,2021,F,stomach,yes,no,no,yes,yes,no,yes,NA,NA
-2021BDL-0723C,New,1,beluga whale,Barrow,JUL,2021,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-2022Beluga-0713-SA,New,1,beluga whale,Barrow,JUL,2022,M,stomach,yes,no,no,yes,yes,yes,yes,gastropod,NA
-2022Beluga-0713-SB,New,1,beluga whale,Barrow,JUL,2022,F,stomach,yes,no,no,yes,yes,,yes,NA,NA
-2022Beluga-0713-SD,New,1,beluga whale,Barrow,JUL,2022,M,stomach,yes,no,no,yes,yes,yes,yes,echiurid,NA
-2023Beluga0721SA,Replacement,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,NA,NA
-2023Beluga0721SA,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,NA,NA
-2023Beluga0721SB,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-2023Beluga0722SA,Replacement,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,crab,NA
-2023Beluga0722SA,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,crab,NA
-2023Beluga0722SB,New,1,beluga whale,Barrow,JUL,2023,F,stomach,yes,no,no,no,yes,no,no,NA,NA
-2023Beluga0722SD,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,NA,NA
-2023Beluga0722SE,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,yes,yes,yes,no,NA,NA
-2023Beluga0722SF,Replacement,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,yes,yes,no,yes,NA,NA
-2023Beluga0722SF,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,yes,yes,no,yes,NA,NA
-2023Beluga0726SA,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,NA,NA
-2023Beluga0726SB,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-2023Beluga0728SA,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,NA,NA
-2023Beluga0728SB,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,yes,yes,echiurid,NA
-DL16HB001,New,1,beluga whale,Hooper Bay,OCT,2016,M,stomach,yes,no,no,yes,no,yes,yes,"echiurid, amphipod, isopod",NA
-DL16OME004,New,1,beluga whale,Nome,NOV,2016,M,stomach,yes,no,no,yes,no,yes,yes,crab,NA
-DL18OME005,New,1,beluga whale,Nome,43405,2018,F,stomach,yes,no,no,yes,no,yes,yes,"amphipod, crab, tunicate",NA
-DL20OME001,New,1,beluga whale,Nome,SEP,2020,M,stomach,yes,no,no,yes,no,yes,yes,"echiurid, amphipod, gastropod, bivalve",NA
-DL20OME002,New,1,beluga whale,Nome,SEP,2020,M,stomach,yes,no,no,yes,no,yes,no,"amphipod, crustacean",NA
-DL20OME003,New,1,beluga whale,Nome,NOV,2020,F,stomach,yes,no,no,yes,no,yes,yes,"echurid, tunicate",NA
-DL21OTZ007,New,1,beluga whale,Kotzebue,SEP,2021,F,stomach,yes,no,no,yes,yes,yes,yes,"echiurid, amphipod, isopod, crab, mysid",NA
-DL22OME001,New,1,beluga whale,Nome,OCT,2022,U,stomach,yes,no,no,yes,no,yes,no,echiurid,NA
-DL22OME002,New,1,beluga whale,Nome,NOV,2022,F,stomach,yes,no,no,yes,no,yes,yes,"echurid, crab",NA
-DL22OME003,New,1,beluga whale,Nome,DEC,2022,U,stomach,yes,no,no,yes,no,yes,no,echiurid,NA
-DL22OME004,New,1,beluga whale,Nome,JAN,2022,U,stomach,yes,no,no,yes,no,yes,yes,"bivalve, tunicate",NA
-DL22OME005,New,1,beluga whale,Nome,FEB,2022,U,stomach,yes,no,no,yes,no,yes,no,"echiurid, amphipod, bivalve, tunicate",NA
-DL22OTZ004,New,1,beluga whale,Kotzebue,JUN,2022,F,stomach,yes,no,no,yes,no,no,yes,"echiurid, isopod",NA
-DL22SCM001,New,1,beluga whale,Scammon Bay,OCT,2022,F,stomach,yes,no,no,yes,no,yes,no," echiurid, amphipod",NA
-LDL-16-17,New,1,beluga whale,Point Lay,JUN,2017,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-LDL-21-17,New,1,beluga whale,Point Lay,JUN,2017,F,stomach,yes,no,no,yes,yes,no,no,NA,NA
-LDL-23-17,New,1,beluga whale,Point Lay,JUN,2017,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-LDL-24-17,New,1,beluga whale,Point Lay,JUN,2017,F,stomach,yes,no,no,no,yes,no,no,"bivalve, gastropod, crustacean",NA
-LDL-32-17,New,1,beluga whale,Point Lay,JUN,2017,M,stomach,yes,no,no,no,no,no,yes,"tunicate, crab",NA
-LDL-UNK-A-17,New,1,beluga whale,Point Lay,JUN,2017,U,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA
-2010RSW-05,Replacement,1,ringed seal,Barrow,FEB,2010,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk
-2010RSW-05,New,1,ringed seal,Barrow,FEB,2010,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk
-2013RS31,New,1,ringed seal,Barrow,DEC,2013,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk
-2014-02-RS,Replacement,1,ringed seal,Barrow,APR,2014,F,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,10
-2014-02-RS,New,1,ringed seal,Barrow,APR,2014,F,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,10
-N24-2013,New,1,ringed seal,Nome,,2012,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,18
-PH14GAM020,New,1,ringed seal,Gambell,MAY,2014,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk
-PH14GAM026,New,1,ringed seal,Gambell,JUN,2014,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,0
-PH14GAM027,New,1,ringed seal,Gambell,JUN,2014,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk
-PH14GAM029,New,1,ringed seal,Gambell,MAY,2014,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk
-PH15GAM051,New,1,ringed seal,Gambell,NOV,2015,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,0
-DIO-001-14,New,1,spotted seal,Diomede Island,OCT,2014,U,,Yes,Yes,No,NA,NA,NA,NA,NA,0
-PL12GAM049,New,1,spotted seal,Gambell,,2012,U,,Yes,Yes,No,NA,NA,NA,NA,NA,unk
-2014122,New,2,Beluga whale,Cook Inlet,AUG,2014,M,stomach,Yes,no,No,Yes,no,no,no,Sea Lice,NA
-2017198,New,2,Beluga whale,Cook Inlet,SEP,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2017206,New,2,Beluga whale,Cook Inlet,SEP,2017,F,stomach,Yes,no,No,Yes,no,Yes,no,Sea Lice,NA
-2017215,New,2,Beluga whale,Cook Inlet,OCT,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2017217,New,2,Beluga whale,Cook Inlet,OCT,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2017221,New,2,Beluga whale,Cook Inlet,OCT,2017,F,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2017222,New,2,Beluga whale,Cook Inlet,OCT,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2017228,New,2,Beluga whale,Cook Inlet,,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2017230,New,2,Beluga whale,Cook Inlet,OCT,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2018278,New,2,Beluga whale,Cook Inlet,OCT,2018,M,stomach,Yes,no,No,no,no,no,no,Terrestrial Plant,NA
-2020230,Replacement,2,Beluga whale,Cook Inlet,SEP,2020,M,stomach,Yes,no,No,Lamprey,no,no,no,Unknown,NA
-2021028,Replacement,2,Beluga whale,Cook Inlet,MAY,2021,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2021214,Replacement,2,Beluga whale,Cook Inlet,SEP,2021,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2022161,Replacement,2,Beluga whale,Cook Inlet,AUG,2022,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2022165,Replacement,2,Beluga whale,Cook Inlet,AUG,2022,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2023157,Replacement,2,Beluga whale,Cook Inlet,JUL,2023,M,stomach,Yes,no,No,Yes,no,no,no,NA,NA
-2023279,Replacement,2,Beluga whale,Cook Inlet,SEP,2023,F,stomach,Yes,no,No,Yes,no,no,Yes,NA,NA
-2023281,Replacement,2,Beluga whale,Cook Inlet,OCT,2023,F,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2023295,Replacement,2,Beluga whale,Cook Inlet,OCT,2023,F,stomach,Yes,no,No,no,no,no,Yes,NA,NA
-2023296,Replacement,2,Beluga whale,Cook Inlet,OCT,2023,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2023296,New,2,Beluga whale,Cook Inlet,OCT,2023,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2021BDL-0708Sa,Replacement,2,Beluga whale,Utqia?vik,JUL,2021,F,stomach,Yes,no,No,Yes,no,no,Yes,Isopods,NA
-2021BDL-0723A,Replacement,2,Beluga whale,Utqia?vik,JUL,2021,F,stomach,Yes,no,No,Yes,Yes,Yes,Yes,NA,NA
-2021BDL-0723C,Replacement,2,Beluga whale,Utqia?vik,JUL,2021,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA
-2022Beluga-0713-SD,Replacement,2,Beluga whale,Utqia?vik,JUL,2022,M,stomach,Yes,no,No,Yes,Yes,Yes,Yes,Echiurid,NA
-DL17HB001,New,2,Beluga whale,Hooper Bay,OCT,2017,U,stomach,Yes,no,No,Yes,no,Yes,Yes,"Bivalves, Sea Lice, Mysids, Isopods, Caprellids, Amphipods, Echiurids",NA
-DL17OME001,New,2,Beluga whale,Nome,OCT,2017,M,stomach,Yes,no,No,Yes,no,Yes,Yes,"Gastropods, Sea Lice, Amphipods, Crab, Echiurids",NA
-DL18OME001,New,2,Beluga whale,Nome,OCT,2018,M,stomach,Yes,no,No,Yes,no,Yes,Yes,"Clams, Sea Lice, Crab",NA
-DL18OME002,New,2,Beluga whale,Nome,OCT,2018,M,stomach,Yes,no,No,Yes,no,Yes,Yes,"Clams, Sea Lice",NA
-DL18OME003,New,2,Beluga whale,Nome,OCT,2018,M,stomach,Yes,no,No,Yes,no,Yes,Yes,"Copepod, Amphipods, Crab, Echiurids",NA
-DL18OME004,New,2,Beluga whale,Nome,OCT,2018,F,stomach,Yes,no,No,Yes,no,Yes,Yes,"Crab, Echiurids, Hydrozoan",NA
-DL20OME001,Replacement,2,Beluga whale,Nome,SEP,2020,M,stomach,Yes,no,No,Yes,no,Yes,Yes,"Echiurid, amphipod, gastropod, bivalve",NA
-DL20OME002,Replacement,2,Beluga whale,Nome,SEP,2020,M,stomach,Yes,no,No,Yes,no,Yes,no,"Amphipod, crustacean",NA
-DL20OME003,Replacement,2,Beluga whale,Nome,NOV,2020,F,stomach,Yes,no,No,Yes,no,Yes,Yes,"Echurid, tunicate",NA
-DL21OTZ007,Replacement,2,Beluga whale,Kotzebue,SEP,2021,F,stomach,Yes,no,No,Yes,Yes,Yes,Yes,"Echiurid, amphipod, isopod, crab, mysid",NA
-DL22OME001,Replacement,2,Beluga whale,Nome,OCT,2022,U,stomach,Yes,no,No,Yes,no,Yes,no,Echiurid,NA
-DL22OME002,Replacement,2,Beluga whale,Nome,NOV,2022,F,stomach,Yes,no,No,Yes,no,Yes,Yes,"Echurid, crab",NA
-DL22OME003,Replacement,2,Beluga whale,Nome,DEC,2022,U,stomach,Yes,no,No,Yes,no,Yes,no,Echiurid,NA
-DL22OME004,Replacement,2,Beluga whale,Nome,JAN,2022,U,stomach,Yes,no,No,Yes,no,Yes,Yes,"Bivalve, tunicate",NA
-DL22OME005,Replacement,2,Beluga whale,Nome,FEB,2022,U,stomach,Yes,no,No,Yes,no,Yes,no,"Echiurid, amphipod, bivalve, tunicate",NA
-DL22OTZ004,Replacement,2,Beluga whale,Kotzebue,JUN,2022,F,stomach,Yes,no,No,Yes,no,no,Yes,"Echiurid, isopod",NA
-DL22SCM001,Replacement,2,Beluga whale,Scammon Bay,OCT,2022,F,stomach,Yes,no,No,Yes,no,Yes,no,"Echiurid, amphipod",NA
-DL23OME001,Replacement,2,Beluga whale,Nome,OCT,2023,U,stomach,Yes,no,No,Yes,no,Yes,Yes,NA,NA
-DL23OME002,Replacement,2,Beluga whale,Nome,OCT,2023,U,stomach,Yes,no,No,Yes,no,no,Yes,"Echiurid, crab",NA
-DL23OME003,Replacement,2,Beluga whale,Nome,OCT,2023,U,stomach,Yes,no,No,Yes,no,Yes,Yes,NA,NA
-DL23SCM001,Replacement,2,Beluga whale,Scammon Bay,OCT,2023,F,stomach,Yes,no,No,Yes,no,Yes,Yes,Echiurid,NA
-EB21GAM031-S,New,3,bearded seal,Gambell,MAY,2021,M,stomach,Yes,no,Yes,No,no,no,no,no,1
-EB22GAM019-S,New,3,bearded seal,Gambell,MAY,2022,F,stomach,Yes,no,No,no,unk,unk,unk,unk,16
-EB23PH005-S,New,3,bearded seal,Point Hope,JUN,2023,F,stomach,Yes,no,No,Yes,unk,unk,unk,unk,9
-EB23PH028-S,New,3,bearded seal,Point Hope,JUN,2023,F,stomach,Yes,no,No,No,unk,unk,unk,unk,7
-EB23SH008-S,New,3,bearded seal,Shishmaref,NOV,2023,F,stomach,Yes,no,No,Yes,unk,unk,unk,unk,0
-EB23SH009-S,New,3,bearded seal,Shishmaref,OCT,2023,M,stomach,Yes,no,No,Yes,unk,unk,unk,unk,0
-EB24GAM020-S,New,3,bearded seal,Gambell,MAY,2024,M,stomach,Yes,no,No,No,unk,unk,unk,unk,NA
-EB24GAM027-S,New,3,bearded seal,Gambell,MAY,2024,M,stomach,Yes,no,No,No,unk,unk,unk,unk,NA
-EB24PH055-S,New,3,bearded seal,Point Hope,JUN,2024,M,stomach,Yes,no,No,No,unk,unk,unk,unk,NA
-EB24PH075-S,New,3,bearded seal,Point Hope,JUN,2024,F,stomach,Yes,no,No,Yes,unk,unk,unk,unk,NA
-PH22SH004-S,New,3,ringed seal,Shishmaref,OCT,2022,F,stomach,Yes,no,No,Yes,no,no,no,no,3
-PH22SH005-S,New,3,ringed seal,Shishmaref,OCT,2022,F,stomach,Yes,no,Yes,No,no,no,no,no,2
-PH22SH015-S,New,3,ringed seal,Shishmaref,OCT,2022,M,stomach,Yes,no,No,Yes,no,no,no,no,15
-PH22SH036-S,New,3,ringed seal,Shishmaref,OCT,2022,M,stomach,Yes,no,No,Yes,no,no,no,no,21
-PH22SH043-S,New,3,ringed seal,Shishmaref,OCT,2022,F,stomach,Yes,no,No,Yes,no,no,no,no,7
-PH23GAM007-S,New,3,ringed seal,Gambell,JUN,2023,F,stomach,Yes,no,Yes,No,no,no,no,no,0
-PH23SH005-S,New,3,ringed seal,Shishmaref,SEP,2023,M,stomach,Yes,no,Yes,No,no,no,no,no,4
-PH23SH013-S,New,3,ringed seal,Shishmaref,OCT,2023,M,stomach,Yes,no,Yes,No,no,no,no,no,0
-PH23SH032-S,New,3,ringed seal,Shishmaref,OCT,2023,M,stomach,Yes,no,No,Yes,no,no,no,no,2
-PH24GAM014-S,New,3,ringed seal,Gambell,JUN,2024,F,stomach,Yes,no,Yes,No,no,no,no,no,NA
-EB21GAM031-F,New,3,bearded seal,Gambell,MAY,2021,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,1
-EB22GAM019-F,New,3,bearded seal,Gambell,MAY,2022,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,16
-EB23PH005-F,New,3,bearded seal,Point Hope,JUN,2023,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,9
-EB23PH028-F,New,3,bearded seal,Point Hope,JUN,2023,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,7
-EB23SH008-F,New,3,bearded seal,Shishmaref,NOV,2023,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,0
-EB23SH009-F,New,3,bearded seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,0
-EB24GAM020-F,New,3,bearded seal,Gambell,MAY,2024,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA
-EB24GAM027-F,New,3,bearded seal,Gambell,MAY,2024,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA
-EB24PH055-F,New,3,bearded seal,Point Hope,JUN,2024,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA
-EB24PH075-F,New,3,bearded seal,Point Hope,JUN,2024,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA
-PH22SH004-F,New,3,ringed seal,Shishmaref,OCT,2022,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,3
-PH22SH005-F,New,3,ringed seal,Shishmaref,OCT,2022,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,2
-PH22SH015-F,New,3,ringed seal,Shishmaref,OCT,2022,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,15
-PH22SH036-F,New,3,ringed seal,Shishmaref,OCT,2022,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,21
-PH22SH043-F,New,3,ringed seal,Shishmaref,OCT,2022,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,7
-PH23GAM007-F,New,3,ringed seal,Gambell,JUN,2023,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,0
-PH23SH005-F,New,3,ringed seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,4
-PH23SH013-F,New,3,ringed seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,0
-PH23SH032-F,New,3,ringed seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,2
-PH24GAM014-F,New,3,ringed seal,Gambell,JUN,2024,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA
-new_beluga1,,,,,,,,stomach,,,,,,,,,
-new_beluga2,,,,,,,,stomach,,,,,,,,,
-fin_whale-foregut1,,,,,,,,stomach,,,,,,,,,
-fin_whale-foregut2,,,,,,,,stomach,,,,,,,,,
-fin_whale-hindgut,,,,,,,,intestine,,,,,,,,,
+Specimen ID,Repeat or New Specimen?,Shipment,Species,Location,Month,Year,Sex,Sample_type,Stomach Goo,Intestinal Goo,,Fish,Cephalopod,Shrimp,Polychaete,Other,Tooth_age,Age_Group,Repro_Status,Length_cm,Date,Stranded_Harvested,Decomposition_Code,Death_to_Harvest_Time
+08BS09,New,1,bearded seal,Barrow,JUL,2008,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk,,,,,,,
+08BS7,Replacement,1,bearded seal,Barrow,JUL,2008,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,4,,,,,,,
+08BS7,New,1,bearded seal,Barrow,JUL,2008,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,4,,,,,,,
+09WWBS10,Replacement,1,bearded seal,Wainwright,JUL,2009,F,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,9,,,,,,,
+09WWBS10,New,1,bearded seal,Wainwright,JUL,2009,F,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,9,,,,,,,
+2014BS18,Replacement,1,bearded seal,Barrow,JUL,2014,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,10,,,,,,,
+2014BS18,New,1,bearded seal,Barrow,JUL,2014,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,10,,,,,,,
+DIO-001-11,New,1,bearded seal,Diomede Island,,2011,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,0,,,,,,,
+EB13GAM020,New,1,bearded seal,Gambell,,2013,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,1,,,,,,,
+EB14GAM025,New,1,bearded seal,Gambell,Spring,2014,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,0,,,,,,,
+SHH-004-14,New,1,bearded seal,Shishmaref,Fall,2014,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,1,,,,,,,
+2012180,New,1,beluga whale,Cook Inlet,OCT,2012,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+2015066,New,1,beluga whale,Cook Inlet,JUN,2015,M,unk,no,yes,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+2018199,New,1,beluga whale,Pilot Station,AUG,2018,M,stomach,yes,no,no,yes,no,no,no,NA,NA,,,,,,,
+2020230,New,1,beluga whale,Cook Inlet,SEP,2020,M,stomach,yes,no,no,lamprey,no,no,no,unknown,NA,,,,,,,
+2021028,New,1,beluga whale,Cook Inlet,MAY,2021,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+2021214,New,1,beluga whale,Cook Inlet,SEP,2021,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+2022161,New,1,beluga whale,Cook Inlet,AUG,2022,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+2022165,New,1,beluga whale,Cook Inlet,AUG,2022,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+2021BDL-0708Sa,New,1,beluga whale,Barrow,JUL,2021,F,stomach,yes,no,no,yes,no,no,yes,isopods,NA,,,,,,,
+2021BDL-0723A,New,1,beluga whale,Barrow,JUL,2021,F,stomach,yes,no,no,yes,yes,yes,yes,NA,NA,,,,,,,
+2021BDL-0723B,Replacement,1,beluga whale,Barrow,JUL,2021,F,stomach,yes,no,no,yes,yes,no,yes,NA,NA,,,,,,,
+2021BDL-0723B,New,1,beluga whale,Barrow,JUL,2021,F,stomach,yes,no,no,yes,yes,no,yes,NA,NA,,,,,,,
+2021BDL-0723C,New,1,beluga whale,Barrow,JUL,2021,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+2022Beluga-0713-SA,New,1,beluga whale,Barrow,JUL,2022,M,stomach,yes,no,no,yes,yes,yes,yes,gastropod,NA,,,,,,,
+2022Beluga-0713-SB,New,1,beluga whale,Barrow,JUL,2022,F,stomach,yes,no,no,yes,yes,,yes,NA,NA,,,,,,,
+2022Beluga-0713-SD,New,1,beluga whale,Barrow,JUL,2022,M,stomach,yes,no,no,yes,yes,yes,yes,echiurid,NA,,,,,,,
+2023Beluga0721SA,Replacement,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,NA,NA,,,,,,,
+2023Beluga0721SA,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,NA,NA,,,,,,,
+2023Beluga0721SB,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+2023Beluga0722SA,Replacement,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,crab,NA,,,,,,,
+2023Beluga0722SA,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,crab,NA,,,,,,,
+2023Beluga0722SB,New,1,beluga whale,Barrow,JUL,2023,F,stomach,yes,no,no,no,yes,no,no,NA,NA,,,,,,,
+2023Beluga0722SD,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,NA,NA,,,,,,,
+2023Beluga0722SE,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,yes,yes,yes,no,NA,NA,,,,,,,
+2023Beluga0722SF,Replacement,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,yes,yes,no,yes,NA,NA,,,,,,,
+2023Beluga0722SF,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,yes,yes,no,yes,NA,NA,,,,,,,
+2023Beluga0726SA,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,NA,NA,,,,,,,
+2023Beluga0726SB,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+2023Beluga0728SA,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,no,yes,NA,NA,,,,,,,
+2023Beluga0728SB,New,1,beluga whale,Barrow,JUL,2023,M,stomach,yes,no,no,no,yes,yes,yes,echiurid,NA,,,,,,,
+DL16HB001,New,1,beluga whale,Hooper Bay,OCT,2016,M,stomach,yes,no,no,yes,no,yes,yes,"echiurid, amphipod, isopod",NA,,,,,,,
+DL16OME004,New,1,beluga whale,Nome,NOV,2016,M,stomach,yes,no,no,yes,no,yes,yes,crab,NA,,,,,,,
+DL18OME005,New,1,beluga whale,Nome,43405,2018,F,stomach,yes,no,no,yes,no,yes,yes,"amphipod, crab, tunicate",NA,,,,,,,
+DL20OME001,New,1,beluga whale,Nome,SEP,2020,M,stomach,yes,no,no,yes,no,yes,yes,"echiurid, amphipod, gastropod, bivalve",NA,,,,,,,
+DL20OME002,New,1,beluga whale,Nome,SEP,2020,M,stomach,yes,no,no,yes,no,yes,no,"amphipod, crustacean",NA,,,,,,,
+DL20OME003,New,1,beluga whale,Nome,NOV,2020,F,stomach,yes,no,no,yes,no,yes,yes,"echurid, tunicate",NA,,,,,,,
+DL21OTZ007,New,1,beluga whale,Kotzebue,SEP,2021,F,stomach,yes,no,no,yes,yes,yes,yes,"echiurid, amphipod, isopod, crab, mysid",NA,,,,,,,
+DL22OME001,New,1,beluga whale,Nome,OCT,2022,U,stomach,yes,no,no,yes,no,yes,no,echiurid,NA,,,,,,,
+DL22OME002,New,1,beluga whale,Nome,NOV,2022,F,stomach,yes,no,no,yes,no,yes,yes,"echurid, crab",NA,,,,,,,
+DL22OME003,New,1,beluga whale,Nome,DEC,2022,U,stomach,yes,no,no,yes,no,yes,no,echiurid,NA,,,,,,,
+DL22OME004,New,1,beluga whale,Nome,JAN,2022,U,stomach,yes,no,no,yes,no,yes,yes,"bivalve, tunicate",NA,,,,,,,
+DL22OME005,New,1,beluga whale,Nome,FEB,2022,U,stomach,yes,no,no,yes,no,yes,no,"echiurid, amphipod, bivalve, tunicate",NA,,,,,,,
+DL22OTZ004,New,1,beluga whale,Kotzebue,JUN,2022,F,stomach,yes,no,no,yes,no,no,yes,"echiurid, isopod",NA,,,,,,,
+DL22SCM001,New,1,beluga whale,Scammon Bay,OCT,2022,F,stomach,yes,no,no,yes,no,yes,no," echiurid, amphipod",NA,,,,,,,
+LDL-16-17,New,1,beluga whale,Point Lay,JUN,2017,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+LDL-21-17,New,1,beluga whale,Point Lay,JUN,2017,F,stomach,yes,no,no,yes,yes,no,no,NA,NA,,,,,,,
+LDL-23-17,New,1,beluga whale,Point Lay,JUN,2017,M,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+LDL-24-17,New,1,beluga whale,Point Lay,JUN,2017,F,stomach,yes,no,no,no,yes,no,no,"bivalve, gastropod, crustacean",NA,,,,,,,
+LDL-32-17,New,1,beluga whale,Point Lay,JUN,2017,M,stomach,yes,no,no,no,no,no,yes,"tunicate, crab",NA,,,,,,,
+LDL-UNK-A-17,New,1,beluga whale,Point Lay,JUN,2017,U,stomach,yes,no,yes,unk,unk,unk,unk,unk,NA,,,,,,,
+2010RSW-05,Replacement,1,ringed seal,Barrow,FEB,2010,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk,,,,,,,
+2010RSW-05,New,1,ringed seal,Barrow,FEB,2010,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk,,,,,,,
+2013RS31,New,1,ringed seal,Barrow,DEC,2013,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk,,,,,,,
+2014-02-RS,Replacement,1,ringed seal,Barrow,APR,2014,F,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,10,,,,,,,
+2014-02-RS,New,1,ringed seal,Barrow,APR,2014,F,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,10,,,,,,,
+N24-2013,New,1,ringed seal,Nome,,2012,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,18,,,,,,,
+PH14GAM020,New,1,ringed seal,Gambell,MAY,2014,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk,,,,,,,
+PH14GAM026,New,1,ringed seal,Gambell,JUN,2014,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,0,,,,,,,
+PH14GAM027,New,1,ringed seal,Gambell,JUN,2014,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk,,,,,,,
+PH14GAM029,New,1,ringed seal,Gambell,MAY,2014,U,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,unk,,,,,,,
+PH15GAM051,New,1,ringed seal,Gambell,NOV,2015,M,intestine,Yes,Yes,No,NA,NA,NA,NA,NA,0,,,,,,,
+DIO-001-14,New,1,spotted seal,Diomede Island,OCT,2014,U,,Yes,Yes,No,NA,NA,NA,NA,NA,0,,,,,,,
+PL12GAM049,New,1,spotted seal,Gambell,,2012,U,,Yes,Yes,No,NA,NA,NA,NA,NA,unk,,,,,,,
+2014122,New,2,Beluga whale,Cook Inlet,AUG,2014,M,stomach,Yes,no,No,Yes,no,no,no,Sea Lice,NA,,,,,,,
+2017198,New,2,Beluga whale,Cook Inlet,SEP,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2017206,New,2,Beluga whale,Cook Inlet,SEP,2017,F,stomach,Yes,no,No,Yes,no,Yes,no,Sea Lice,NA,,,,,,,
+2017215,New,2,Beluga whale,Cook Inlet,OCT,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2017217,New,2,Beluga whale,Cook Inlet,OCT,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2017221,New,2,Beluga whale,Cook Inlet,OCT,2017,F,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2017222,New,2,Beluga whale,Cook Inlet,OCT,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2017228,New,2,Beluga whale,Cook Inlet,,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2017230,New,2,Beluga whale,Cook Inlet,OCT,2017,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2018278,New,2,Beluga whale,Cook Inlet,OCT,2018,M,stomach,Yes,no,No,no,no,no,no,Terrestrial Plant,NA,,,,,,,
+2020230,Replacement,2,Beluga whale,Cook Inlet,SEP,2020,M,stomach,Yes,no,No,Lamprey,no,no,no,Unknown,NA,,,,,,,
+2021028,Replacement,2,Beluga whale,Cook Inlet,MAY,2021,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2021214,Replacement,2,Beluga whale,Cook Inlet,SEP,2021,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2022161,Replacement,2,Beluga whale,Cook Inlet,AUG,2022,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2022165,Replacement,2,Beluga whale,Cook Inlet,AUG,2022,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2023157,Replacement,2,Beluga whale,Cook Inlet,JUL,2023,M,stomach,Yes,no,No,Yes,no,no,no,NA,NA,,,,,,,
+2023279,Replacement,2,Beluga whale,Cook Inlet,SEP,2023,F,stomach,Yes,no,No,Yes,no,no,Yes,NA,NA,,,,,,,
+2023281,Replacement,2,Beluga whale,Cook Inlet,OCT,2023,F,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2023295,Replacement,2,Beluga whale,Cook Inlet,OCT,2023,F,stomach,Yes,no,No,no,no,no,Yes,NA,NA,,,,,,,
+2023296,Replacement,2,Beluga whale,Cook Inlet,OCT,2023,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2023296,New,2,Beluga whale,Cook Inlet,OCT,2023,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2021BDL-0708Sa,Replacement,2,Beluga whale,Utqia?vik,JUL,2021,F,stomach,Yes,no,No,Yes,no,no,Yes,Isopods,NA,,,,,,,
+2021BDL-0723A,Replacement,2,Beluga whale,Utqia?vik,JUL,2021,F,stomach,Yes,no,No,Yes,Yes,Yes,Yes,NA,NA,,,,,,,
+2021BDL-0723C,Replacement,2,Beluga whale,Utqia?vik,JUL,2021,M,stomach,Yes,no,Yes,no,no,no,no,NA,NA,,,,,,,
+2022Beluga-0713-SD,Replacement,2,Beluga whale,Utqia?vik,JUL,2022,M,stomach,Yes,no,No,Yes,Yes,Yes,Yes,Echiurid,NA,,,,,,,
+DL17HB001,New,2,Beluga whale,Hooper Bay,OCT,2017,U,stomach,Yes,no,No,Yes,no,Yes,Yes,"Bivalves, Sea Lice, Mysids, Isopods, Caprellids, Amphipods, Echiurids",NA,,,,,,,
+DL17OME001,New,2,Beluga whale,Nome,OCT,2017,M,stomach,Yes,no,No,Yes,no,Yes,Yes,"Gastropods, Sea Lice, Amphipods, Crab, Echiurids",NA,,,,,,,
+DL18OME001,New,2,Beluga whale,Nome,OCT,2018,M,stomach,Yes,no,No,Yes,no,Yes,Yes,"Clams, Sea Lice, Crab",NA,,,,,,,
+DL18OME002,New,2,Beluga whale,Nome,OCT,2018,M,stomach,Yes,no,No,Yes,no,Yes,Yes,"Clams, Sea Lice",NA,,,,,,,
+DL18OME003,New,2,Beluga whale,Nome,OCT,2018,M,stomach,Yes,no,No,Yes,no,Yes,Yes,"Copepod, Amphipods, Crab, Echiurids",NA,,,,,,,
+DL18OME004,New,2,Beluga whale,Nome,OCT,2018,F,stomach,Yes,no,No,Yes,no,Yes,Yes,"Crab, Echiurids, Hydrozoan",NA,,,,,,,
+DL20OME001,Replacement,2,Beluga whale,Nome,SEP,2020,M,stomach,Yes,no,No,Yes,no,Yes,Yes,"Echiurid, amphipod, gastropod, bivalve",NA,,,,,,,
+DL20OME002,Replacement,2,Beluga whale,Nome,SEP,2020,M,stomach,Yes,no,No,Yes,no,Yes,no,"Amphipod, crustacean",NA,,,,,,,
+DL20OME003,Replacement,2,Beluga whale,Nome,NOV,2020,F,stomach,Yes,no,No,Yes,no,Yes,Yes,"Echurid, tunicate",NA,,,,,,,
+DL21OTZ007,Replacement,2,Beluga whale,Kotzebue,SEP,2021,F,stomach,Yes,no,No,Yes,Yes,Yes,Yes,"Echiurid, amphipod, isopod, crab, mysid",NA,,,,,,,
+DL22OME001,Replacement,2,Beluga whale,Nome,OCT,2022,U,stomach,Yes,no,No,Yes,no,Yes,no,Echiurid,NA,,,,,,,
+DL22OME002,Replacement,2,Beluga whale,Nome,NOV,2022,F,stomach,Yes,no,No,Yes,no,Yes,Yes,"Echurid, crab",NA,,,,,,,
+DL22OME003,Replacement,2,Beluga whale,Nome,DEC,2022,U,stomach,Yes,no,No,Yes,no,Yes,no,Echiurid,NA,,,,,,,
+DL22OME004,Replacement,2,Beluga whale,Nome,JAN,2022,U,stomach,Yes,no,No,Yes,no,Yes,Yes,"Bivalve, tunicate",NA,,,,,,,
+DL22OME005,Replacement,2,Beluga whale,Nome,FEB,2022,U,stomach,Yes,no,No,Yes,no,Yes,no,"Echiurid, amphipod, bivalve, tunicate",NA,,,,,,,
+DL22OTZ004,Replacement,2,Beluga whale,Kotzebue,JUN,2022,F,stomach,Yes,no,No,Yes,no,no,Yes,"Echiurid, isopod",NA,,,,,,,
+DL22SCM001,Replacement,2,Beluga whale,Scammon Bay,OCT,2022,F,stomach,Yes,no,No,Yes,no,Yes,no,"Echiurid, amphipod",NA,,,,,,,
+DL23OME001,Replacement,2,Beluga whale,Nome,OCT,2023,U,stomach,Yes,no,No,Yes,no,Yes,Yes,NA,NA,,,,,,,
+DL23OME002,Replacement,2,Beluga whale,Nome,OCT,2023,U,stomach,Yes,no,No,Yes,no,no,Yes,"Echiurid, crab",NA,,,,,,,
+DL23OME003,Replacement,2,Beluga whale,Nome,OCT,2023,U,stomach,Yes,no,No,Yes,no,Yes,Yes,NA,NA,,,,,,,
+DL23SCM001,Replacement,2,Beluga whale,Scammon Bay,OCT,2023,F,stomach,Yes,no,No,Yes,no,Yes,Yes,Echiurid,NA,,,,,,,
+EB21GAM031-S,New,3,bearded seal,Gambell,MAY,2021,M,stomach,Yes,no,Yes,No,no,no,no,no,1,,,,,,,
+EB22GAM019-S,New,3,bearded seal,Gambell,MAY,2022,F,stomach,Yes,no,No,no,unk,unk,unk,unk,16,,,,,,,
+EB23PH005-S,New,3,bearded seal,Point Hope,JUN,2023,F,stomach,Yes,no,No,Yes,unk,unk,unk,unk,9,,,,,,,
+EB23PH028-S,New,3,bearded seal,Point Hope,JUN,2023,F,stomach,Yes,no,No,No,unk,unk,unk,unk,7,,,,,,,
+EB23SH008-S,New,3,bearded seal,Shishmaref,NOV,2023,F,stomach,Yes,no,No,Yes,unk,unk,unk,unk,0,,,,,,,
+EB23SH009-S,New,3,bearded seal,Shishmaref,OCT,2023,M,stomach,Yes,no,No,Yes,unk,unk,unk,unk,0,,,,,,,
+EB24GAM020-S,New,3,bearded seal,Gambell,MAY,2024,M,stomach,Yes,no,No,No,unk,unk,unk,unk,NA,,,,,,,
+EB24GAM027-S,New,3,bearded seal,Gambell,MAY,2024,M,stomach,Yes,no,No,No,unk,unk,unk,unk,NA,,,,,,,
+EB24PH055-S,New,3,bearded seal,Point Hope,JUN,2024,M,stomach,Yes,no,No,No,unk,unk,unk,unk,NA,,,,,,,
+EB24PH075-S,New,3,bearded seal,Point Hope,JUN,2024,F,stomach,Yes,no,No,Yes,unk,unk,unk,unk,NA,,,,,,,
+PH22SH004-S,New,3,ringed seal,Shishmaref,OCT,2022,F,stomach,Yes,no,No,Yes,no,no,no,no,3,,,,,,,
+PH22SH005-S,New,3,ringed seal,Shishmaref,OCT,2022,F,stomach,Yes,no,Yes,No,no,no,no,no,2,,,,,,,
+PH22SH015-S,New,3,ringed seal,Shishmaref,OCT,2022,M,stomach,Yes,no,No,Yes,no,no,no,no,15,,,,,,,
+PH22SH036-S,New,3,ringed seal,Shishmaref,OCT,2022,M,stomach,Yes,no,No,Yes,no,no,no,no,21,,,,,,,
+PH22SH043-S,New,3,ringed seal,Shishmaref,OCT,2022,F,stomach,Yes,no,No,Yes,no,no,no,no,7,,,,,,,
+PH23GAM007-S,New,3,ringed seal,Gambell,JUN,2023,F,stomach,Yes,no,Yes,No,no,no,no,no,0,,,,,,,
+PH23SH005-S,New,3,ringed seal,Shishmaref,SEP,2023,M,stomach,Yes,no,Yes,No,no,no,no,no,4,,,,,,,
+PH23SH013-S,New,3,ringed seal,Shishmaref,OCT,2023,M,stomach,Yes,no,Yes,No,no,no,no,no,0,,,,,,,
+PH23SH032-S,New,3,ringed seal,Shishmaref,OCT,2023,M,stomach,Yes,no,No,Yes,no,no,no,no,2,,,,,,,
+PH24GAM014-S,New,3,ringed seal,Gambell,JUN,2024,F,stomach,Yes,no,Yes,No,no,no,no,no,NA,,,,,,,
+EB21GAM031-F,New,3,bearded seal,Gambell,MAY,2021,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,1,,,,,,,
+EB22GAM019-F,New,3,bearded seal,Gambell,MAY,2022,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,16,,,,,,,
+EB23PH005-F,New,3,bearded seal,Point Hope,JUN,2023,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,9,,,,,,,
+EB23PH028-F,New,3,bearded seal,Point Hope,JUN,2023,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,7,,,,,,,
+EB23SH008-F,New,3,bearded seal,Shishmaref,NOV,2023,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,0,,,,,,,
+EB23SH009-F,New,3,bearded seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,0,,,,,,,
+EB24GAM020-F,New,3,bearded seal,Gambell,MAY,2024,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+EB24GAM027-F,New,3,bearded seal,Gambell,MAY,2024,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+EB24PH055-F,New,3,bearded seal,Point Hope,JUN,2024,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+EB24PH075-F,New,3,bearded seal,Point Hope,JUN,2024,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+PH22SH004-F,New,3,ringed seal,Shishmaref,OCT,2022,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,3,,,,,,,
+PH22SH005-F,New,3,ringed seal,Shishmaref,OCT,2022,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,2,,,,,,,
+PH22SH015-F,New,3,ringed seal,Shishmaref,OCT,2022,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,15,,,,,,,
+PH22SH036-F,New,3,ringed seal,Shishmaref,OCT,2022,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,21,,,,,,,
+PH22SH043-F,New,3,ringed seal,Shishmaref,OCT,2022,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,7,,,,,,,
+PH23GAM007-F,New,3,ringed seal,Gambell,JUN,2023,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,0,,,,,,,
+PH23SH005-F,New,3,ringed seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,4,,,,,,,
+PH23SH013-F,New,3,ringed seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,0,,,,,,,
+PH23SH032-F,New,3,ringed seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,2,,,,,,,
+PH24GAM014-F,New,3,ringed seal,Gambell,JUN,2024,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+2025011A,New,4,,,,,,stomach,,,,,,,,,,,,,,,,
+2025011B,New,4,,,,,,stomach,,,,,,,,,,,,,,,,
+finwhale.fat,New,4,,,,,,stomach,,,,,,,,,,,,,,,,
+finwhale,New,4,,,,,,stomach,,,,,,,,,,,,,,,,
+EB10PH008,New,5,Bearded seal,Point Hope,JUN,2010,M,Feces,No,Yes,,Yes,No,Yes,No,"Clams, Crabs, Echiurids",7,Non-pup,NA,216,16-Jun-10,Harvested,Fresh dead,Unknown
+EB10PH021,New,5,Bearded seal,Point Hope,JUN,2010,F,Feces,No,Yes,,Yes,No,Yes,No,"Clams, Crabs, Amphipods",15,Non-pup,Multiparous,230.5,17-Jun-10,Harvested,Fresh dead,Unknown
+EB10PH036,New,5,Bearded seal,Point Hope,JUN,2010,F,Feces,No,Yes,,Yes,No,Yes,No,Clams,0,Pup,Nulliparous,148,22-Jun-10,Harvested,Fresh dead,Unknown
+EB11PH022,New,5,Bearded seal,Point Hope,JUN,2011,F,Feces,No,Yes,,Yes,Yes,Yes,No,"Sponges, Crabs",2,Non-pup,Nulliparous,232.4,16-Jun-11,Harvested,Fresh dead,Unknown
+EB11PH042,New,5,Bearded seal,Point Hope,JUN,2011,M,Feces,No,Yes,,Yes,No,Yes,No,"Crabs, Echiurids",0,Pup,NA,143,20-Jun-11,Harvested,Fresh dead,Unknown
+EB12PH019,New,5,Bearded seal,Point Hope,JUN,2012,M,Feces,No,Yes,,Yes,No,Yes,Yes,"Clams, Crabs, Echiurids",10,Non-pup,NA,224,23-Jun-12,Harvested,Fresh dead,Unknown
+EB12PH023,New,5,Bearded seal,Point Hope,JUN,2012,F,Feces,No,Yes,,Yes,No,Yes,Yes,"Gastropod, Clams",0,Pup,Nulliparous,143,24-Jun-12,Harvested,Fresh dead,Unknown
+EB12SH034,New,5,Bearded seal,Shishmaref,SEP,2012,M,Feces,No,Yes,,Yes,No,Yes,No,"Gastropod, Clams, Crabs, Amphipods, Echiurids",1,Non-pup,NA,190.5,29-Sep-12,Harvested,Fresh dead,Unknown
+EB21GAM025,New,5,Bearded seal,Gambell,OCT,2021,M,Feces,No,Yes,,Yes,No,No,No,Crabs,0,Pup,NA,175.26,24-Oct-21,Harvested,Fresh dead,Unknown
+EB21GAM028,New,5,Bearded seal,Gambell,NOV,2021,F,Feces,No,Yes,,Yes,No,No,No,NA,0,Pup,Nulliparous,149,19-Nov-21,Harvested,Fresh dead,Unknown
+EB22GAM003,New,5,Bearded seal,Gambell,MAY,2022,F,Feces,No,Yes,,No,No,No,No,"Crabs, Tunicates",0,Pup,Undetermined,138,23-May-22,Harvested,Fresh dead,Unknown
+EB22GAM010,New,5,Bearded seal,Gambell,MAY,2022,M,Feces,No,Yes,,No,No,Yes,No,"Crabs, Amphipods",0,Pup,NA,139,23-May-22,Harvested,Fresh dead,Unknown
+EB22GAM023,New,5,Bearded seal,Gambell,NOV,2022,F,Feces,No,Yes,,Yes,No,Yes,Yes,Crabs,0,Pup,Unknown,182,3-Nov-22,Harvested,Fresh dead,Unknown
+EB22GAM026,New,5,Bearded seal,Gambell,NOV,2022,M,Feces,No,Yes,,Yes,No,No,No,Crabs,0,Pup,NA,212,19-Nov-22,Harvested,Fresh dead,Unknown
+EB22GAM027,New,5,Bearded seal,Gambell,MAY,2022,M,Feces,No,Yes,,No,No,No,No,Crabs,10,Non-pup,NA,305,12-May-22,Harvested,Fresh dead,Unknown
+EB22SH001,New,5,Bearded seal,Shishmaref,OCT,2022,F,Feces,No,Yes,,Yes,No,No,No,Echiruids,0,Pup,Nulliparous,161,13-Oct-22,Harvested,Fresh dead,Unknown
+EB22SH004,New,5,Bearded seal,Shishmaref,OCT,2022,M,Feces,No,Yes,,No,No,No,No,NA,0,Pup,NA,164,23-Oct-22,Harvested,Fresh dead,Unknown
+EB23GAM001,New,5,Bearded seal,Gambell,MAY,2023,M,Feces,No,Yes,,No,No,No,No,NA,1,Non-pup,NA,145,20-May-23,Harvested,Fresh dead,Unknown
+EB23GAM013,New,5,Bearded seal,Gambell,SEP,2023,M,Feces,No,Yes,,Yes,No,Yes,No,NA,0,Pup,NA,163,6-Sep-23,Harvested,Fresh dead,Unknown
+EB23SH001,New,5,Bearded seal,Shishmaref,OCT,2023,M,Feces,No,Yes,,Yes,No,No,No,NA,0,Pup,NA,169,8-Oct-23,Harvested,Fresh dead,Unknown
+EB23SH004,New,5,Bearded seal,Shishmaref,SEP,2023,F,Feces,No,Yes,,Yes,No,Yes,No,NA,0,Pup,Nulliparous,169,29-Sep-23,Harvested,Fresh dead,Unknown
+EB24GAM022,New,5,Bearded seal,Gambell,MAY,2024,F,Feces,No,Yes,,No,No,No,No,Crabs,19,Non-pup,Unknown,245,17-May-24,Harvested,Fresh dead,Unknown
+EB24GAM025,New,5,Bearded seal,Gambell,MAY,2024,F,Feces,No,Yes,,No,No,Yes,No,"Crabs, Echiurids",12,Non-pup,Unknown,229,17-May-24,Harvested,Fresh dead,Unknown
+EB24GAM028,New,5,Bearded seal,Gambell,MAY,2024,M,Feces,No,Yes,,No,No,No,No,"Gastropod, Clams, Crabs, Amphipods",0,Pup,NA,147.32,27-May-24,Harvested,Fresh dead,Unknown
+EB24GAM034,New,5,Bearded seal,Gambell,OCT,2024,F,Feces,No,Yes,,Yes,No,No,No,NA,0,Pup,Nulliparous,155,30-Oct-24,Harvested,Fresh dead,Unknown
+EB24GAM039,New,5,Bearded seal,Gambell,NOV,2024,M,Feces,No,Yes,,Yes,No,Yes,No,NA,0,Pup,NA,165,26-Nov-24,Harvested,Fresh dead,Unknown
+EB24GAM043,New,5,Bearded seal,Gambell,MAY,2024,M,Feces,No,Yes,,No,No,No,No,Crabs,1,Non-pup,NA,142.24,27-May-24,Harvested,Fresh dead,Unknown
+EB24GAM044,New,5,Bearded seal,Gambell,MAY,2024,M,Feces,No,Yes,,No,No,Yes,No,"Gastropod, Crabs, Echiurids",9,Non-pup,NA,180.34,22-May-24,Harvested,Fresh dead,Unknown
+EB24GAM046,New,5,Bearded seal,Gambell,NOV,2024,M,Feces,No,Yes,,Yes,No,Yes,No,"Crabs, Amphipods",0,Pup,NA,99,30-Nov-24,Harvested,Fresh dead,Unknown
+EB25GAM010,New,5,Bearded seal,Gambell,MAY,2025,M,Feces,No,Yes,,No,No,No,No,"Gastropods, Crabs, Echiurids",20,Non-pup,NA,216,15-May-25,Harvested,Fresh dead,Unknown
+EB25GAM024,New,5,Bearded seal,Gambell,NOV,2025,M,Feces,No,Yes,,Yes,No,Yes,No,Isopods,CA 1+/jaw,Pending,NA,185,4-Nov-25,Harvested,Fresh dead,Unknown
+EB25SH001,New,5,Bearded seal,Shishmaref,SEP,2025,M,Feces,No,Yes,,,,,,,CA 3+/jaw,Pending,NA,158,13-Sep-25,Harvested,Fresh dead,Unknown
+EB25SH009,New,5,Bearded seal,Shishmaref,SEP,2025,F,Feces,No,Yes,,,,,,,CA 0+/jaw,Pending,Unknown,153,17-Sep-25,Harvested,Fresh dead,Unknown
+PH10HB027,New,5,Ringed seal,Hooper Bay,NOV,2010,F,Feces,No,Yes,,No,No,No,No,NA,0,Pup,Nulliparous,88,7-Nov-10,Harvested,Fresh dead,Unknown
+PH10PH001,New,5,Ringed seal,Point Hope,JUN,2010,M,Feces,No,Yes,,Yes,No,Yes,No,Mysids,0,Pup,NA,84,16-Jun-10,Harvested,Fresh dead,Unknown
+PH10PH002,New,5,Ringed seal,Point Hope,JUN,2010,F,Feces,No,Yes,,Yes,No,Yes,No,NA,0,Pup,Nulliparous,82,,Harvested,Fresh dead,Unknown
+PH12DIO005,New,5,Ringed seal,Diomede Island,MAY,2012,F,Feces,No,Yes,,Yes,No,No,No,NA,21,Non-pup,Multiparous,137.16,25-May-12,Harvested,Fresh dead,Unknown
+PH12HB011,New,5,Ringed seal,Hooper Bay,MAY,2012,M,Feces,No,Yes,,Yes,No,No,No,"Amphipods, Mysids",3,Non-pup,NA,101,17-May-12,Harvested,Fresh dead,Unknown
+PH12PH004,New,5,Ringed seal,Point Hope,JUN,2012,M,Feces,No,Yes,,Yes,No,Yes,No,NA,1,Non-pup,NA,94,21-Jun-12,Harvested,Fresh dead,Unknown
+PH12PH005,New,5,Ringed seal,Point Hope,JUN,2012,M,Feces,No,Yes,,No,No,No,No,Mysids,1,Non-pup,NA,78,21-Jun-12,Harvested,Fresh dead,Unknown
+PH14KOTZ001,New,5,Ringed seal,Kotzebue,JUN,2014,M,Feces,No,Yes,,Yes,No,Yes,No,"Amphipods, Echiruids",14,Non-pup,NA,120,19-Jun-14,Harvested,Fresh dead,Unknown
+PH21GAM022,New,5,Ringed seal,Gambell,JUN,2021,M,Feces,No,Yes,,Yes,No,No,No,NA,14,Non-pup,NA,121.92,15-Jun-21,Harvested,Fresh dead,Unknown
+PH22GAM001,New,5,Ringed seal,Gambell,APR,2022,F,Feces,No,Yes,,Yes,No,Yes,No,"Crabs, Amphipods",5,Non-pup,Primaparous,134,18-Apr-22,Harvested,Fresh dead,Unknown
+PH22GAM004,New,5,Ringed seal,Gambell,MAY,2022,F,Feces,No,Yes,,No,No,No,No,NA,0,Pup,Nulliparous,72,23-May-22,Harvested,Fresh dead,Unknown
+PH22GAM012,New,5,Ringed seal,Gambell,MAY,2022,F,Feces,No,Yes,,No,No,Yes,No,Amphipods,0,Pup,Nulliparous,92,12-May-22,Harvested,Fresh dead,Unknown
+PH22GAM022,New,5,Ringed seal,Gambell,MAR,2022,M,Feces,No,Yes,,No,No,No,No,NA,0,Pup,NA,32,6-Mar-22,Harvested,Fresh dead,Unknown
+PH22PH002,New,5,Ringed seal,Point Hope,JUN,2022,F,Feces,No,Yes,,Yes,No,No,No,NA,3,Non-pup,Nulliparous,113,16-Jun-22,Harvested,Fresh dead,Unknown
+PH22PH003,New,5,Ringed seal,Point Hope,JUN,2022,F,Feces,No,Yes,,Yes,No,No,No,NA,14,Non-pup,Primaparous,107,18-Jun-22,Harvested,Fresh dead,Unknown
+PH23GAM002,New,5,Ringed seal,Gambell,MAY,2023,M,Feces,No,Yes,,No,No,No,No,Isopods,0,Pup,NA,96,27-May-23,Harvested,Fresh dead,Unknown
+PH23GAM003,New,5,Ringed seal,Gambell,MAY,2023,M,Feces,No,Yes,,No,No,Yes,No,Amphipods,0,Pup,NA,70,4-May-23,Harvested,Fresh dead,Unknown
+PH23GAM009,New,5,Ringed seal,Gambell,JUN,2023,M,Feces,No,Yes,,Yes,No,No,No,NA,16,Non-pup,NA,89,16-Jun-23,Harvested,Fresh dead,Unknown
+PH23GAM017,New,5,Ringed seal,Gambell,JUN,2023,M,Feces,No,Yes,,Yes,No,No,No,NA,13,Non-pup,NA,172.72,15-Jun-23,Harvested,Fresh dead,Unknown
+PH24GAM001,New,5,Ringed seal,Gambell,APR,2024,M,Feces,No,Yes,,No,No,No,No,NA,0,Pup,NA,109,25-Apr-24,Harvested,Fresh dead,Unknown
+PH24GAM008,New,5,Ringed seal,Gambell,JUN,2024,M,Feces,No,Yes,,No,No,No,No,NA,0,Pup,NA,66,23-Jun-24,Harvested,Fresh dead,Unknown
+PH24GAM016,New,5,Ringed seal,Gambell,JUN,2024,F,Feces,No,Yes,,No,No,Yes,No,Amphipods,0,Pup,Unknown,77,24-Jun-24,Harvested,Fresh dead,Unknown
+PH24GAM017,New,5,Ringed seal,Gambell,JUL,2024,F,Feces,No,Yes,,No,No,No,No,NA,0,Pup,Unknown,82,11-Jul-24,Harvested,Fresh dead,Unknown
+PH24GAM025,New,5,Ringed seal,Gambell,JUN,2024,M,Feces,No,Yes,,No,No,No,No,Mysids,0,Pup,NA,81,18-Jun-24,Harvested,Fresh dead,Unknown
+PH24GAM028,New,5,Ringed seal,Gambell,JUN,2024,F,Feces,No,Yes,,No,No,No,No,NA,0,Pup,Nulliparous,81,20-Jun-24,Harvested,Fresh dead,Unknown
+PH24GAM031,New,5,Ringed seal,Gambell,MAY,2024,F,Feces,No,Yes,,Yes,No,No,No,NA,0,Pup,Unknown,66.04,15-May-24,Harvested,Fresh dead,Unknown
+PH25GAM009,New,5,Ringed seal,Gambell,JUN,2025,M,Feces,No,Yes,,No,No,No,No,NA,0,Pup,NA,77,13-Jun-25,Harvested,Fresh dead,Unknown
+UAM:Fish:3876,New,6,Eleginus gracilis,UAM,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+UAM:Fish:3895,New,6,Myoxocephalus scorpius,UAM,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+UAM:Fish:4061,New,6,Glyptocephalus zachirus,UAM,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+UAM:Fish:4081,New,6,Clupea pallasii,UAM,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+UAM:Fish:10013,New,6,Ammodytes hexapterus,UAM,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+UAM:Fish:10304,New,6,Limanda proboscidea,UAM,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+UAM:Fish:10308,New,6,Osmerus mordax,UAM,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,,
+BDL-0904-S,New,6,Beluga whale,Utqia?vik,Sep,2020,F,Adult,Yes,No,Yes,No,No,No,No,,,,,,,,,
+2021136,New,6,Beluga whale,Cook Inlet,Jul,2021,F,Subadult,Yes,No,Yes,No,No,No,No,,,,,,,,,
+2021265,New,6,Beluga whale,Cook Inlet,Sep,2021,F,Adult,Yes,No,Yes,No,No,No,No,,,,,,,,,
+2021283,New,6,Beluga whale,Cook Inlet,Nov,2021,F,Unknown,Yes,No,Unknown,No,No,No,No,,,,,,,,,
+2024Beluga0719S1-C1,New,6,Beluga whale,Utqia?vik,Jul,2024,U,Adult,Yes,No,No,Yes,Yes,Yes,Yes,,,,,,,,,
+2024Beluga0719S1-C2,New,6,Beluga whale,Utqia?vik,Jul,2024,U,Adult,Yes,No,No,Yes,Yes,Yes,Yes,,,,,,,,,
+2024Beluga0719S1-C4,New,6,Beluga whale,Utqia?vik,Jul,2024,U,Adult,Yes,No,No,Yes,Yes,Yes,Yes,,,,,,,,,
+2024Beluga0719S2-C1,New,6,Beluga whale,Utqia?vik,Jul,2024,U,Adult,Yes,No,No,No,Yes,Yes,Yes,Echiurid,,,,,,,,
+2024Beluga0719S2-C2,New,6,Beluga whale,Utqia?vik,Jul,2024,U,Adult,Yes,No,No,No,Yes,Yes,Yes,Echiurid,,,,,,,,
+2024Beluga0719S3,New,6,Beluga whale,Utqia?vik,Jul,2024,M,Adult,Yes,No,No,No,No,No,Yes,,,,,,,,,
+LDL-4-24,New,6,Beluga whale,Point Lay,Jun,2024,F,Unknown,Yes,No,No,No,No,No,Yes,Echiurid,,,,,,,,
+LDL-5-24,New,6,Beluga whale,Point Lay,Jun,2024,M,Unknown,Yes,No,No,No,No,No,Yes,Echiurid,,,,,,,,
+LDL-6-24,New,6,Beluga whale,Point Lay,Jun,2024,F,Unknown,Yes,No,No,Yes,No,No,No,Echiurid,,,,,,,,
+LDL-7-24,New,6,Beluga whale,Point Lay,Jun,2024,M,Unknown,Yes,No,No,No,No,No,Yes,Echiurid,,,,,,,,
+LDL-8-24,New,6,Beluga whale,Point Lay,Jun,2024,M,Unknown,Yes,No,No,Yes,No,No,Yes,Echiurid,,,,,,,,
+LDL-9-24,New,6,Beluga whale,Point Lay,Jun,2024,M,Unknown,Yes,No,No,Yes,No,No,Yes,Echiurid,,,,,,,,
+LDL-37-24,New,6,Beluga whale,Point Lay,Unk,2024,U,Unknown,Yes,No,No,No,No,No,Yes,Echiurid,,,,,,,,
+2024102,New,6,Beluga whale,Cook Inlet,Jul,2024,M,Adult,Yes,No,No,No,No,No,Yes,,,,,,,,,
+2025Beluga0718Sa,New,6,Beluga whale,Utqia?vik,Jul,2025,M,Adult,Yes,No,No,Yes,Yes,No,Yes,,,,,,,,,
+2025Beluga0718Sb,New,6,Beluga whale,Utqia?vik,Jul,2025,M,Adult,Yes,No,No,Yes,Yes,No,Yes,,,,,,,,,
+2025Beluga0718Sc,New,6,Beluga whale,Utqia?vik,Jul,2025,M,Adult,Yes,No,No,Yes,Yes,Yes,Yes,,,,,,,,,
+2025Beluga0724SA,New,6,Beluga whale,Utqia?vik,Jul,2025,M,Adult,Yes,No,No,No,Yes,No,Yes,"Gastropod, Tunicate, Echiurid",,,,,,,,
+2025Beluga0724SB,New,6,Beluga whale,Utqia?vik,Jul,2025,F,Unknown,Yes,No,No,Yes,Yes,No,Yes,,,,,,,,,
+LDL-2-25,New,6,Beluga whale,Point Lay,Jul,2025,M,Unknown,Yes,No,No,Yes,No,Yes,Yes,Echiurid,,,,,,,,
+LDL-6-25,New,6,Beluga whale,Point Lay,Jul,2025,F,Unknown,Yes,No,No,No,No,Yes,Yes,"Tunicate, Echiurid",,,,,,,,
+LDL-8-25,New,6,Beluga whale,Point Lay,Jul,2025,M,Unknown,Yes,No,No,No,No,Yes,Yes,"Gastropod, Tunicate, Echiurid",,,,,,,,
+LDL-16-25,New,6,Beluga whale,Point Lay,Jul,2025,M,Unknown,Yes,No,No,No,No,Yes,Yes,,,,,,,,,
+LDL-22-25,New,6,Beluga whale,Point Lay,Jul,2025,F,Unknown,Yes,No,No,No,No,Yes,No,Tunicate,,,,,,,,
+LDL-XX-25,New,6,Beluga whale,Point Lay,Jul,2025,U,Unknown,Yes,No,No,No,No,No,Yes,"Gastropod, Tunicate, Echiurid",,,,,,,,
+DL25DLG001,New,6,Beluga whale,Dillingham,Oct,2025,U,Unknown,Yes,No,No,Yes,No,No,No,,,,,,,,,
+DL25DLG002,New,6,Beluga whale,Dillingham,Oct,2025,U,Unknown,Yes,No,No,Yes,No,No,Yes,Isopod,,,,,,,,
+2026002,New,6,Beluga whale,Cook Inlet,Jan,2026,F,Subadult,Yes,No,No,Yes,No,No,Yes,,,,,,,,,
+2026004,New,6,Beluga whale,Cook Inlet,Jan,2026,F,Subadult,Yes,No,No,No,No,No,Yes,,,,,,,,,

@@ -35,9 +35,9 @@ scp -r "C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic Predator Diets/12SP1" mba
 scp -r C:/Users/Intern/Desktop/arctic-pred/scripts/ mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/scripts
   # MUST BE RUN FROM LOCAL TERMINAL! NOT HYAK SSH SESSION
 
-
-scp -r "Z:/Arctic predator diet sequences/CO1P1/*" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/rawdata/CO1P1
-
+cd "/z/Arctic predator diet sequences/12SP2 - MFU"
+scp -r "./ubiome/"* \
+mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/rawdata/ubiome
 # ------------------------------------------------------------------
 # Uploads reference Db to HYAK
 # ------------------------------------------------------------------
@@ -64,12 +64,21 @@ scp -r "C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/
 # ------------------------------------------------------------------
 
 #12S
-scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_12SP1_output.Rdata" "C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
-scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/SRKW-diet-16SP1.Rdata" "C:/Users/MBall/OneDrive/文档/WADE LAB/SRKW/DADA2/DADA2 Outputs"
+scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_12SP2_output.Rdata" "C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
+
+
+scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_12S_output.Rdata" "C:/Users/MBall/OneDrive - UW/Documents/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/"
+
+
+
+#12s unnassigned taxa from HYAK
+scp -r "mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/unassigned_seqs.fasta" "C:/Users/MBall/OneDrive - UW/Documents/WADE LAB/Arctic-predator-diet-microbiome/"
+#12s hit table to HYAK
+scp -r "C:/Users/MBall/OneDrive - UW/Documents/WADE LAB/Arctic-predator-diet-microbiome/unassigned_ALL_BLAST.csv" "mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/"
+
 
 
 #16S
-scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_16SP1+2-2.Rdata" "C:/Users/MBall/OneDrive/Documents/UW-DOCS/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
 
 scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/SRKW-diet-16SP1.Rdata" "C:/Users/Intern/SRKW/DADA2/DADA2 Outputs"
 
@@ -81,6 +90,10 @@ scp -r * mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/SRKW/rawdata/16SP1/
   
 #CO1
   scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/testDADA2_CO1_allseqs_012826.Rdata" "C:/Users/MBall/OneDrive - UW/Documents/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
+
+#ubiome
+scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_ubiome_output.Rdata" "C:/Users/MBall/OneDrive - UW/Documents/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs/"
+
 
 
 # Read error output
