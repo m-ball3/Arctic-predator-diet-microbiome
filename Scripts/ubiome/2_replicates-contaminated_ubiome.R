@@ -15,6 +15,45 @@ library(lubridate)
 # Loads in output from DADA2 + filtered seqtab.nochim and samdf from rownames-match.r
 load("./Scripts/ubiome/rdata/rownames-match_ubiome.RData")
 
+# ------------------------------------------------------------------------------
+# Contamination
+# ------------------------------------------------------------------------------
+## NOW THINK ABOUT NEGATIVE CONTAMINATION!!!!!
+
+# ps for negs
+samdfneg <- samdf %>% 
+  filter(grepl("neg", rownames(.)))
+
+seqtab.negtest <- as.data.frame(seqtab.nochim) %>% 
+  rownames_to_column("sample") %>% 
+  pivot_longer(-sample, names_to = "seq", values_to = "nReads") %>% 
+  mutate(sample_type = case_when(grepl("mock", sample)~"mock",
+                                 grepl("neg", sample)~"neg",
+                                 TRUE~"sample")) %>% 
+  group_by(seq, sample_type) %>% 
+  summarise(nReadsTotal = sum(nReads)) %>% 
+  ungroup() %>% group_by(seq) %>% 
+  mutate(seqNumber = cur_group_id()) %>% 
+  filter(!any(sample_type == "neg" & nReadsTotal == 0)) %>% 
+  arrange(desc(nReadsTotal)) %>% 
+  filter(sample_type != "mock") %>% 
+  filter(!any(sample_type == "sample" & nReadsTotal == 0))
+
+# 
+# neg_contaminated <- 
+#   #some vector here to use to filter for the contaminated samples from the shipment 5 extractions
+# 
+# # need to change this syntax because I don't want to remove them, 
+#   ## instead, I want to delete the reads that appear in both
+#   ### MAYBE THIS SHOULD HAPPEN BEFORE THE REPLICATE STEPS???
+# samdf_filt <- samdf_filt[!rownames(samdf_filt) %in% neg_contaminated, ]
+# 
+# seqtab.nochim_filt <- seqtab.nochim_filt[!rownames(seqtab.nochim_filt) %in% neg_contaminated, ]
+# 
+
+# ------------------------------------------------------------------------------
+# Replicates
+# ------------------------------------------------------------------------------
 
 # Determines which samples are replicates by pulling the duplicated specimen IDs
 replicates <- unique(samdf$Specimen.ID[duplicated(samdf$Specimen.ID)])
@@ -77,6 +116,7 @@ replicate_to_remove <- c(
 )
 
 samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
+seqtab.nochim <- seqtab.nochim[!rownames(seqtab.nochim) %in% replicate_to_remove, ]
 
 # Recreates phyloseq object without unwanted replicates
 ps.norep <- phyloseq(
@@ -88,20 +128,6 @@ ps.norep <- phyloseq(
 
 sample_names(ps.norep)
 nsamples(ps.norep)
-
-
-
-## NOW THINK ABOUT NEGATIVE CONTAMINATION!!!!!
-
-neg_contaminated <- 
-  #some vector here to use to filter for the contaminated samples from the shipment 5 extractions
-
-# need to change this syntax because I don't want to remove them, 
-  ## instead, I want to delete the reads that appear in both
-  ### MAYBE THIS SHOULD HAPPEN BEFORE THE REPLICATE STEPS???
-samdf_filt <- samdf_filt[!rownames(samdf_filt) %in% neg_contaminated, ]
-
-seqtab.nochim_filt <- seqtab.nochim_filt[!rownames(seqtab.nochim_filt) %in% neg_contaminated, ]
 
 
 # REMOVES TISSUE SAMPLE (NOT AN SRKW FECAL SAMPLE)

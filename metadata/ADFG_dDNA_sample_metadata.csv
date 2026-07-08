@@ -159,10 +159,10 @@ PH23SH005-F,New,3,ringed seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,
 PH23SH013-F,New,3,ringed seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,0,,,,,,,
 PH23SH032-F,New,3,ringed seal,Shishmaref,OCT,2023,M,fecal,No,Yes,NA,NA,NA,NA,NA,NA,2,,,,,,,
 PH24GAM014-F,New,3,ringed seal,Gambell,JUN,2024,F,fecal,No,Yes,NA,NA,NA,NA,NA,NA,NA,,,,,,,
-2025011A,New,4,,,,,,stomach,,,,,,,,,,,,,,,,
-2025011B,New,4,,,,,,stomach,,,,,,,,,,,,,,,,
-finwhale.fat,New,4,,,,,,stomach,,,,,,,,,,,,,,,,
-finwhale,New,4,,,,,,stomach,,,,,,,,,,,,,,,,
+2025011A,New,4,beluga whale,,,,,stomach,,,,,,,,,,,,,,,,
+2025011B,New,4,beluga whale,,,,,stomach,,,,,,,,,,,,,,,,
+finwhale.fat,New,4,fin whale,,,,,stomach,,,,,,,,,,,,,,,,
+finwhale,New,4,fin whale,,,,,stomach,,,,,,,,,,,,,,,,
 EB10PH008,New,5,Bearded seal,Point Hope,JUN,2010,M,Feces,No,Yes,,Yes,No,Yes,No,"Clams, Crabs, Echiurids",7,Non-pup,NA,216,16-Jun-10,Harvested,Fresh dead,Unknown
 EB10PH021,New,5,Bearded seal,Point Hope,JUN,2010,F,Feces,No,Yes,,Yes,No,Yes,No,"Clams, Crabs, Amphipods",15,Non-pup,Multiparous,230.5,17-Jun-10,Harvested,Fresh dead,Unknown
 EB10PH036,New,5,Bearded seal,Point Hope,JUN,2010,F,Feces,No,Yes,,Yes,No,Yes,No,Clams,0,Pup,Nulliparous,148,22-Jun-10,Harvested,Fresh dead,Unknown

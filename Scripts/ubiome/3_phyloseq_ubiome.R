@@ -39,8 +39,11 @@ ps.filt <- subset_taxa(ps.norep, Class!="Mammalia")
 # Remove samples with total abundance == 0
 ps.filt <- prune_samples(sample_sums(ps.filt) > 0, ps.filt)
 
+# WADE-003-178 had 0 reads, remove from samdf
+samdf <- samdf[rownames(samdf) != "WADE-003-178", ]
+
 ## MERGE TO SPECIES HERE (TAX GLOM)
-ps.filt = tax_glom(ps.filt, "Genus", NArm = FALSE)
+ps.filt = tax_glom(ps.filt, "Class", NArm = FALSE)
 
 # Filtering to remove taxa with less than 1% of reads assigned in at least 1 sample.
 f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
@@ -89,11 +92,9 @@ which(is.nan(as.matrix(otu_table(ps.minor.rel))), arr.ind = TRUE)
 which(is.nan(as.matrix(otu_table(ps.major.rel))), arr.ind = TRUE)
 
 #SAVES
-### needs updating from SRKW to ADFG ubiome!
-# save(ps.16s, ps16s.rel, samdf_filt, seqtab.nochim_filt, taxam, track, out, freq.nochim, file = "srkw-ps.16s.RData")
-# save(seqtab.nochim_filt, freq.nochim, track, taxam, ps16s.rel, ps.16s, file = "SRKW-diet-16SALL.Rdata")
-# save(seqtab.nochim_filt, freq.nochim, track, taxam, ps.16s.filt, ps.16s.filt.rel, file = "SRKW-diet-FILT-16SALL.Rdata")
-# save(seqtab.nochim_filt, freq.nochim, track, taxam, ps.16s.major, ps.16s.major.rel, file = "SRKW-diet-MAJOR-16SALL.Rdata")
+save(ps.raw, ps.filt, ps.rel, samdf, seqtab.nochim, taxam, track, out, freq.nochim, file = "ubiome.ps.RData")
+save(seqtab.nochim, freq.nochim, track, taxam, ps.minor, ps.minor.rel, file = "ubiome.ps-minor.Rdata")
+save(seqtab.nochim, freq.nochim, track, taxam, ps.major, ps.major.rel, file = "ubiome.ps-major.Rdata")
 
 # ------------------------------------------------------------------
 # PLOTS RELATIVE ABUNDANCE
@@ -133,6 +134,10 @@ ggsave("Deliverables/ubiome/ubiome-majorpredfacet.png", plot = pred.facet, width
 otu.abs <- as.data.frame(otu_table(ps.major))
 colnames(otu.abs) <- as.data.frame(tax_table(ps.major))$Genus
 
+# Checks for differences = WADE-003-178
+setdiff(rownames(samdf), rownames(otu.abs))
+setdiff(rownames(otu.abs), rownames(samdf))
+
 ## Adds ADFG Sample ID as a column
 otu.abs$Specimen.ID <- samdf$Specimen.ID # error here
 
@@ -144,7 +149,7 @@ otu.prop <- as.data.frame(otu_table(ps.major.rel))
 colnames(otu.prop) <- as.data.frame(tax_table(ps.major.rel))$Genus
 
 ## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)
-otu.prop$Specimen.ID <- samdf_filt$Specimen.ID
+otu.prop$Specimen.ID <- samdf$Specimen.ID
 
 ## Moves ADFG_SampleID to the first column
 otu.prop <- otu.prop[, c(ncol(otu.prop), 1:(ncol(otu.prop)-1))]
@@ -157,8 +162,8 @@ is.num <- sapply(otu.prop, is.numeric)
 otu.prop[is.num] <- lapply(otu.prop[is.num], round, 3)
 
 # Writes to CSV
-write.csv(otu.abs, "./Deliverables/ALL/SRKW_absolute_speciesxsamples-MAJOR.csv", row.names = TRUE)
-write.csv(otu.prop, "./Deliverables/ALL/SRKW_relative_speciesxsamples-MAJOR.csv", row.names = TRUE)
+write.csv(otu.abs, "./Deliverables/ubiome/ubiome_absolute_speciesxsamples-MAJOR.csv", row.names = TRUE)
+write.csv(otu.prop, "./Deliverables/ubiome/ubiome_relative_speciesxsamples-MAJOR.csv", row.names = TRUE)
 
 
 # Calculates the total percent abundance for each prey species (across all samples)

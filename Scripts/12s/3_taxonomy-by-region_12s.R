@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------
-# 12S Samples by Location
-# Mollie Ball
-# 
+# SEPARATES SAMPLES GEOGRAPHICALLY FOR CORRECT TAXONOMIC ASSIGNMENT BY REGION
+# THIS IS THE THIRD STEP AFTER DADA2
+## 1_rownames-match_12S.R and 2_replicates_contaminated_12s.R must be run before this
 # ------------------------------------------------------------------
 
 # ------------------------------------------------------------------
@@ -25,7 +25,7 @@ library(dplyr)
 library(dada2)
 
 # Loads in dada2 output
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12S_output.Rdata")
+load("./Scripts/12s/rdata/replicates-contaminated_12s.RData")
 
 # loads in regional DBs
 cookinletDB <- "DADA2/Ref-DB/12S/12S_Cook-Inlet-DB.fasta"
@@ -36,94 +36,6 @@ sberingDB.sp <- "DADA2/Ref-DB/12S/12S_S-Bering-addspecies-DB.fasta"
 
 arcticDB <- "DADA2/Ref-DB/12S/12S_Arctic-DB.fasta"
 arcticDB.sp<- "DADA2/Ref-DB/12S/12S_Arctic-addspecies-DB.fasta"
-
-
-# ------------------------------------------------------------------
-# FORMATS METADATASHEET FOR PHYLOSEQ OBJ
-# ------------------------------------------------------------------
-
-# Removes file extensions from OTU table names
-rownames(seqtab.nochim) <- gsub("-MFU_S\\d+", "", rownames(seqtab.nochim))
-
-# Gets sample metadata; filters out NA's (shipment 1)
-## TEMPORARILY RENAMES EB22PH005-S TO EB23PH005-S -----------------------------------------------------------
-
-labdf <- read.csv("metadata/ADFG_dDNA_labwork_metadata.csv")%>%
-  filter(!is.na(LabID))%>%
-  mutate(Specimen.ID = 
-           ifelse(Specimen.ID == "EB22PH005-S", "EB23PH005-S", Specimen.ID)) %>% 
-  dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID) %>% 
-  filter(!str_detect(Specimen.ID, "^neg[0-7]+$")) %>%
-  mutate(LabID = gsub("-C", "", LabID)) %>% # removes -C tag
-  mutate(LabID = gsub("-UC", "", LabID))
-         
-samdf <- labdf %>% 
-  left_join(read.csv("metadata/ADFG_dDNA_sample_metadata.csv"), 
-            by =  c("Specimen.ID", "Repeat.or.New.Specimen.")) %>%
-  dplyr::rename(Predator = Species) %>%
-  mutate(Predator = tolower(Predator))
-  
-#  Sets row names to LabID
-rownames(samdf) <- samdf$LabID
-
-# INVESTIGATES WHY WE ADD 10 OBS FROM CREATING A CORRESPONDING ADFG SAMPLE ID WITH WADE ID
-
-# Check for duplicate keys in labdf
-labdf_dupes <- labdf %>%
-  dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID) %>%
-  group_by(Specimen.ID, Repeat.or.New.Specimen.) %>%
-  summarise(n = n(), .groups = "drop") %>%
-  filter(n > 1)
-
-print(labdf_dupes)  # Shows which keys have multiples
-nrow(labdf_dupes)   # Number of duplicated keys (likely 10)
-
-labdf_dupes_with_labid <- labdf %>%
-  dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID) %>%
-  inner_join(labdf_dupes, by = c("Specimen.ID", "Repeat.or.New.Specimen.")) %>%
-  arrange(Specimen.ID, Repeat.or.New.Specimen.)
-
-print(labdf_dupes_with_labid)
-
-# All samples after DADA2, before metadata filtering
-seq_samples <- rownames(seqtab.nochim)      # should be length 79
-
-# All samples with metadata after LabID join and NA removal
-meta_samples <- rownames(samdf)             # before intersect(), should be > 74
-
-# Only keeps rows that appear in both metadata and seq.tab 
-## AKA only samples that made it through all steps 
-common_ids <- intersect(rownames(samdf), rownames(seqtab.nochim)) # CURRENTLY 78; resolve sample 122 field ID mismatch
-samdf <- samdf[common_ids, ]
-seqtab.nochim <- seqtab.nochim[common_ids, ]
-
-# Samples that disappear after intersect()
-dropped_from_seq <- setdiff(seq_samples, meta_samples)
-dropped_from_meta <- setdiff(meta_samples, seq_samples)
-
-dropped_from_seq # 122
-dropped_from_meta # make sure none of these are removed in error
-
-# Checks for duplicates and identical sample rownames in both
-
-### should return FALSE
-any(duplicated(rownames(samdf)))
-any(duplicated(rownames(seqtab.nochim)))
-
-### should return TRUE
-all(rownames(samdf) %in% rownames(seqtab.nochim))
-all(rownames(seqtab.nochim) %in% rownames(samdf))
-
-# Checks for samples in metadata but not in OTU table
-setdiff(rownames(samdf), rownames(seqtab.nochim))
-
-# Checks for samples in OTU table but not in metadata
-setdiff(rownames(seqtab.nochim), rownames(samdf))
-
-# Sanity check: row names are the same
-rownames(samdf)
-rownames(seqtab.nochim)
-
 
 # ------------------------------------------------------------------
 # FORMATS FOR REGION-SPECIFIC ASSIGNMENT
@@ -141,7 +53,7 @@ samdf <- samdf %>%
   )
 
 # Divides seqtab.nochim by lab ID into regions for Assign Taxonomy and Species
-rowcount <- rownames(seqtab.nochim) # 78 as of 12/23/25
+rowcount <- rownames(seqtab.nochim) # 122 as of 6/16/26
 
 cook.ids   <- samdf$LabID[samdf$sample_DB == "cookinletDB"]
 sbering.ids <- samdf$LabID[samdf$sample_DB == "sberingDB"]
@@ -152,9 +64,9 @@ sbering.seqtab <- seqtab.nochim[rownames(seqtab.nochim) %in% sbering.ids, ]
 arctic.seqtab  <- seqtab.nochim[rownames(seqtab.nochim) %in% arctic.ids, ]
 
 rowcount.cook <- rownames(cook.seqtab) # 19
-rowcount.sbering <- rownames(sbering.seqtab) # 19
-rowcount.arctic <- rownames(arctic.seqtab) # 40
-# total = 78 as of 12/23/25
+rowcount.sbering <- rownames(sbering.seqtab) # 20
+rowcount.arctic <- rownames(arctic.seqtab) # 83
+# total = 122 as of 6/16/26
 
 # ------------------------------------------------------------------
 # SPECIES ASSIGNMENTS BY REGION
@@ -195,6 +107,12 @@ arcticsp <- assignSpecies(arctic.seqtab, arcticDB.sp) %>%
     Genus.x   = Genus,
     Species.y = Species) %>%
   as.matrix()                      
+
+# ------------------------------------------------------------------
+# NEED TO ADD IN THE BLASTING CODE THAT AMY WROTE HERE TO GET BETTER ASSIGNMENTS
+# ------------------------------------------------------------------
+
+
 
 # ------------------------------------------------------------------
 # ADDRESSES NA AND COLUMN NON-AGREEMENT ISSUES BETWEEN ASSIGNTAXONOMY AND ADDSPECIES

@@ -1,5 +1,7 @@
 # ------------------------------------------------------------------
 # FROM DADA2 TO PHYLOSEQ
+# THIS IS THE FOURTH STEP AFTER DADA2
+## rownames-match.r replicates-contaminated.r and 3_taxonomy-by-region_12s.R must be run before this!
 # ------------------------------------------------------------------
 
 # ------------------------------------------------------------------
@@ -49,84 +51,6 @@ ps.12s.arctic <- phyloseq(
 )
 
 # ------------------------------------------------------------------
-# DEALS WITH TECHNICAL REPLICATES
-# ------------------------------------------------------------------
-
-
-# Identifies rows in Specimen.ID that appear more than once (replicates)
-duplicated_ids <- samdf$Specimen.ID[duplicated(samdf$Specimen.ID) | duplicated(samdf$Specimen.ID, fromLast = TRUE)]
-unique_dup_ids <- unique(duplicated_ids) # "EB24PH075-S" = WADE 111 and WADE 124
-
-# Subset phyloseq object to keep only samples with duplicated Specimen.IDs
-### replicates are only found in arctic db
-ps.12s.replicates.arctic <- subset_samples(ps.12s.arctic, Specimen.ID %in% unique_dup_ids)
-
-# Removes any taxa that have zero total reads across all samples
-ps.12s.replicates.arctic <- prune_taxa(taxa_sums(ps.12s.replicates.arctic) > 0, ps.12s.replicates.arctic)
-
-# Creates a vector of read counts
-reads.arctic <- sample_sums(ps.12s.arctic)
-
-# Gets the desired sample's read counts
-reads.WADE.111 <- reads.arctic["WADE-003-111"]
-reads.WADE.124 <- reads.arctic["WADE-003-124"]
-reads.WADE.104 <- reads.arctic["WADE-003-104"]
-reads.WADE.122 <- reads.arctic["WADE-003-122"]
-
-# Gets read count before filtering out Mammals and Bacteria
-reads.WADE.111 # 38402
-reads.WADE.124 # 20768
-reads.WADE.104 # 31054
-reads.WADE.122 # 19045
-
-# Filters out Mammals and Bacteria
-ps.12s.replicates.arctic <- subset_taxa(ps.12s.replicates.arctic, Class == "Actinopteri")
-nsamples(ps.12s.replicates.arctic)
-
-# Creates a vector of read counts
-reads.arctic <- sample_sums(ps.12s.replicates.arctic)
-
-# Gets the desired sample's read counts
-reads.WADE.111 <- reads.arctic["WADE-003-111"]
-reads.WADE.124 <- reads.arctic["WADE-003-124"]
-reads.WADE.104 <- reads.arctic["WADE-003-104"]
-reads.WADE.122 <- reads.arctic["WADE-003-122"]
-
-# Gets read count after filtering out Mammals and Bacteria
-reads.WADE.111 # 21067
-reads.WADE.124 # 18083
-reads.WADE.104 # 17347 
-reads.WADE.122 # 21
-
-# Transforms read counts to relative abundance of each species 
-## Transforms NaN (0/0) to 0
-ps12s.replicate.rel <- transform_sample_counts(ps.12s.replicates.arctic, function(x) {
-  x_rel <- x / sum(x)
-  x_rel[is.nan(x_rel)] <- 0
-  return(x_rel)
-})
-
-# Create the stacked bar plot
-plot_bar(ps12s.replicate.rel, x = "LabID", fill = "Species")+ 
-  facet_wrap(~ Specimen.ID, ncol = 2, scales = "free_x", strip.position = "top")
-
-# Specifies the replicate to remove
-replicate_to_remove <- c("WADE-003-124", "WADE-003-122")
-samdf <- samdf[!rownames(samdf) %in% replicate_to_remove, ]
-
-# Recreates REGIONAL phyloseq objects without unwanted replicate
-ps.12s.arctic <- phyloseq(
-  otu_table(arctic.seqtab, taxa_are_rows=FALSE), 
-  sample_data(samdf), 
-  tax_table(taxa.arctic)
-)%>%
-  subset_samples(!(LabID %in% replicate_to_remove))
-sample_names(ps.12s.arctic)
-
-# Checks that replicates were removed
-sample_names(ps.12s.arctic)[grepl("122|124", sample_names(ps.12s.arctic))]
-
-# ------------------------------------------------------------------
 # CLEANS PHYLOSEQ
 # ------------------------------------------------------------------
 
@@ -150,7 +74,7 @@ taxa_names(ps.12s.arctic) <- paste0("ASV", seq(ntaxa(ps.12s.arctic)))
 nsamples(ps.12s.cook)
 nsamples(ps.12s.sbering)
 nsamples(ps.12s.arctic)
-#73 total samps
+#122 total samps
 
 # Saves phyloseq obj per region (RAW)
 save(ps.12s.cook, ps.12s.sbering, ps.12s.arctic, file = "ps.12s.regions.raw.Rdata")
@@ -175,6 +99,13 @@ nsamples(ps.12s.sbering)
 ps.12s.arctic <- prune_samples(sample_sums(ps.12s.arctic) >= 100, ps.12s.arctic)
 sample_sums(ps.12s.arctic)
 nsamples(ps.12s.arctic)
+
+## MERGE TO SPECIES HERE (TAX GLOM)
+ps.12s.sbering = tax_glom(ps.12s.sbering, "Species", NArm = FALSE) %>% 
+  prune_taxa(taxa_sums(.) > 0, .)
+
+ps.12s.arctic = tax_glom(ps.12s.arctic, "Species", NArm = FALSE) %>% 
+  prune_taxa(taxa_sums(.) > 0, .)
 
 # ------------------------------------------------------------------
 # EXPLORES SAMPLES LOST IN FILTERING FOR COOK INLET BELUGAS
@@ -250,19 +181,13 @@ p_after_rel <- plot_bar(ps.12s.cook.after.rel, fill = "Species") +
 # warning message related to removal of taxa with abundance of 0 
 
 
-# ------------------------------------------------------------------
-# CONTINUES WITH CLEANING PHYLOSEQ
-# ------------------------------------------------------------------
-
 ## MERGE TO SPECIES HERE (TAX GLOM)
 ps.12s.cook = tax_glom(ps.12s.cook.after, "Species", NArm = FALSE) %>% 
   prune_taxa(taxa_sums(.) > 0, .)
 
-ps.12s.sbering = tax_glom(ps.12s.sbering, "Species", NArm = FALSE) %>% 
-  prune_taxa(taxa_sums(.) > 0, .)
-
-ps.12s.arctic = tax_glom(ps.12s.arctic, "Species", NArm = FALSE) %>% 
-  prune_taxa(taxa_sums(.) > 0, .)
+# ------------------------------------------------------------------
+# CONTINUES WITH CLEANING PHYLOSEQ
+# ------------------------------------------------------------------
 
 # Filtering to remove taxa with less than 1% of reads assigned in at least 1 sample.
 f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
