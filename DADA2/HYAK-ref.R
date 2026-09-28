@@ -43,7 +43,7 @@ mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/rawdata/ubio
 # ------------------------------------------------------------------
   
 # 12S
-scp -r "C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/Ref-DB/MURI_MFU_07_2025.fasta" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/
+scp -r "C:/Users/MBall/Downloads/silva_nr99_v138.2_toSpecies_trainset (1).fa/silva_nr99_v138.2_toSpecies_trainset (1).fa" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/
   scp -r "C:/Users/MBall/OneDrive/文档/WADE LAB/Arctic-predator-diet-microbiome/DADA2/Ref-DB/12S-AddSpecies_11-25.fasta" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/
   
   # 16S
@@ -82,7 +82,7 @@ scp -r "C:/Users/MBall/OneDrive - UW/Documents/WADE LAB/Arctic-predator-diet-mic
 
 #16S
 
-scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_16S_output-batched.Rdata" "C:/Users/MBall/OneDrive - UW/Documents/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
+scp -r "mball3@klone.hyak.uw.edu:/mmfs1/home/mball3/WADE003-arcticpred_dada2_QAQC_ubiome_output_newsilva.Rdata" "C:/Users/MBall/OneDrive - UW/Documents/WADE LAB/Arctic-predator-diet-microbiome/DADA2/DADA2 Outputs"
 
 scp -r "C:\Users\Intern\Desktop\arctic-pred\16S_Arctic_predator_reference_database_05_2025.fasta" mball3@klone.hyak.uw.edu:/gscratch/coenv/mball3/WADE003-arctic-pred/scripts
 

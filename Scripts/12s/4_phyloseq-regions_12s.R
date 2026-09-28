@@ -21,6 +21,7 @@ library(dplyr)
 library(patchwork)
 library(writexl)
 
+
 # Loads dada2 output
 load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-COOKINLET.Rdata")
 load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12SP1_output-SBERING.Rdata")
@@ -53,22 +54,22 @@ ps.12s.arctic <- phyloseq(
 # ------------------------------------------------------------------
 # CLEANS PHYLOSEQ
 # ------------------------------------------------------------------
-
-### shorten ASV seq names, store sequences as reference
-dna.cook <- Biostrings::DNAStringSet(taxa_names(ps.12s.cook))
-names(dna.cook) <- taxa_names(ps.12s.cook)
-ps.cook.raw <- merge_phyloseq(ps.12s.cook, dna.cook) ## CHECK WITH AMY ABOUT THIS
-taxa_names(ps.12s.cook) <- paste0("ASV", seq(ntaxa(ps.12s.cook)))
-
-dna.sbering <- Biostrings::DNAStringSet(taxa_names(ps.12s.sbering))
-names(dna.sbering) <- taxa_names(ps.12s.sbering)
-ps.raw.sbering <- merge_phyloseq(ps.12s.sbering, dna.sbering) 
-taxa_names(ps.12s.sbering) <- paste0("ASV", seq(ntaxa(ps.12s.sbering))) 
-
-dna.arctic <- Biostrings::DNAStringSet(taxa_names(ps.12s.arctic))
-names(dna.arctic) <- taxa_names(ps.12s.arctic)
-ps.raw.arctic <- merge_phyloseq(ps.12s.arctic, dna.arctic)
-taxa_names(ps.12s.arctic) <- paste0("ASV", seq(ntaxa(ps.12s.arctic)))
+### DO AFTER THE MERGE
+# ### shorten ASV seq names, store sequences as reference
+# dna.cook <- Biostrings::DNAStringSet(taxa_names(ps.12s.cook))
+# names(dna.cook) <- taxa_names(ps.12s.cook)
+# ps.cook.raw <- merge_phyloseq(ps.12s.cook, dna.cook) ## CHECK WITH AMY ABOUT THIS
+# taxa_names(ps.12s.cook) <- paste0("ASV", seq(ntaxa(ps.12s.cook)))
+# 
+# dna.sbering <- Biostrings::DNAStringSet(taxa_names(ps.12s.sbering))
+# names(dna.sbering) <- taxa_names(ps.12s.sbering)
+# ps.raw.sbering <- merge_phyloseq(ps.12s.sbering, dna.sbering) 
+# taxa_names(ps.12s.sbering) <- paste0("ASV", seq(ntaxa(ps.12s.sbering))) 
+# 
+# dna.arctic <- Biostrings::DNAStringSet(taxa_names(ps.12s.arctic))
+# names(dna.arctic) <- taxa_names(ps.12s.arctic)
+# ps.raw.arctic <- merge_phyloseq(ps.12s.arctic, dna.arctic)
+# taxa_names(ps.12s.arctic) <- paste0("ASV", seq(ntaxa(ps.12s.arctic)))
 
 # compares number of samples
 nsamples(ps.12s.cook)
@@ -77,7 +78,7 @@ nsamples(ps.12s.arctic)
 #122 total samps
 
 # Saves phyloseq obj per region (RAW)
-save(ps.12s.cook, ps.12s.sbering, ps.12s.arctic, file = "ps.12s.regions.raw.Rdata")
+save(ps.12s.cook, ps.12s.sbering, ps.12s.arctic, file = "./Scripts/12s/rdata/ps.12s.regions.raw.Rdata")
 
 
 # Filters out anything not in Actinopteri
@@ -91,7 +92,7 @@ ps.12s.arctic <- subset_taxa(ps.12s.arctic, Class == "Actinopteri")
 nsamples(ps.12s.arctic)
 
 
-# Remove samples with total abundance < 100
+# Remove samples with total abundance < 100 <- DO I MEAN READS HERE???
 ps.12s.sbering <- prune_samples(sample_sums(ps.12s.sbering) >= 100, ps.12s.sbering)
 sample_sums(ps.12s.sbering)
 nsamples(ps.12s.sbering)
@@ -100,12 +101,13 @@ ps.12s.arctic <- prune_samples(sample_sums(ps.12s.arctic) >= 100, ps.12s.arctic)
 sample_sums(ps.12s.arctic)
 nsamples(ps.12s.arctic)
 
-## MERGE TO SPECIES HERE (TAX GLOM)
-ps.12s.sbering = tax_glom(ps.12s.sbering, "Species", NArm = FALSE) %>% 
-  prune_taxa(taxa_sums(.) > 0, .)
-
-ps.12s.arctic = tax_glom(ps.12s.arctic, "Species", NArm = FALSE) %>% 
-  prune_taxa(taxa_sums(.) > 0, .)
+### DO AFTER THE MERGE
+# ## MERGE TO SPECIES HERE (TAX GLOM)
+# ps.12s.sbering = tax_glom(ps.12s.sbering, "Species", NArm = FALSE) %>% 
+#   prune_taxa(taxa_sums(.) > 0, .)
+# 
+# ps.12s.arctic = tax_glom(ps.12s.arctic, "Species", NArm = FALSE) %>% 
+#   prune_taxa(taxa_sums(.) > 0, .)
 
 # ------------------------------------------------------------------
 # EXPLORES SAMPLES LOST IN FILTERING FOR COOK INLET BELUGAS
@@ -131,10 +133,10 @@ cook.after.counts  <- sample_sums(ps.12s.cook.after)
 cook.samples.before <- names(cook.before.counts)
 cook.samples.after  <- names(cook.after.counts)
 
-# Gets the samples that are lost iiin filtering 
+# Gets the samples that are lost in filtering 
 cook.samples.lost <- setdiff(cook.samples.before, cook.samples.after)
 
-# Creates a df to check what is lost in filtering\
+# Creates a df to check what is lost in filtering
 # displays and gets mean and median
 lost.df <- tibble(
   Sample = cook.samples.lost,
@@ -180,10 +182,10 @@ p_after_rel <- plot_bar(ps.12s.cook.after.rel, fill = "Species") +
   theme(legend.position = "right")
 # warning message related to removal of taxa with abundance of 0 
 
-
-## MERGE TO SPECIES HERE (TAX GLOM)
-ps.12s.cook = tax_glom(ps.12s.cook.after, "Species", NArm = FALSE) %>% 
-  prune_taxa(taxa_sums(.) > 0, .)
+### DO AFTER MERGING
+# ## MERGE TO SPECIES HERE (TAX GLOM)
+# ps.12s.cook = tax_glom(ps.12s.cook.after, "Species", NArm = FALSE) %>% 
+#   prune_taxa(taxa_sums(.) > 0, .)
 
 # ------------------------------------------------------------------
 # CONTINUES WITH CLEANING PHYLOSEQ
@@ -193,18 +195,18 @@ ps.12s.cook = tax_glom(ps.12s.cook.after, "Species", NArm = FALSE) %>%
 f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
 
 lowcount.filt.cook <- genefilter_sample(ps.12s.cook, f1, A=1)
-ps.12s.cook.filt <- prune_taxa(lowcount.filt.cook, ps.12s.cook)
+ps.12s.cook.minor <- prune_taxa(lowcount.filt.cook, ps.12s.cook)
 
 lowcount.filt.sbering <- genefilter_sample(ps.12s.sbering, f1, A=1)
-ps.12s.sbering.filt <- prune_taxa(lowcount.filt.sbering, ps.12s.sbering)
+ps.12s.sbering.minor <- prune_taxa(lowcount.filt.sbering, ps.12s.sbering)
 
 lowcount.filt.arctic <- genefilter_sample(ps.12s.arctic, f1, A=1)
-ps.12s.arctic.filt <- prune_taxa(lowcount.filt.arctic, ps.12s.arctic)
+ps.12s.arctic.minor <- prune_taxa(lowcount.filt.arctic, ps.12s.arctic)
 
 # Explores ASV assignments
-asv.cook.rows <- as.data.frame(tax_table(ps.12s.cook.filt))
-asv.bering.rows <- as.data.frame(tax_table(ps.12s.sbering.filt))
-asv.arctic.rows <- as.data.frame(tax_table(ps.12s.arctic.filt))
+asv.cook.rows <- as.data.frame(tax_table(ps.12s.cook.minor))
+asv.bering.rows <- as.data.frame(tax_table(ps.12s.sbering.minor))
+asv.arctic.rows <- as.data.frame(tax_table(ps.12s.arctic.minor))
 
 # makes rownames a column called rn
 asv.cook.rows$rn <- rownames(asv.cook.rows)
@@ -212,28 +214,28 @@ asv.bering.rows$rn <- rownames(asv.bering.rows)
 asv.bering.rows$rn <- rownames(asv.bering.rows)
 
 # Saves phyloseq obj
-save(ps.12s.cook.filt, ps.12s.sbering.filt, ps.12s.arctic.filt, file = "ps.12s.regions.filt.Rdata")
+save(ps.12s.cook.minor, ps.12s.sbering.minor, ps.12s.arctic.minor, file = "./Scripts/12s/rdata/ps.12s.regions.minor.Rdata")
 
 # Plots stacked bar plot of abundance
-plot_bar(ps.12s.cook.filt, fill="Species")
-plot_bar(ps.12s.sbering.filt, fill="Species")
-plot_bar(ps.12s.arctic.filt, fill="Species")
+plot_bar(ps.12s.cook.minor, fill="Species")
+plot_bar(ps.12s.sbering.minor, fill="Species")
+plot_bar(ps.12s.arctic.minor, fill="Species")
 
 # Transforms read counts to relative abundance of each species 
 ## Transforms NaN (0/0) to 0
-ps12s.cook.rel <- transform_sample_counts(ps.12s.cook.filt, function(x) {
+ps12s.cook.rel <- transform_sample_counts(ps.12s.cook.minor, function(x) {
   x_rel <- x / sum(x)
   x_rel[is.nan(x_rel)] <- 0
   return(x_rel)
 })
 
-ps12s.sbering.rel <- transform_sample_counts(ps.12s.sbering.filt, function(x) {
+ps12s.sbering.rel <- transform_sample_counts(ps.12s.sbering.minor, function(x) {
   x_rel <- x / sum(x)
   x_rel[is.nan(x_rel)] <- 0
   return(x_rel)
 })
 
-ps12s.arctic.rel <- transform_sample_counts(ps.12s.arctic.filt, function(x) {
+ps12s.arctic.rel <- transform_sample_counts(ps.12s.arctic.minor, function(x) {
   x_rel <- x / sum(x)
   x_rel[is.nan(x_rel)] <- 0
   return(x_rel)
@@ -529,12 +531,12 @@ ggsave("Deliverables/12S/regions/arctic/ADFG-12S-species-by-pred-arctic.png",
 # ------------------------------------------------------------------
 
 # CREATES ABSOLUTE SAMPLES X SPECIES TABLE 
-otu.cook.abs <- as.data.frame(otu_table(ps.12s.cook.filt))
-otu.sbering.abs <- as.data.frame(otu_table(ps.12s.sbering.filt))
-otu.arctic.abs <- as.data.frame(otu_table(ps.12s.arctic.filt))
+otu.cook.abs <- as.data.frame(otu_table(ps.12s.cook.minor))
+otu.sbering.abs <- as.data.frame(otu_table(ps.12s.sbering.minor))
+otu.arctic.abs <- as.data.frame(otu_table(ps.12s.arctic.minor))
 
 # Changes NA.1 to it's corresponding ASV
-cooktaxa.names <- as.data.frame(tax_table(ps.12s.cook.filt)) %>% 
+cooktaxa.names <- as.data.frame(tax_table(ps.12s.cook.minor)) %>% 
   rownames_to_column("ASV") %>% 
   mutate(Species = case_when(is.na(Species)~ASV,
                                TRUE~Species)) %>% 
@@ -542,10 +544,10 @@ cooktaxa.names <- as.data.frame(tax_table(ps.12s.cook.filt)) %>%
 
 colnames(otu.cook.abs) <- cooktaxa.names
 
-cooktax_table <- as.data.frame(tax_table(ps.12s.cook.filt)) %>%
+cooktax_table <- as.data.frame(tax_table(ps.12s.cook.minor)) %>%
   select(-DB)
 
-sberingtaxa.names <- as.data.frame(tax_table(ps.12s.sbering.filt)) %>% 
+sberingtaxa.names <- as.data.frame(tax_table(ps.12s.sbering.minor)) %>% 
   rownames_to_column("ASV") %>% 
   mutate(Species = case_when(is.na(Species)~ASV,
                              TRUE~Species)) %>% 
@@ -553,10 +555,10 @@ sberingtaxa.names <- as.data.frame(tax_table(ps.12s.sbering.filt)) %>%
 
 colnames(otu.sbering.abs) <- sberingtaxa.names
 
-sberingtax_table <- as.data.frame(tax_table(ps.12s.sbering.filt)) %>%
+sberingtax_table <- as.data.frame(tax_table(ps.12s.sbering.minor)) %>%
   select(-DB)
 
-arctictaxa.names <- as.data.frame(tax_table(ps.12s.arctic.filt)) %>% 
+arctictaxa.names <- as.data.frame(tax_table(ps.12s.arctic.minor)) %>% 
   rownames_to_column("ASV") %>% 
   mutate(Species = case_when(is.na(Species)~ASV,
                              TRUE~Species)) %>% 
@@ -564,7 +566,7 @@ arctictaxa.names <- as.data.frame(tax_table(ps.12s.arctic.filt)) %>%
 
 colnames(otu.arctic.abs) <- arctictaxa.names
 
-arctictax_table <- as.data.frame(tax_table(ps.12s.arctic.filt)) %>%
+arctictax_table <- as.data.frame(tax_table(ps.12s.arctic.minor)) %>%
   select(-DB)
 
 ## Adds ADFG Sample ID as a column (do NOT set as row names if not unique)

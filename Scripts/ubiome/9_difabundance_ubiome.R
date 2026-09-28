@@ -221,7 +221,7 @@ ch_fit <- emuFit(
 )
 
 # Identify which model-matrix columns are host contrasts
-host_meta <- data.frame(phyloseq::sample_data(ps.norep))
+host_meta <- data.frame(phyloseq::sample_data(ps.pred))
 
 X_host <- model.matrix(
   ~ Predator,
@@ -233,13 +233,13 @@ host_k <- grep("^Predator", colnames(X_host))
 # Specify every season-coefficient × ASV test
 test_kj_host <- expand.grid(
   k = host_k,
-  j = seq_len(phyloseq::ntaxa(ps.norep))
+  j = seq_len(phyloseq::ntaxa(ps.pred))
 )
 
 # Run score tests using the model fit
-test_all_shost <- emuFit(
-  formula = ~ host,
-  Y = ps.norep,
+test_all_host <- emuFit(
+  formula = ~ Predator,
+  Y = ps.pred,
   B = ch_fit$B,
   run_score_tests = TRUE,
   test_kj = test_kj_host
@@ -257,7 +257,7 @@ p1 <- plot(
 p1
 
 p2 <- plot(
-  test_all_season,
+  test_all_host,
   taxon_names = tax_df, 
   display_taxon_names = TRUE)$plots
 p2
@@ -267,7 +267,7 @@ library(patchwork)
 
 # Generate the radEmu plot list
 p2 <- plot(
-  test_all_season,
+  test_all_host,
   taxon_names = tax_df,
   display_taxon_names = TRUE
 )$plots
@@ -277,13 +277,13 @@ names(p2)
 length(p2)
 
 # Combine all plots into one horizontal figure
-season_plot_panels <- patchwork::wrap_plots(
+host_plot_panels <- patchwork::wrap_plots(
   p2,
   ncol = 1
 )
 
 # View in RStudio
-season_plot_panels <- season_plot_panels&
+host_plot_panels <- host_plot_panels&
   theme(
     text = element_text(size = 24),
     axis.title = element_text(size = 24),
@@ -296,7 +296,7 @@ season_plot_panels <- season_plot_panels&
 
 # Save as a high-resolution presentation/publication figure
 ggsave(
-  filename = "Deliverables/ALL/differential_abundance/pod_radEmu_panels.png",
+  filename = "Deliverables/ubiome/diffabund/host_radEmu_panels.png",
   plot = season_plot_panels,
   width = 20,
   height = 15,
