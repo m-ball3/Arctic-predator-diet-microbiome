@@ -1,0 +1,22 @@
+"ASV","taxon_label","Kingdom","Phylum","Class","Order","Family","Genus","n_samples_dominant","proportion_samples_dominant","mean_dominance","median_dominance","max_dominance","total_reads_when_dominant"
+"ASV1","g__ Clostridium | ASV1","Bacteria","Bacillota","Clostridia","Clostridiales","Clostridiaceae","Clostridium",4,0.133333333333333,0.492941668177836,0.49735195289836,0.773922520307688,118976
+"ASV22","g__ Helicobacter | ASV22","Bacteria","Campylobacterota","Campylobacteria","Campylobacterales","Helicobacteraceae","Helicobacter",3,0.1,0.268557125563545,0.219436191028335,0.411241256570506,18729
+"ASV5","g__ UCG-005 | ASV5","Bacteria","Bacillota","Clostridia","Oscillospirales","Oscillospiraceae","UCG-005",3,0.1,0.142530267761837,0.122945704181402,0.225887223316529,9632
+"ASV2","f__ Peptostreptococcaceae | ASV2","Bacteria","Bacillota","Clostridia","Peptostreptococcales-Tissierellales","Peptostreptococcaceae",NA,2,0.0666666666666667,0.312642646588212,0.312642646588212,0.451094890510949,7068
+"ASV18","g__ Tyzzerella | ASV18","Bacteria","Bacillota","Clostridia","Lachnospirales","Lachnospiraceae","Tyzzerella",2,0.0666666666666667,0.181162460423586,0.181162460423586,0.217995424891977,8857
+"ASV7","g__ Bisgaardia | ASV7","Bacteria","Pseudomonadota","Gammaproteobacteria","Enterobacterales","Pasteurellaceae","Bisgaardia",1,0.0333333333333333,0.992817581750588,0.992817581750588,0.992817581750588,39257
+"ASV201","g__ Clostridium | ASV201","Bacteria","Bacillota","Clostridia","Clostridiales","Clostridiaceae","Clostridium",1,0.0333333333333333,0.761605035405193,0.761605035405193,0.761605035405193,1936
+"ASV321","p__ Pseudomonadota | ASV321","Bacteria","Pseudomonadota",NA,NA,NA,NA,1,0.0333333333333333,0.60069848661234,0.60069848661234,0.60069848661234,516
+"ASV55","g__ Clostridium | ASV55","Bacteria","Bacillota","Clostridia","Clostridiales","Clostridiaceae","Clostridium",1,0.0333333333333333,0.368309147929623,0.368309147929623,0.368309147929623,13858
+"ASV41","g__ Clostridium | ASV41","Bacteria","Bacillota","Clostridia","Clostridiales","Clostridiaceae","Clostridium",1,0.0333333333333333,0.360159484741604,0.360159484741604,0.360159484741604,11743
+"ASV40","g__ Mycoplasmoides | ASV40","Bacteria","Bacillota","Bacilli","Mycoplasmatales","Mycoplasmataceae","Mycoplasmoides",1,0.0333333333333333,0.277529095792301,0.277529095792301,0.277529095792301,8990
+"ASV68","g__ Clostridium | ASV68","Bacteria","Bacillota","Clostridia","Clostridiales","Clostridiaceae","Clostridium",1,0.0333333333333333,0.242265795206972,0.242265795206972,0.242265795206972,7784
+"ASV9","g__ Bacteroides | ASV9","Bacteria","Bacteroidota","Bacteroidia","Bacteroidales","Bacteroidaceae","Bacteroides",1,0.0333333333333333,0.214140153878145,0.214140153878145,0.214140153878145,5149
+"ASV69","f__ [Eubacterium] coprostanoligenes group | ASV69","Bacteria","Bacillota","Clostridia","Oscillospirales","[Eubacterium] coprostanoligenes group",NA,1,0.0333333333333333,0.168848167539267,0.168848167539267,0.168848167539267,5160
+"ASV30","g__ Tyzzerella | ASV30","Bacteria","Bacillota","Clostridia","Lachnospirales","Lachnospiraceae","Tyzzerella",1,0.0333333333333333,0.164670098268601,0.164670098268601,0.164670098268601,3519
+"ASV121","g__ Fournierella | ASV121","Bacteria","Bacillota","Clostridia","Oscillospirales","Ruminococcaceae","Fournierella",1,0.0333333333333333,0.147367861037959,0.147367861037959,0.147367861037959,5540
+"ASV123","g__ Clostridium | ASV123","Bacteria","Bacillota","Clostridia","Clostridiales","Clostridiaceae","Clostridium",1,0.0333333333333333,0.146586807955156,0.146586807955156,0.146586807955156,1909
+"ASV33","g__ UCG-005 | ASV33","Bacteria","Bacillota","Clostridia","Oscillospirales","Oscillospiraceae","UCG-005",1,0.0333333333333333,0.128173828125,0.128173828125,0.128173828125,5250
+"ASV46","g__ Bacteroides | ASV46","Bacteria","Bacteroidota","Bacteroidia","Bacteroidales","Bacteroidaceae","Bacteroides",1,0.0333333333333333,0.1202320861737,0.1202320861737,0.1202320861737,4621
+"ASV127","g__ Prevotellaceae Ga6A1 group | ASV127","Bacteria","Bacteroidota","Bacteroidia","Bacteroidales","Prevotellaceae","Prevotellaceae Ga6A1 group",1,0.0333333333333333,0.114067690688419,0.114067690688419,0.114067690688419,3468
+"ASV6","g__ Peptoclostridium | ASV6","Bacteria","Bacillota","Clostridia","Peptostreptococcales-Tissierellales","Peptostreptococcaceae","Peptoclostridium",1,0.0333333333333333,0.107411618212333,0.107411618212333,0.107411618212333,1984

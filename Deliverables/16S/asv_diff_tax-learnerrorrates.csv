@@ -1,0 +1,27 @@
+SampleID,rel_batched,rel_combined,diff,Taxon,Genus_batched,Species_batched,Genus_combined,Species_combined,same_genus,same_species
+WADE-003-062,0.879481527,0.883457418,-0.003975891,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-008,0.614644438,0.617296791,-0.002652354,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-024,1,0.555555556,0.444444444,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-025,0.782370081,0.782049871,0.000320209,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-026,0.993996149,0.997799095,-0.003802946,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-027,0.998896468,0.998927076,-3.06E-05,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-028,0.997186445,0.997316334,-0.000129889,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-030,0.994645411,0.994084473,0.000560938,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-033,0.99883123,0.998867122,-3.59E-05,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-034,0.998973864,0.999031046,-5.72E-05,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-043,0.135802469,0.1375,-0.001697531,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-044,0.155002147,0.43253012,-0.277527974,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-045,0.434298367,0.539990496,-0.105692128,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-104,0.861188672,0.92364107,-0.062452398,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-107,0.396723712,0.402142524,-0.005418813,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-114,0.876689189,0.878942882,-0.002253692,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-123,0.963479416,0.964508929,-0.001029513,gASV1,Eleginus,Eleginus gracilis,Eleginus,Eleginus gracilis,TRUE,TRUE
+WADE-003-062,0,0.012775323,-0.012775323,gASV8,NA,Myzopsetta proboscidea,NA,NA,NA,NA
+WADE-003-024,0,0.444444444,-0.444444444,gASV8,NA,Myzopsetta proboscidea,NA,NA,NA,NA
+WADE-003-030,0,0.005915527,-0.005915527,gASV8,NA,Myzopsetta proboscidea,NA,NA,NA,NA
+WADE-003-043,0,0.175,-0.175,gASV8,NA,Myzopsetta proboscidea,NA,NA,NA,NA
+WADE-003-104,0,0.07635893,-0.07635893,gASV8,NA,Myzopsetta proboscidea,NA,NA,NA,NA
+WADE-003-107,0.284707605,0.444713554,-0.160005949,gASV8,NA,Myzopsetta proboscidea,NA,NA,NA,NA
+WADE-003-110,0.731257557,0.931644797,-0.20038724,gASV8,NA,Myzopsetta proboscidea,NA,NA,NA,NA
+WADE-003-111,0.019319938,0.783974863,-0.764654924,gASV8,NA,Myzopsetta proboscidea,NA,NA,NA,NA
+WADE-003-147,0,0.196551724,-0.196551724,gASV8,NA,Myzopsetta proboscidea,NA,NA,NA,NA

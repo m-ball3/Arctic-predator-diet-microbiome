@@ -1,0 +1,25 @@
+"host","outcome","covariate","model","n_samples","n_levels","min_group_n","statistic","df_num","df_den","p","poisson_dispersion","nb_theta","group_sizes","status","p_BH_within_covariate","p_BH_all","significance"
+"beluga whale","Berger_Parker","Locale","lm",48,3,9,5.92164531351178,2,45,0.00521193884534516,NA,NA,"Arctic (n=9); Cook Inlet (n=20); South Bering (n=19)","OK",0.0156358165360355,0.0781790826801774,"ns"
+"beluga whale","Shannon","Locale","lm",48,3,9,4.87718601672628,2,45,0.012102037765543,NA,NA,"Arctic (n=9); Cook Inlet (n=20); South Bering (n=19)","OK",0.0181530566483145,0.0907652832415726,"ns"
+"ringed seal","Shannon","Age_Group","lm",22,2,9,1.2035908515024,1,20,0.285639123579481,NA,NA,"Non-pup (n=9); Pup (n=13)","OK",0.871794082678266,0.957476472527217,"ns"
+"ringed seal","Berger_Parker","Age_Group","lm",22,2,9,0.71972387206394,1,20,0.406274014706492,NA,NA,"Non-pup (n=9); Pup (n=13)","OK",0.871794082678266,0.957476472527217,"ns"
+"ringed seal","Observed","Age_Group","poisson",22,2,9,0.366638137381221,1,20,0.544842498419913,0.644372294372288,NA,"Non-pup (n=9); Pup (n=13)","OK",0.871794082678266,0.957476472527217,"ns"
+"bearded seal","Observed","season","poisson",39,3,9,0.969125439810348,2,36,0.615966487766377,1.43444958929851,NA,"Autumn (n=18); Spring (n=9); Summer (n=12)","OK",0.957476472527217,0.957476472527217,"ns"
+"beluga whale","Observed","Locale","poisson",48,3,9,0.848352475187209,2,45,0.654308557981218,0.550032670032607,NA,"Arctic (n=9); Cook Inlet (n=20); South Bering (n=19)","OK",0.654308557981218,0.957476472527217,"ns"
+"bearded seal","Observed","Age_Group","poisson",24,2,6,0.171337071394667,1,22,0.678926233679479,1.78600145546878,NA,"Non-pup (n=6); Pup (n=18)","OK",0.871794082678266,0.957476472527217,"ns"
+"bearded seal","Berger_Parker","season","lm",39,3,9,0.333394394177613,2,36,0.718676145257291,NA,NA,"Autumn (n=18); Spring (n=9); Summer (n=12)","OK",0.957476472527217,0.957476472527217,"ns"
+"bearded seal","Berger_Parker","Age_Group","lm",24,2,6,0.125521182734737,1,22,0.726495068898555,NA,NA,"Non-pup (n=6); Pup (n=18)","OK",0.871794082678266,0.957476472527217,"ns"
+"ringed seal","Observed","season","poisson",41,3,7,0.60620021972742,2,38,0.7385251590166,0.910333865276217,NA,"Autumn (n=17); Spring (n=7); Summer (n=17)","OK",0.957476472527217,0.957476472527217,"ns"
+"ringed seal","Berger_Parker","season","lm",41,3,7,0.220959859050562,2,38,0.802771702203399,NA,NA,"Autumn (n=17); Spring (n=7); Summer (n=17)","OK",0.957476472527217,0.957476472527217,"ns"
+"bearded seal","Shannon","Age_Group","lm",24,2,6,0.0180391466910688,1,22,0.894378685246033,NA,NA,"Non-pup (n=6); Pup (n=18)","OK",0.894378685246033,0.957476472527217,"ns"
+"ringed seal","Shannon","season","lm",41,3,7,0.0603158362424066,2,38,0.941557084269405,NA,NA,"Autumn (n=17); Spring (n=7); Summer (n=17)","OK",0.957476472527217,0.957476472527217,"ns"
+"bearded seal","Shannon","season","lm",39,3,9,0.0435066239420143,2,36,0.957476472527217,NA,NA,"Autumn (n=18); Spring (n=9); Summer (n=12)","OK",0.957476472527217,0.957476472527217,"ns"
+"beluga whale","Berger_Parker","season","lm",45,4,1,NA,NA,NA,NA,NA,NA,"Autumn (n=31); Spring (n=1); Summer (n=10); Winter (n=3)","Skipped: need >=2 covariate levels and >=3 samples per level",NA,NA,NA
+"beluga whale","Observed","season","poisson",45,4,1,NA,NA,NA,NA,NA,NA,"Autumn (n=31); Spring (n=1); Summer (n=10); Winter (n=3)","Skipped: need >=2 covariate levels and >=3 samples per level",NA,NA,NA
+"beluga whale","Shannon","season","lm",45,4,1,NA,NA,NA,NA,NA,NA,"Autumn (n=31); Spring (n=1); Summer (n=10); Winter (n=3)","Skipped: need >=2 covariate levels and >=3 samples per level",NA,NA,NA
+"bearded seal","Berger_Parker","Locale","lm",39,1,39,NA,NA,NA,NA,NA,NA,"Arctic (n=39)","Skipped: need >=2 covariate levels and >=3 samples per level",NA,NA,NA
+"ringed seal","Berger_Parker","Locale","lm",41,2,2,NA,NA,NA,NA,NA,NA,"Arctic (n=39); South Bering (n=2)","Skipped: need >=2 covariate levels and >=3 samples per level",NA,NA,NA
+"bearded seal","Observed","Locale","poisson",39,1,39,NA,NA,NA,NA,NA,NA,"Arctic (n=39)","Skipped: need >=2 covariate levels and >=3 samples per level",NA,NA,NA
+"ringed seal","Observed","Locale","poisson",41,2,2,NA,NA,NA,NA,NA,NA,"Arctic (n=39); South Bering (n=2)","Skipped: need >=2 covariate levels and >=3 samples per level",NA,NA,NA
+"bearded seal","Shannon","Locale","lm",39,1,39,NA,NA,NA,NA,NA,NA,"Arctic (n=39)","Skipped: need >=2 covariate levels and >=3 samples per level",NA,NA,NA
+"ringed seal","Shannon","Locale","lm",41,2,2,NA,NA,NA,NA,NA,NA,"Arctic (n=39); South Bering (n=2)","Skipped: need >=2 covariate levels and >=3 samples per level",NA,NA,NA

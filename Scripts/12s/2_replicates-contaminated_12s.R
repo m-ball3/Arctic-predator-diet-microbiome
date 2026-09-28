@@ -21,14 +21,18 @@ replicates <- unique(samdf$Specimen.ID[duplicated(samdf$Specimen.ID)])
 
 # Subset phyloseq object to keep only samples with duplicated Specimen.IDs
 ps.replicates <- subset_samples(ps.raw, Specimen.ID %in% replicates)
-
+getwd()
+save(
+  ps.replicates,
+  file = "./Scripts/12s/rdata/ps.replicates.RData"
+)
 # Creates a df
 replicates_df <- samdf %>%
-  filter(Specimen.ID %in% replicates) %>%
-  select(Specimen.ID, LabID)
+  dplyr::filter(Specimen.ID %in% replicates) %>%
+  dplyr::select(Specimen.ID, LabID)
 
 # Creates a vector of read counts
-reads <- sample_sums(ps.replicates)
+reads <- phyloseq::sample_sums(ps.replicates)
 
 # Turn read counts into a data frame with a LabID column
 reads_df <- data.frame(
@@ -39,13 +43,13 @@ reads_df <- data.frame(
 
 # Join read counts onto your replicate table
 replicates_df <- replicates_df %>%
-  left_join(reads_df, by = "LabID")
+  dplyr::left_join(reads_df, by = "LabID")
 
 # Create the stacked bar plot (absolute)
 plot_bar(ps.replicates, x = "LabID", fill = "Species") +
   facet_wrap(~ Specimen.ID, ncol = 13, scales = "free_x", strip.position = "top") +
   theme_bw() +
-  theme(legend.position = "none",
+  theme(legend.position = "bottom",
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
 # Transforms read counts to relative abundance of each species 
@@ -60,7 +64,7 @@ ps.replicates.rel <- transform_sample_counts(ps.replicates, function(x) {
 plot_bar(ps.replicates.rel, x = "LabID", fill = "Genus") +
   facet_wrap(~ Specimen.ID, ncol = 13, scales = "free_x", strip.position = "top") +
   theme_bw() +
-  theme(legend.position = "none",
+  theme(legend.position = "bottom",
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
 # Ensures samples removed in filtering are removed from samdf
@@ -88,22 +92,7 @@ sample_names(ps.norep)
 nsamples(ps.norep) # = 122
 
 
-# all 12s negatives were clean- check with Amy about needed to run contamination here
-
-## NOW THINK ABOUT NEGATIVE CONTAMINATION!!!!!
-
-# NEED TO PULL JUST THE DATE THAT THE CONTAMINATED EXTRACTION OCCURRED
-## THE DATE SHOULD BE IN LABDF
-# neg_contaminated <- 
-#   #some vector here to use to filter for the contaminated samples from the shipment 5 extractions
-#   
-#   # need to change this syntax because I don't want to remove them, 
-#   ## instead, I want to delete the reads that appear in both
-#   ### MAYBE THIS SHOULD HAPPEN BEFORE THE REPLICATE STEPS???
-#   samdf_filt <- samdf_filt[!rownames(samdf_filt) %in% neg_contaminated, ]
-# 
-# seqtab.nochim_filt <- seqtab.nochim_filt[!rownames(seqtab.nochim_filt) %in% neg_contaminated, ]
-
+# all 12s negatives were clean- no need to run decontamination here
 
 getwd()
-save(samdf, seqtab.nochim, taxa, track, out, freq.nochim, ps.raw, ps.norep, file = "./Scripts/12s/rdata/replicates-contaminated_12s.RData")
+save(samdf, seqtab.nochim, taxa, track, freq.nochim, ps.raw, ps.norep, file = "./Scripts/12s/rdata/replicates-contaminated_12s.RData")

@@ -1,0 +1,8 @@
+"ASV","taxon_label","Kingdom","Phylum","Class","Order","Family","Genus","n_samples_dominant","proportion_samples_dominant","mean_dominance","median_dominance","max_dominance","total_reads_when_dominant"
+"ASV1","c__ Clostridia | ASV1","Bacteria","Bacillota","Clostridia",NA,NA,NA,29,0.604166666666667,0.585441373313468,0.500303605313093,0.997575463692569,512434
+"ASV3","c__ Gammaproteobacteria | ASV3","Bacteria","Pseudomonadota","Gammaproteobacteria",NA,NA,NA,9,0.1875,0.438259985491818,0.44444128113879,0.514404872962739,119251
+"ASV14","c__ Campylobacteria | ASV14","Bacteria","Campylobacterota","Campylobacteria",NA,NA,NA,4,0.0833333333333333,0.630093158760953,0.69000743912699,0.770591188168514,44891
+"ASV13","c__ Bacteroidia | ASV13","Bacteria","Bacteroidota","Bacteroidia",NA,NA,NA,3,0.0625,0.563413159760893,0.520999932800215,0.661475116362334,53273
+"ASV17","c__ Actinobacteria | ASV17","Bacteria","Actinomycetota","Actinobacteria",NA,NA,NA,1,0.0208333333333333,0.82756460880695,0.82756460880695,0.82756460880695,30389
+"ASV20","c__ Bacilli | ASV20","Bacteria","Bacillota","Bacilli",NA,NA,NA,1,0.0208333333333333,0.406957775332903,0.406957775332903,0.406957775332903,10727
+"ASV4","c__ Fusobacteriia | ASV4","Bacteria","Fusobacteriota","Fusobacteriia",NA,NA,NA,1,0.0208333333333333,0.4011802295253,0.4011802295253,0.4011802295253,12305

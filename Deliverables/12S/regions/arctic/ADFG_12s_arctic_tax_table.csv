@@ -1,12 +1,11 @@
 "ASV","Kingdom","Phylum","Class","Order","Family","Genus","Species"
 "ASV2","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae","Eleginus","Eleginus gracilis"
 "ASV3","Eukaryota","Chordata","Actinopteri","Clupeiformes","Clupeidae","Clupea","Clupea pallasii"
+"ASV5","Eukaryota","Chordata","Actinopteri","Osmeriformes","Osmeridae","Osmerus","Osmerus mordax"
 "ASV10","Eukaryota","Chordata","Actinopteri","Pleuronectiformes","Pleuronectidae","Platichthys","Platichthys stellatus"
 "ASV11","Eukaryota","Chordata","Actinopteri","Perciformes","Gasterosteidae","Pungitius","Pungitius pungitius"
 "ASV12","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Myoxocephalus","Myoxocephalus spp."
-"ASV13","Eukaryota","Chordata","Actinopteri","Osmeriformes","Osmeridae","Osmerus","Osmerus mordax"
 "ASV14","Eukaryota","Chordata","Actinopteri","Perciformes","Liparidae","Liparis","Liparis spp."
-"ASV15","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Clupea","Clupea pallasii"
 "ASV16","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae","Boreogadus","Boreogadus saida"
 "ASV17","Eukaryota","Chordata","Actinopteri","Pleuronectiformes","Pleuronectidae","Pleuronectes","Pleuronectes quadrituberculatus"
 "ASV18","Eukaryota","Chordata","Actinopteri","Perciformes","Liparidae",NA,NA
@@ -17,23 +16,23 @@
 "ASV26","Eukaryota","Chordata","Actinopteri","Pleuronectiformes","Pleuronectidae","Lepidopsetta","Lepidopsetta spp."
 "ASV27","Eukaryota","Chordata","Actinopteri","Perciformes","Liparidae","Liparis","Liparis tunicatus"
 "ASV30","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Gymnocanthus","Gymnocanthus tricuspis"
+"ASV34","Eukaryota","Chordata","Actinopteri","Perciformes",NA,NA,NA
 "ASV35","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae",NA,NA
 "ASV36","Eukaryota","Chordata","Actinopteri","Perciformes","Stichaeidae","Acantholumpenus","Acantholumpenus mackayi"
-"ASV38","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus gorbuscha"
+"ASV37","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus gorbuscha"
 "ASV39","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae","Gadus","Gadus macrocephalus"
 "ASV44","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Gymnocanthus","Gymnocanthus spp."
-"ASV45","Eukaryota","Chordata","Actinopteri","Perciformes",NA,NA,NA
-"ASV47","Eukaryota","Chordata","Actinopteri","Perciformes","Hexagrammidae","Hexagrammos","Hexagrammos lagocephalus"
+"ASV47","Eukaryota","Chordata","Actinopteri","Perciformes","Hexagrammidae","Hexagrammos","Hexagrammos spp."
 "ASV50","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Hemilepidotus","Hemilepidotus spp."
-"ASV51","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae",NA,NA
+"ASV52","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae",NA,NA
 "ASV57","Eukaryota","Chordata","Actinopteri","Perciformes","Stichaeidae","Stichaeus","Stichaeus punctatus"
-"ASV61","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus keta"
+"ASV62","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus keta"
 "ASV64","Eukaryota","Chordata","Actinopteri","Perciformes","Agonidae",NA,NA
-"ASV65","Eukaryota","Chordata","Actinopteri","Perciformes","Zoarcidae",NA,NA
-"ASV74","Eukaryota","Chordata","Actinopteri","Perciformes","Hemitripteridae","Nautichthys","Nautichthys pribilovius"
-"ASV77","Eukaryota","Chordata","Actinopteri","Perciformes",NA,"Pholis","Pholis clemensi"
-"ASV93","Eukaryota","Chordata","Actinopteri","Perciformes","Agonidae","Podothecus","Podothecus accipenserinus"
-"ASV98","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae","Gadus","Gadus spp."
-"ASV124","Eukaryota","Chordata","Actinopteri","Perciformes","Stichaeidae",NA,NA
-"ASV143","Eukaryota","Chordata","Actinopteri","Perciformes","Sebastidae","Sebastolobus","Sebastolobus spp."
-"ASV343","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Cottus","Cottus aleuticus"
+"ASV70","Eukaryota","Chordata","Actinopteri","Perciformes","Zoarcidae",NA,NA
+"ASV83","Eukaryota","Chordata","Actinopteri","Perciformes","Hemitripteridae","Nautichthys","Nautichthys pribilovius"
+"ASV86","Eukaryota","Chordata","Actinopteri","Perciformes","Pholidae","Pholis","Pholis clemensi"
+"ASV103","Eukaryota","Chordata","Actinopteri","Perciformes","Agonidae","Podothecus","Podothecus accipenserinus"
+"ASV109","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae","Gadus","Gadus spp."
+"ASV141","Eukaryota","Chordata","Actinopteri","Perciformes","Stichaeidae",NA,NA
+"ASV156","Eukaryota","Chordata","Actinopteri","Perciformes","Sebastidae","Sebastolobus","Sebastolobus spp."
+"ASV307","Eukaryota","Chordata","Actinopteri","Perciformes","Cottidae","Cottus","Cottus aleuticus"
