@@ -10,7 +10,6 @@ library(dplyr)
 library(tibble)
 library(stringr)
 library(lubridate)
-library(phyloseq)
 
 
 # ------------------------------------------------------------------
@@ -19,7 +18,7 @@ library(phyloseq)
 getwd()
 
 # Loads dada2 output
-load("./DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_ubiome_output_newsilva.Rdata")
+load("./DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_ubiome_output.Rdata")
 track_df<- as.data.frame(track)
 
 
@@ -49,7 +48,7 @@ rownames(seqtab.nochim) <- sub("_S[0-9]+$", "", rownames(seqtab.nochim))
 
 # Creates a column corresponding ADFG sample IDs with WADE sample IDs
 samdf <- samdf %>%
-  dplyr::left_join(labdf %>% 
+  left_join(labdf %>% 
       dplyr::select(Specimen.ID, Repeat.or.New.Specimen., LabID),
     by = c("Specimen.ID", "Repeat.or.New.Specimen."))
 
@@ -66,42 +65,13 @@ negs_mocks_ids <- c("mock1-782D",
 
 # Adds them to samdf
 samdf <- samdf %>%
-  dplyr::mutate(Shipment = as.integer(Shipment)) %>%
-  dplyr::bind_rows(
+  mutate(Shipment = as.integer(Shipment)) %>%
+  bind_rows(
     labdf %>%
-      dplyr::filter(LabID %in% negs_mocks_ids) %>%
-      dplyr::transmute(
-        LabID,
-        Shipment = NA_integer_
+      filter(LabID %in% negs_mocks_ids) %>%
+      mutate(
+        Shipment = NA_integer_  # NA in Shipment to integer class
       )
-  )
-
-# DEALING WITH JULIAN DAY
-
-## option 1: convert to radians
-### this tells R that 365 is 2pi, which is right next to 1
-
-## option 2: use modular arithmetic 
-### this tells R that 365+1 = 1
-
-# adds column for season
-samdf <- samdf %>%
-  dplyr::mutate(season = case_when(
-    Month %in% c("DEC", "JAN", "FEB") ~ "Winter",
-    Month %in% c("MAR", "APR", "MAY") ~ "Spring",
-    Month %in% c("JUN", "JUL", "AUG") ~ "Summer",
-    Month %in% c("SEP", "OCT", "NOV") ~ "Autumn"
-  ))
-
-# adds row specifying DB
-samdf <- samdf %>%
-  mutate(
-    Locale = case_when(
-      Location == "Cook Inlet" ~ "Cook Inlet",
-      Location %in% c("Hooper Bay", "Scammon Bay") ~ "South Bering",
-      Predator == "beluga whale" & Location == "Nome" ~ "South Bering",
-      TRUE ~ "Arctic"
-    )
   )
 
 # Sets row names to LabID

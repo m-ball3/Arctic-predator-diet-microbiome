@@ -1,9 +1,8 @@
 "ASV","Kingdom","Phylum","Class","Order","Family","Genus","Species"
 "ASV3","Eukaryota","Chordata","Actinopteri","Clupeiformes","Clupeidae","Clupea","Clupea pallasii"
 "ASV16","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae","Gadus","Gadus spp."
-"ASV62","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus keta"
-"ASV74","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus kisutch"
-"ASV130","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae",NA,NA
-"ASV304","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus gorbuscha"
-"ASV331","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus spp."
-"ASV380","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Coregonus","Coregonus laurettae"
+"ASV61","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus keta"
+"ASV68","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus kisutch"
+"ASV116","Eukaryota","Chordata","Actinopteri","Gadiformes","Gadidae",NA,NA
+"ASV339","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Oncorhynchus","Oncorhynchus gorbuscha"
+"ASV426","Eukaryota","Chordata","Actinopteri","Salmoniformes","Salmonidae","Coregonus","Coregonus laurettae"

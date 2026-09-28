@@ -11,7 +11,7 @@ library(stringr)
 library(lubridate)
 
 # Loads in dada2 output
-load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12S_output-batched.wBLASt.Rdata")
+load("DADA2/DADA2 Outputs/WADE003-arcticpred_dada2_QAQC_12S_output.Rdata")
 track_df<- as.data.frame(track)
 
 mean(track_df$nonchim)
@@ -50,12 +50,6 @@ samdf <- samdf %>%
 # Removes rows where LabID is NA (because shipment 1 was bad & thus not extracted)
 samdf <- samdf[!is.na(samdf$LabID), ]
 
-# removes duplicate row for 153 (A and B) and 169 (A and B)
-samdf <- samdf%>%
-  filter(!str_ends(LabID, "-B"))
-
-# drops the -A suffix on 153 and 169
-samdf$LabID <- gsub("-A", "", samdf$LabID)
 
 # Sets row names to LabID
 rownames(samdf) <- samdf$LabID
@@ -73,7 +67,7 @@ lost_from_seqtab <- setdiff(rownames(seqtab.nochim), rownames(seqtab.nochimm))
 
 
 lost_from_samdf
-lost_from_seqtab #nothing lost in seqtab
+lost_from_seqtab #we lose -122 because it is not in samdf --> WHY??
 
 samdf <- samdff
 seqtab.nochim <- seqtab.nochimm
@@ -98,5 +92,5 @@ ps.raw <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE),
 
 
 ### Save data
-save(samdf, seqtab.nochim, taxa, track, freq.nochim, ps.raw, file = "./Scripts/12s/rdata/rownames-match_12s.RData")
+save(samdf, seqtab.nochim, taxa, track, out, freq.nochim, ps.raw, file = "./Scripts/12s/rdata/rownames-match_12s.RData")
 

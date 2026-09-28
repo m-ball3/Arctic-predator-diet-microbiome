@@ -6,8 +6,6 @@
   ## 3_taxonomy-by-region_12S.R must be run before this
   # ------------------------------------------------------------------
   
-  ###### I DON'T THINK I WANT THIS STEP BECAUSE IT'S NOT BY REGION?????
-  
   # ------------------------------------------------------------------
   # Sets up the Environment and Loads in data
   # ------------------------------------------------------------------

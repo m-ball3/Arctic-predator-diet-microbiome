@@ -109,6 +109,12 @@ arcticsp <- assignSpecies(arctic.seqtab, arcticDB.sp) %>%
   as.matrix()                      
 
 # ------------------------------------------------------------------
+# NEED TO ADD IN THE BLASTING CODE THAT AMY WROTE HERE TO GET BETTER ASSIGNMENTS
+# ------------------------------------------------------------------
+
+
+
+# ------------------------------------------------------------------
 # ADDRESSES NA AND COLUMN NON-AGREEMENT ISSUES BETWEEN ASSIGNTAXONOMY AND ADDSPECIES
 # ------------------------------------------------------------------
 
