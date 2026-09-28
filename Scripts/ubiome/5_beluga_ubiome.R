@@ -1,3 +1,10 @@
+# ------------------------------------------------------------------
+# CREATES PHYLOSEQ OBJS FOR BELUGA SAMPLES - INTENDED FOR FREDDY'S SAMPLE COMPARISONS
+# THIS IS AN OPTIONAL FIFTH STEP AFTER DADA2
+## 1_rownames-match_ubiome.R and 
+## 2_replicates_contaminated_ubiome.R 3_ampbias_ubiome.R
+## and 4_phyloseq_ubiome.R must be run before this
+# ------------------------------------------------------------------
 
 # Sets up environment
 library(phyloseq)

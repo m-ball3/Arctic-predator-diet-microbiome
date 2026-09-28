@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------
 # FROM DADA2 TO PHYLOSEQ
-# THIS IS THE THIRD STEP AFTER DADA2
+# THIS IS THE FOURTH STEP AFTER DADA2
 ## rownames-match.r and replicates-contaminated.r must be run before this!
 # ------------------------------------------------------------------
 
@@ -29,28 +29,28 @@ load("./Scripts/ubiome/rdata/replicates-contaminated_ubiome.RData")
 dna <- Biostrings::DNAStringSet(taxa_names(ps.norep))
 names(dna) <- taxa_names(ps.norep)
 ps.norep <- merge_phyloseq(ps.norep, dna)
-taxa_names(ps.norep) <- paste0("ASV", seq(ntaxa(ps.norep)))
+phyloseq::taxa_names(ps.norep) <- paste0("ASV", seq(phyloseq::ntaxa(ps.norep)))
 
-nsamples(ps.norep)
+phyloseq::nsamples(ps.norep)
 
 # Filters out any Mammalia
-ps.filt <- subset_taxa(ps.norep, Class!="Mammalia")
+ps.filt <- phyloseq::subset_taxa(ps.norep, Class!="Mammalia")
 
 # Remove samples with total abundance == 0
-ps.filt <- prune_samples(sample_sums(ps.filt) > 0, ps.filt)
+ps.filt <- prune_samples(phyloseq::sample_sums(ps.filt) > 0, ps.filt)
 
 # WADE-003-178 had 0 reads, remove from samdf
 samdf <- samdf[rownames(samdf) != "WADE-003-178", ]
 
 ## MERGE TO SPECIES HERE (TAX GLOM)
-ps.filt = tax_glom(ps.filt, "Class", NArm = FALSE)
+ps.filt = tax_glom(ps.filt, "Genus", NArm = FALSE)
 
 # Filtering to remove taxa with less than 1% of reads assigned in at least 1 sample.
 f1 <- filterfun_sample(function(x) x / sum(x) > 0.01)
 lowcount.minor <- genefilter_sample(ps.filt, f1, A=1)
 ps.minor <- prune_taxa(lowcount.minor, ps.filt)
 
-# Filtering to remove taxa with less than 1% of diet in 4 or more samples
+# Filtering to remove taxa with less than 1% of reads in 4 or more samples
 f1 <- filterfun_sample(function(x) x >= 0.01)
 lowcount.filt <- genefilter_sample(ps.filt, f1, A=2) # errors occur at A>2
 ps.major <- prune_taxa(lowcount.filt, ps.filt)
@@ -59,7 +59,7 @@ ps.major <- prune_taxa(lowcount.filt, ps.filt)
 # plot_bar(ps.16s, fill="Species")
 
 # Plots stacked bar plot of abundance - to confirm presence of NA's
-abs <- plot_bar(ps.filt, fill="Class")
+abs <- plot_bar(ps.filt, fill="Genus")
 abs
 
 # Saves absolute abundance plot
@@ -92,9 +92,9 @@ which(is.nan(as.matrix(otu_table(ps.minor.rel))), arr.ind = TRUE)
 which(is.nan(as.matrix(otu_table(ps.major.rel))), arr.ind = TRUE)
 
 #SAVES
-save(ps.raw, ps.filt, ps.rel, samdf, seqtab.nochim, taxam, track, out, freq.nochim, file = "ubiome.ps.RData")
-save(seqtab.nochim, freq.nochim, track, taxam, ps.minor, ps.minor.rel, file = "ubiome.ps-minor.Rdata")
-save(seqtab.nochim, freq.nochim, track, taxam, ps.major, ps.major.rel, file = "ubiome.ps-major.Rdata")
+save(ps.raw, ps.norep, ps.filt, ps.rel, samdf, seqtab.nochim, taxam, track, out, freq.nochim, file = "./Scripts/ubiome/rdata/ubiome.ps.Rdata")
+save(seqtab.nochim, freq.nochim, track, taxam, ps.minor, ps.minor.rel, file = "./Scripts/ubiome/rdata/ubiome.ps-minor.Rdata")
+save(seqtab.nochim, freq.nochim, track, taxam, ps.major, ps.major.rel, file = "./Scripts/ubiome/rdata/ubiome.ps-major.Rdata")
 
 # ------------------------------------------------------------------
 # PLOTS RELATIVE ABUNDANCE
@@ -102,12 +102,12 @@ save(seqtab.nochim, freq.nochim, track, taxam, ps.major, ps.major.rel, file = "u
 # Creates bar plot of relative abundance
 
 # Plots with WADE IDs
-rel.plot <- plot_bar(ps.major.rel, fill="Class")+
+rel.plot <- plot_bar(ps.major.rel, fill="Genus")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 rel.plot
 
-pred.facet <- plot_bar(ps.major.rel, x = "LabID", fill = "Class") +
+pred.facet <- plot_bar(ps.major.rel, x = "LabID", fill = "Genus") +
   facet_wrap(~Predator, ncol = 4, scales = "free_x", strip.position = "right") +
   theme_minimal() +
   theme(
